@@ -167,7 +167,7 @@
 
   section,
   main,
-  .container {
+  .container:not(.site-navbar):not(header) {
     background: transparent !important;
   }
 
@@ -186,7 +186,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.50);
+    background: rgba(255, 255, 255, 0.50) !important;
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
     border-bottom: 1px solid rgba(200, 220, 255, 0.55);
@@ -194,19 +194,19 @@
   }
 
   .site-navbar.scrolled {
-    background: rgba(255, 255, 255, 0.50);
+    background: rgba(255, 255, 255, 0.72) !important;
     border-bottom: 1px solid rgba(200, 220, 255, 0.55);
-    backdrop-filter: blur(28px) saturate(200%);
-    -webkit-backdrop-filter: blur(28px) saturate(200%);
+    backdrop-filter: blur(28px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
   }
 
   .dark .site-navbar {
-    background: var(--glass-bg);
+    background: var(--glass-bg) !important;
     border-bottom: 1px solid var(--glass-border);
   }
 
   .dark .site-navbar.scrolled {
-    background: rgba(2, 8, 23, 0.60);
+    background: rgba(2, 8, 23, 0.75) !important;
   }
 
   .site-navbar__logo {
