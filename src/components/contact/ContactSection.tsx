@@ -204,11 +204,10 @@ function ContactFormCard() {
                       type="button"
                       onClick={() => toggleService(service)}
                       aria-pressed={selected}
-                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
-                        selected
+                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${selected
                           ? "border-primary bg-primary text-primary-foreground"
                           : "border-border bg-transparent text-muted-foreground hover:border-[var(--primary-50)] hover:text-foreground"
-                      }`}
+                        }`}
                     >
                       {service}
                     </button>
@@ -278,7 +277,7 @@ export default function ContactSection() {
       aria-labelledby="contact-heading"
     >
       <div className="mx-auto flex flex-col gap-12 sm:gap-16 items-center w-full max-w-7xl">
-        
+
         {/* 1. HERO CTA BLOCK (Wrapped in a card container) */}
         <motion.div
           className="mx-auto w-full bg-black/20 dark:bg-white/5 border border-white/10 !backdrop-blur-md rounded-2xl p-8 sm:p-10 lg:py-16 flex flex-col items-center gap-8"
@@ -303,13 +302,13 @@ export default function ContactSection() {
                 <span className="italic text-primary">improve or automate.</span>
               </h2>
             </div>
-            
+
             <p className="text-[15px] sm:text-base leading-relaxed text-[var(--foreground-85)] mx-auto max-w-[600px]">
               Whether you need AI automation, GoHighLevel support, or customer
               service workflow improvements — let's talk for 30 minutes. No pitch,
               just clarity.
             </p>
-            
+
             <div className="flex flex-col gap-3 pt-2 items-center">
               <div className="flex items-center gap-3">
                 <CheckCircle className="h-[18px] w-[18px] text-primary shrink-0" />
@@ -338,7 +337,7 @@ export default function ContactSection() {
                 Book a Call
               </button>
             </div>
-            
+
             <div className="flex flex-col gap-1 w-full text-center">
               <p className="text-[13px] text-foreground leading-snug">
                 30-minute discovery call &middot; <span className="opacity-70">No commitment. No sales pressure.</span>
@@ -366,7 +365,7 @@ export default function ContactSection() {
                 <Linkedin className="h-[18px] w-[18px]" />
               </a>
               <a
-                href="https://github.com/RWBFFreelancer"
+                href="https://github.com/RWBFreelancer"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="GitHub"
@@ -375,7 +374,7 @@ export default function ContactSection() {
                 <Github className="h-[18px] w-[18px]" />
               </a>
             </div>
-            
+
             <p className="text-xs text-muted-foreground/70 w-full text-center pt-2">
               Baguio City, Philippines
             </p>
