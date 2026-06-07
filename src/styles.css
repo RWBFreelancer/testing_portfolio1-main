@@ -1126,6 +1126,16 @@ html body .calendly-overlay {
   height: 100% !important;
   z-index: 1 !important;
   cursor: pointer !important;
+  color: transparent !important;
+}
+
+/* Hide any inner SVGs, text spans, or native close buttons injected by Calendly */
+.calendly-close-overlay * {
+  display: none !important;
+}
+
+.calendly-popup-close {
+  display: none !important;
 }
 
 /* 2. Visible close (X) button positioned at top right of viewport */

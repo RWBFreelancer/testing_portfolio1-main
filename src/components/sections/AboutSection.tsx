@@ -78,7 +78,7 @@ export default function AboutSection() {
               className="text-center font-display font-bold leading-tight lg:text-left"
               style={{ fontSize: "clamp(34px, 6vw, 72px)" }}
             >
-              Reynaldo Wakit Binay-an
+              Rey W. Binay-an
             </h2>
 
             {/* Trust badges */}
