@@ -14,7 +14,7 @@ export default function EducationSection() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-2xl border border-border p-7 shadow-glow">
+          <div className="education-card rounded-2xl border border-border p-7 shadow-glow">
             <GraduationCap className="h-7 w-7 text-primary" />
             <h3 className="mt-4 font-display text-2xl text-foreground">
               B.S. Electrical Engineering
@@ -24,7 +24,7 @@ export default function EducationSection() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-border p-7 shadow-glow">
+          <div className="education-card rounded-2xl border border-border p-7 shadow-glow">
             <Award className="h-7 w-7 text-primary" />
             <h3 className="mt-4 font-display text-2xl text-foreground">
               Certifications
