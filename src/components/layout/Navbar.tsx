@@ -118,6 +118,14 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
               className="site-navbar__cta hidden items-center gap-2 text-sm sm:inline-flex"
             >
               Book a Call <span aria-hidden>→</span>
+              <div className="btn-star-container">
+                <svg className="btn-star btn-star-1" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                <svg className="btn-star btn-star-2" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                <svg className="btn-star btn-star-3" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                <svg className="btn-star btn-star-4" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                <svg className="btn-star btn-star-5" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                <svg className="btn-star btn-star-6" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+              </div>
             </button>
             <button
               onClick={onThemeToggle}
@@ -193,6 +201,14 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
                     className="site-navbar__cta flex w-full items-center justify-center gap-2 text-sm font-medium"
                   >
                     Book a Call <span aria-hidden>→</span>
+                    <div className="btn-star-container">
+                      <svg className="btn-star btn-star-1" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                      <svg className="btn-star btn-star-2" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                      <svg className="btn-star btn-star-3" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                      <svg className="btn-star btn-star-4" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                      <svg className="btn-star btn-star-5" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                      <svg className="btn-star btn-star-6" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                    </div>
                   </button>
                 </li>
               </ul>

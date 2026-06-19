@@ -87,10 +87,18 @@ function SuccessModal({
                 onClose();
                 onBookCall();
               }}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-[var(--primary-90)]"
+              className="site-navbar__cta flex flex-1 items-center justify-center gap-2 !py-2.5 !text-sm"
             >
               <Calendar size={15} />
               Book a Call
+              <div className="btn-star-container">
+                <svg className="btn-star btn-star-1" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                <svg className="btn-star btn-star-2" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                <svg className="btn-star btn-star-3" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                <svg className="btn-star btn-star-4" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                <svg className="btn-star btn-star-5" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                <svg className="btn-star btn-star-6" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+              </div>
             </button>
           </div>
         </motion.div>
@@ -121,7 +129,7 @@ function ContactFormCard() {
         <SuccessModal onClose={resetForm} onBookCall={openCalendly} />
       )}
 
-      <div className="contact-form-container mx-auto w-full bg-black/20 dark:bg-white/5 border border-white/10 !backdrop-blur-md rounded-2xl p-8 sm:p-10 lg:py-12 !flex-none" style={{ boxShadow: "none" }}>
+      <div className="contact-form-container mx-auto w-full bg-white/50 dark:bg-white/5 border border-black/10 dark:border-white/10 !backdrop-blur-md rounded-2xl p-8 sm:p-10 lg:py-12 !flex-none" style={{ boxShadow: "none" }}>
         <div className="mx-auto w-full max-w-[560px] flex h-full flex-col gap-5">
           <div className="flex flex-col gap-1 text-center sm:text-left">
             <span className="text-xs uppercase tracking-[0.3em] text-primary mb-2 block">
@@ -280,7 +288,7 @@ export default function ContactSection() {
 
         {/* 1. HERO CTA BLOCK (Wrapped in a card container) */}
         <motion.div
-          className="mx-auto w-full bg-black/20 dark:bg-white/5 border border-white/10 !backdrop-blur-md rounded-2xl p-8 sm:p-10 lg:py-16 flex flex-col items-center gap-8"
+          className="mx-auto w-full bg-white/50 dark:bg-white/5 border border-black/10 dark:border-white/10 !backdrop-blur-md rounded-2xl p-8 sm:p-10 lg:py-16 flex flex-col items-center gap-8"
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
@@ -331,10 +339,18 @@ export default function ContactSection() {
               <button
                 onClick={openCalendly}
                 aria-label="Open Calendly booking modal"
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-[15px] font-semibold text-primary-foreground shadow-[0_0_30px_rgba(6,182,212,0.3)] transition-all hover:scale-[1.02] hover:bg-[var(--primary-90)] hover:shadow-[0_0_40px_rgba(6,182,212,0.4)]"
+                className="site-navbar__cta flex w-full items-center justify-center gap-2 !py-4 text-[15px]"
               >
                 <Calendar size={18} />
                 Book a Call
+                <div className="btn-star-container">
+                  <svg className="btn-star btn-star-1" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                  <svg className="btn-star btn-star-2" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                  <svg className="btn-star btn-star-3" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                  <svg className="btn-star btn-star-4" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                  <svg className="btn-star btn-star-5" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                  <svg className="btn-star btn-star-6" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
+                </div>
               </button>
             </div>
 
@@ -351,7 +367,7 @@ export default function ContactSection() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Email"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-muted-foreground backdrop-blur-md transition-all hover:border-primary hover:text-primary"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-muted-foreground backdrop-blur-md transition-all hover:border-primary hover:text-primary"
               >
                 <Mail className="h-[18px] w-[18px]" />
               </a>
@@ -360,7 +376,7 @@ export default function ContactSection() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="LinkedIn"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-muted-foreground backdrop-blur-md transition-all hover:border-primary hover:text-primary"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-muted-foreground backdrop-blur-md transition-all hover:border-primary hover:text-primary"
               >
                 <Linkedin className="h-[18px] w-[18px]" />
               </a>
@@ -369,7 +385,7 @@ export default function ContactSection() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="GitHub"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-muted-foreground backdrop-blur-md transition-all hover:border-primary hover:text-primary"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-muted-foreground backdrop-blur-md transition-all hover:border-primary hover:text-primary"
               >
                 <Github className="h-[18px] w-[18px]" />
               </a>
