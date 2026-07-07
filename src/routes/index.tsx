@@ -4,7 +4,6 @@ import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/hero/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import ExperienceSection from "@/components/sections/ExperienceSection";
-import SkillsSection from "@/components/sections/SkillsSection";
 import EducationSection from "@/components/sections/EducationSection";
 import ContactSection from "@/components/contact/ContactSection";
 import { useTheme } from "@/hooks/useTheme";
@@ -34,11 +33,10 @@ function Index() {
   return (
     <div className="min-h-screen text-foreground">
       <Navbar theme={theme} onThemeToggle={toggle} />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <HeroSection />
         <AboutSection />
         <ExperienceSection />
-        <SkillsSection />
         <EducationSection />
         <ContactSection />
       </main>

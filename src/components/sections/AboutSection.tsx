@@ -1,28 +1,23 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import profileImage from "@/assets/profile.jpg";
-
-const METRICS = [
-  { value: "20+", label: "Automations Built" },
-  { value: "3+", label: "Years Experience" },
-  { value: "95%", label: "Client Satisfaction" },
-  { value: "30%", label: "Avg. Process Improvement" },
-] as const;
-
-const TRUST_BADGES = [
-  "20+ Automation Workflows Delivered",
-  "AI Agents, Voice Agents & Integrations",
-  "Available for Freelance & Contract Projects",
-] as const;
 
 const TECH_STACK = [
   "n8n",
   "Zapier",
   "Make",
   "GoHighLevel",
-  "Python"
+  "Retell AI",
+  "Elevenlabs",
+  "Vapi",
+  "ChatGPT",
+  "Claude",
+  "Gemini",
+  "Python",
 ] as const;
 
 export default function AboutSection() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section
       id="about"
@@ -31,7 +26,7 @@ export default function AboutSection() {
       <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-10 px-6 py-24 md:px-12 md:py-32 lg:gap-12 lg:px-20 lg:py-[120px]">
         {/* Section Label — above both columns */}
         <motion.span
-          initial={{ opacity: 0, y: 16 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5 }}
@@ -44,7 +39,7 @@ export default function AboutSection() {
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[2fr_3fr] lg:gap-16">
           {/* LEFT — Profile image (sticky on desktop) */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6 }}
@@ -57,6 +52,8 @@ export default function AboutSection() {
                 src={profileImage}
                 alt="Portrait of Rey Binay-an, Automation Engineer"
                 className="h-auto w-full object-cover object-top"
+                width={1024}
+                height={1535}
                 loading="lazy"
               />
             </div>
@@ -64,16 +61,12 @@ export default function AboutSection() {
 
           {/* RIGHT — Content */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex flex-col gap-8"
           >
-            {/* 2. Name */}
-
-
-            {/* 2. Name */}
             <h2
               className="text-center font-display font-bold leading-tight lg:text-left"
               style={{ fontSize: "clamp(34px, 6vw, 72px)" }}
@@ -81,22 +74,10 @@ export default function AboutSection() {
               Rey W. Binay-an
             </h2>
 
-            {/* Trust badges */}
-            <ul className="flex flex-col gap-2 text-sm text-foreground/80">
-              {TRUST_BADGES.map((badge) => (
-                <li key={badge} className="flex items-start gap-2">
-                  <span className="mt-1 text-primary">✓</span>
-                  <span>{badge}</span>
-                </li>
-              ))}
-            </ul>
-
-            {/* 3. Position */}
             <p className="about-role-badge">
               Automation Engineer &amp; AI Systems Builder
             </p>
 
-            {/* 4. Value Proposition */}
             <p
               className="max-w-[800px] border-l-[3px] border-primary pl-6 text-[18px] leading-[1.6] text-foreground/90 md:text-[22px]"
             >
@@ -105,24 +86,6 @@ export default function AboutSection() {
               experience, and increase operational efficiency.
             </p>
 
-            {/* 5. Metrics Row */}
-            <div className="about-stats-grid grid grid-cols-2 gap-4 lg:grid-cols-4">
-              {METRICS.map((m) => (
-                <div
-                  key={m.label}
-                  className="about-stat-card min-w-0 transition-transform duration-200 hover:-translate-y-1"
-                >
-                  <div className="about-stat-card__value font-display">
-                    {m.value}
-                  </div>
-                  <div className="about-stat-card__label mt-2 break-words">
-                    {m.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* 6. Supporting Story */}
             <div className="max-w-[800px] space-y-4 text-[16px] leading-relaxed text-foreground/80 md:text-[18px]">
               <p>
                 Over the past 3+ years, I have worked across engineering, process
@@ -136,7 +99,6 @@ export default function AboutSection() {
               </p>
             </div>
 
-            {/* 7. Tech stack */}
             <div className="flex flex-col gap-3">
               <span
                 className="text-xs font-medium uppercase text-muted-foreground"

@@ -6,7 +6,7 @@ export default function EducationSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-14 max-w-2xl">
           <span className="text-xs uppercase tracking-[0.3em] text-primary">
-            04 — Education & Credentials
+            03 — Education & Credentials
           </span>
           <h2 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">
             Engineering <span className="italic text-primary">foundation.</span>

@@ -16,6 +16,33 @@ function isMalicious(value: string | null | undefined) {
   return MALICIOUS_PATTERNS.some((p) => p.test(value));
 }
 
+// Per-instance rate limit. Resets on cold start, but blocks the direct-API
+// abuse case a client-only limiter can't: hitting this endpoint without
+// going through the browser form at all.
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const requestLog = new Map<string, number[]>();
+
+function getClientIp(req: VercelRequest): string {
+  const forwarded = req.headers["x-forwarded-for"];
+  if (typeof forwarded === "string") return forwarded.split(",")[0].trim();
+  if (Array.isArray(forwarded)) return forwarded[0];
+  return req.socket?.remoteAddress ?? "unknown";
+}
+
+function isRateLimited(ip: string): boolean {
+  const windowStart = Date.now() - RATE_LIMIT_WINDOW_MS;
+  const timestamps = (requestLog.get(ip) ?? []).filter((t) => t > windowStart);
+  requestLog.set(ip, timestamps);
+  return timestamps.length >= RATE_LIMIT_MAX;
+}
+
+function recordRequest(ip: string) {
+  const timestamps = requestLog.get(ip) ?? [];
+  timestamps.push(Date.now());
+  requestLog.set(ip, timestamps);
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // ── CORS for local dev ──────────────────────────────────────────────────
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -39,6 +66,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
+
+  // ── 0. Rate limit ───────────────────────────────────────────────────────
+  const clientIp = getClientIp(req);
+  if (isRateLimited(clientIp)) {
+    return res.status(429).json({ error: "Too many requests. Please wait a few minutes and try again." });
+  }
+  recordRequest(clientIp);
 
   // ── 1. Parse body ───────────────────────────────────────────────────────
   const body = req.body;
@@ -82,6 +116,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
+  // DB failure alone doesn't fail the request — the email below still
+  // delivers the inquiry (e.g. when a free-tier Supabase project is paused).
+  let dbSaved = true;
   const { error: dbError } = await supabase.from("contact_inquiries").insert({
     name: cleanName,
     email: cleanEmail,
@@ -91,7 +128,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (dbError) {
     console.error("[contact] Supabase error:", dbError);
-    return res.status(500).json({ error: "Could not save your inquiry. Please try again." });
+    dbSaved = false;
   }
 
   // ── 6. Resend email ─────────────────────────────────────────────────────
@@ -100,6 +137,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (!resendKey || !toEmail) {
     console.warn("[contact] Resend not configured, skipping email");
+    if (!dbSaved) {
+      return res.status(500).json({ error: "Could not send your inquiry. Please try again." });
+    }
     return res.json({ success: true, emailSent: false });
   }
 
@@ -137,12 +177,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!emailRes.ok) {
       const errBody = await emailRes.text();
       console.error("[contact] Resend error:", emailRes.status, errBody);
+      if (!dbSaved) {
+        return res.status(500).json({ error: "Could not send your inquiry. Please try again." });
+      }
       return res.json({ success: true, emailSent: false });
     }
   } catch (err) {
     console.error("[contact] Resend threw:", err);
+    if (!dbSaved) {
+      return res.status(500).json({ error: "Could not send your inquiry. Please try again." });
+    }
     return res.json({ success: true, emailSent: false });
   }
 
-  return res.json({ success: true, emailSent: true });
+  return res.json({ success: true, emailSent: true, dbSaved });
 }

@@ -1,16 +1,20 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import FlipCardGrid from "./FlipCardGrid";
 
 export default function HeroSection() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section id="hero" className="hero-section">
       <div className="hero-section__inner">
         <motion.div
-          initial="hidden"
+          initial={shouldReduceMotion ? false : "hidden"}
           animate="visible"
           variants={{
             hidden: {},
-            visible: { transition: { staggerChildren: 0.15 } },
+            visible: {
+              transition: { staggerChildren: shouldReduceMotion ? 0 : 0.15 },
+            },
           }}
           className="hero-section__text"
         >
@@ -33,7 +37,7 @@ export default function HeroSection() {
           >
             I build AI automations
             <br />
-            <span className="hero-section__headline-accent italic">
+            <span className="italic text-primary">
               that solve real bottlenecks.
             </span>
           </motion.h1>

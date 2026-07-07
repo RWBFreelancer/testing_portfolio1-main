@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import type { ThemeMode } from "@/types";
 import { useCalendlyModal } from "@/hooks/useCalendlyModal";
@@ -13,7 +13,6 @@ const links = [
   { href: "#hero", label: "Home" },
   { href: "#about", label: "About" },
   { href: "#experience", label: "Experience" },
-  { href: "#skills", label: "Skills" },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -22,6 +21,7 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const [activeHref, setActiveHref] = useState("#hero");
   const { openCalendly } = useCalendlyModal();
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (!open) return;
@@ -71,9 +71,9 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
             type="button"
             aria-label="Close menu"
             onClick={() => setOpen(false)}
-            initial={{ opacity: 0 }}
+            initial={shouldReduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            exit={shouldReduceMotion ? undefined : { opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="fixed inset-0 top-16 z-40 bg-black/50 backdrop-blur-sm md:hidden"
           />
@@ -118,14 +118,6 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
               className="site-navbar__cta hidden items-center gap-2 text-sm sm:inline-flex"
             >
               Book a Call <span aria-hidden>→</span>
-              <div className="btn-star-container">
-                <svg className="btn-star btn-star-1" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-                <svg className="btn-star btn-star-2" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-                <svg className="btn-star btn-star-3" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-                <svg className="btn-star btn-star-4" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-                <svg className="btn-star btn-star-5" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-                <svg className="btn-star btn-star-6" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-              </div>
             </button>
             <button
               onClick={onThemeToggle}
@@ -161,9 +153,9 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
             <motion.div
               id="mobile-nav-panel"
               key="mobile-panel"
-              initial={{ height: 0, opacity: 0 }}
+              initial={shouldReduceMotion ? false : { height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
+              exit={shouldReduceMotion ? undefined : { height: 0, opacity: 0 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
               className="relative z-50 overflow-hidden border-t border-border md:hidden"
               role="dialog"
@@ -201,14 +193,6 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
                     className="site-navbar__cta flex w-full items-center justify-center gap-2 text-sm font-medium"
                   >
                     Book a Call <span aria-hidden>→</span>
-                    <div className="btn-star-container">
-                      <svg className="btn-star btn-star-1" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-                      <svg className="btn-star btn-star-2" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-                      <svg className="btn-star btn-star-3" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-                      <svg className="btn-star btn-star-4" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-                      <svg className="btn-star btn-star-5" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-                      <svg className="btn-star btn-star-6" viewBox="0 0 24 24"><path d="M12 0C12 6.62742 17.3726 12 24 12C17.3726 12 12 17.3726 12 24C12 17.3726 6.62742 12 0 12C6.62742 12 12 6.62742 12 0Z" fill="#FFFDEF"/></svg>
-                    </div>
                   </button>
                 </li>
               </ul>

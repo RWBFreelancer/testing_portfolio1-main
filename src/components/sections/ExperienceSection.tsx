@@ -1,15 +1,38 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 const roles = [
+  {
+    title: "Freelance AI Automation Developer",
+    company: "Freelance / Multiple Clients",
+    location: "Remote - Part-Time",
+    dates: "01/2026 - Present",
+    bullets: [
+      "Build automation workflows for small business clients using **n8n, Zapier, and Make**.",
+      "Connect AI tools such as Claude Code, Antigravity, and Codex to HubSpot and GoHighLevel to help clients manage sales, marketing, and customer data.",
+      "Set up Airtable and Supabase as backup databases to keep client data safe and organized.",
+      "Source and manage clients through Facebook and OnlineJobs.ph.",
+    ],
+  },
+  {
+    title: "Facebook Automation Specialist",
+    company: "Freelance / Multiple Clients",
+    location: "Remote - Part-Time",
+    dates: "08/2025 - Present",
+    bullets: [
+      "Built n8n workflows that monitor Facebook Page inboxes, sort customer messages with AI (ChatGPT, Claude), and send accurate auto-replies.",
+      "Integrated the Facebook Graph API with n8n to handle comment replies, direct messages, and lead sorting across **multiple client pages** simultaneously.",
+      "Implemented escalation rules routing sensitive or tricky questions to a human instead of AI.",
+      "Helped clients achieve **faster response times** and increased sales from customer messages.",
+    ],
+  },
   {
     title: "Technical Virtual Assistant",
     company: "Hi-Hyperlite",
     location: "Remote - Full-Time",
     dates: "07/2024 - Present",
     bullets: [
-      "Implemented AI-powered automation (ChatGPT, Claude) with n8n, AutoHotKey, and UiPath - **cutting response time from 2 hours to under 30 minutes**.",
-      "Optimized product listings and inventory across Shopify and Amazon, increasing monthly sales.",
+      "Implemented AI-powered automation (QuickCEP CRM, n8n, AutoHotKey) - **cutting response time from 2 hours to under 30 minutes**.",
       "Created customized lighting simulations using DIALux, AutoCAD, and Photoshop, resulting in **80% client approval rate** on first submission.",
       "Delivered multi-channel support (email, phone, chat) maintaining **95% first-contact resolution**.",
     ],
@@ -111,15 +134,16 @@ function ExperienceEntry({
   index: number;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const visibleBullets = role.bullets.slice(0, 2);
   const hiddenBullets = role.bullets.slice(2);
 
   return (
     <motion.li
-      initial={{ opacity: 0, y: 24 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.5, delay: index * 0.05 }}
+      transition={{ duration: 0.5, delay: shouldReduceMotion ? 0 : index * 0.05 }}
       className="experience-entry"
     >
       <div className="experience-entry__card">
@@ -176,7 +200,7 @@ export default function ExperienceSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-16 max-w-2xl">
           <span className="text-xs uppercase tracking-[0.3em] text-primary">
-            02 - Experience
+            02 — Experience
           </span>
           <h2 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">
             A track record of{" "}
