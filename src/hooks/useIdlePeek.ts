@@ -2,7 +2,7 @@
 // No longer loops. Fires a single peek when peekTrigger increments.
 // Used by FlipCard to react to sibling-flip events from FlipCardGrid.
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 interface UseIdlePeekOptions {
   peekDegrees?: number;

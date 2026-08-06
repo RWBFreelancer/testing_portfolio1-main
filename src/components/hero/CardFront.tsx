@@ -18,6 +18,8 @@ export default function CardFront({ project }: { project: Project }) {
           src={project.thumbnailUrl}
           alt={`${project.title} preview`}
           className="hero-project-card__image"
+          width={1280}
+          height={800}
           draggable={false}
         />
         <div className="hero-project-card__shade" />
@@ -38,9 +40,7 @@ export default function CardFront({ project }: { project: Project }) {
       <div className="hero-project-card__info">
         <div>
           <div className="hero-project-card__category">{project.category}</div>
-          <h3 className="hero-project-card__title font-display">
-            {project.title}
-          </h3>
+          <h3 className="hero-project-card__title font-display">{project.title}</h3>
           <p className="hero-project-card__description">{project.tagline}</p>
         </div>
 

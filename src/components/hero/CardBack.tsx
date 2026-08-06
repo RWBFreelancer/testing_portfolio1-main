@@ -32,7 +32,10 @@ export default function CardBack({ project, isVisible }: Props) {
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col p-4 sm:p-5">
-          <div className="min-h-0 flex-1 overflow-y-auto pr-1" style={{ wordWrap: "break-word", whiteSpace: "normal" }}>
+          <div
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1"
+            style={{ wordWrap: "break-word", whiteSpace: "normal" }}
+          >
             <div className="grid grid-cols-3 gap-2 border-b border-border pb-2.5">
               {project.metrics.map((m) => (
                 <div key={m.label} className="text-center">

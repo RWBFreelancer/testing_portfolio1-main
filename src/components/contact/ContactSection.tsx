@@ -1,13 +1,21 @@
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Calendar, CheckCircle, X, Linkedin, Github, Briefcase, Handshake } from "lucide-react";
+import {
+  Send,
+  Calendar,
+  CheckCircle,
+  X,
+  Linkedin,
+  Github,
+  Briefcase,
+  Handshake,
+} from "lucide-react";
 import { useContactForm } from "@/hooks/useContactForm";
 import { useCalendlyModal } from "@/hooks/useCalendlyModal";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
 const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const fadeUp = {
   hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 20 },
@@ -49,13 +57,7 @@ function SocialLink({ href, label, tooltip, icon }: SocialLinkProps) {
 }
 
 // ─── Success Modal ────────────────────────────────────────────────────────────
-function SuccessModal({
-  onClose,
-  onBookCall,
-}: {
-  onClose: () => void;
-  onBookCall: () => void;
-}) {
+function SuccessModal({ onClose, onBookCall }: { onClose: () => void; onBookCall: () => void }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -105,7 +107,7 @@ function SuccessModal({
       />
       <motion.div
         ref={panelRef}
-        className="relative z-10 flex w-full max-w-md flex-col gap-5 rounded-2xl border border-border bg-background p-8 shadow-glow"
+        className="relative z-10 flex w-full max-w-md flex-col gap-5 overscroll-contain rounded-2xl border border-border bg-background p-8 shadow-glow"
         initial={{
           opacity: 0,
           scale: prefersReducedMotion ? 1 : 0.96,
@@ -132,10 +134,7 @@ function SuccessModal({
             <CheckCircle className="text-primary" size={24} />
           </div>
           <div className="flex flex-col gap-2">
-            <h3
-              id="success-title"
-              className="font-display text-2xl text-foreground"
-            >
+            <h3 id="success-title" className="font-display text-2xl text-foreground">
               Thanks for reaching out.
             </h3>
             <p className="text-sm leading-relaxed text-muted-foreground">
@@ -194,16 +193,17 @@ function ContactFormCard() {
         )}
       </AnimatePresence>
 
-      <div className="contact-form-container mx-auto w-full bg-white/50 dark:bg-white/5 border border-black/10 dark:border-white/10 !backdrop-blur-md rounded-2xl p-8 sm:p-10 lg:py-12 !flex-none" style={{ boxShadow: "none" }}>
+      <div
+        className="contact-form-container mx-auto w-full bg-white/50 dark:bg-white/5 border border-black/10 dark:border-white/10 !backdrop-blur-md rounded-2xl p-8 sm:p-10 lg:py-12 !flex-none"
+        style={{ boxShadow: "none" }}
+      >
         <div className="mx-auto w-full max-w-[560px] flex h-full flex-col gap-5">
           <div className="flex flex-col gap-1 text-center sm:text-left">
             <span className="text-xs uppercase tracking-[0.3em] text-primary mb-2 block">
               Prefer to write first?
             </span>
             <h3 className="font-display text-2xl text-foreground">Send a Message</h3>
-            <p className="text-sm text-muted-foreground">
-              I'll get back to you within 24 hours.
-            </p>
+            <p className="text-sm text-muted-foreground">I'll get back to you within 24 hours.</p>
           </div>
 
           <form
@@ -236,6 +236,7 @@ function ContactFormCard() {
               </label>
               <input
                 id="contact-name"
+                name="name"
                 type="text"
                 value={form.name}
                 onChange={(e) => updateField("name", e.target.value)}
@@ -254,6 +255,7 @@ function ContactFormCard() {
               </label>
               <input
                 id="contact-email"
+                name="email"
                 type="email"
                 value={form.email}
                 onChange={(e) => updateField("email", e.target.value)}
@@ -277,10 +279,11 @@ function ContactFormCard() {
                       type="button"
                       onClick={() => toggleService(service)}
                       aria-pressed={selected}
-                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${selected
+                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
+                        selected
                           ? "border-primary bg-primary text-primary-foreground"
                           : "border-border bg-transparent text-muted-foreground hover:border-[var(--primary-50)] hover:text-foreground"
-                        }`}
+                      }`}
                     >
                       {service}
                     </button>
@@ -298,6 +301,7 @@ function ContactFormCard() {
               </label>
               <textarea
                 id="contact-message"
+                name="message"
                 value={form.message}
                 onChange={(e) => updateField("message", e.target.value)}
                 placeholder="What process, workflow, or task would you like to improve or automate?"
@@ -351,7 +355,6 @@ export default function ContactSection() {
         aria-labelledby="contact-heading"
       >
         <div className="mx-auto flex flex-col gap-12 sm:gap-16 items-center w-full max-w-7xl">
-
           {/* 1. HERO CTA BLOCK (Wrapped in a card container) */}
           <motion.div
             className="mx-auto w-full bg-white/50 dark:bg-white/5 border border-black/10 dark:border-white/10 !backdrop-blur-md rounded-2xl p-8 sm:p-10 lg:py-16 grid grid-cols-2 lg:grid-cols-5 items-center gap-10 lg:gap-4"
@@ -395,15 +398,16 @@ export default function ContactSection() {
                     id="contact-heading"
                     className="font-display text-3xl sm:text-4xl lg:text-5xl leading-tight text-foreground"
                   >
-                    Tell me what you'd like to<br />
+                    Tell me what you'd like to
+                    <br />
                     <span className="italic text-primary">improve or automate.</span>
                   </h2>
                 </div>
 
                 <p className="text-[15px] sm:text-base leading-relaxed text-[var(--foreground-85)] mx-auto max-w-[600px]">
-                  Whether you need AI automation, GoHighLevel support, or customer
-                  service workflow improvements — let's talk for 30 minutes, starting
-                  with a free workflow audit. No pitch, just clarity.
+                  Whether you need AI automation, GoHighLevel support, or customer service workflow
+                  improvements — let's talk for 30 minutes, starting with a free workflow audit. No
+                  pitch, just clarity.
                 </p>
               </div>
 
@@ -422,7 +426,8 @@ export default function ContactSection() {
 
                 <div className="flex flex-col gap-1 w-full text-center">
                   <p className="text-[13px] text-foreground leading-snug">
-                    30-minute discovery call &middot; <span className="opacity-70">No commitment. No sales pressure.</span>
+                    30-minute discovery call &middot;{" "}
+                    <span className="opacity-70">No commitment. No sales pressure.</span>
                   </p>
                 </div>
 
@@ -465,10 +470,8 @@ export default function ContactSection() {
           >
             <ContactFormCard />
           </motion.div>
-
         </div>
       </section>
     </TooltipProvider>
   );
 }
-

@@ -9,7 +9,7 @@ import { syncBackgroundLayer } from "@/lib/background-layer";
 const queryClient = new QueryClient();
 syncBackgroundLayer("dark");
 
-const router = createRouter({ 
+const router = createRouter({
   routeTree,
   context: { queryClient },
 });
@@ -23,5 +23,5 @@ declare module "@tanstack/react-router" {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>
+  </StrictMode>,
 );

@@ -6,8 +6,9 @@ export function useTheme() {
   const [theme, setTheme] = useState<ThemeMode>("dark");
 
   useEffect(() => {
-    const stored = (typeof window !== "undefined" &&
-      (localStorage.getItem("theme") as ThemeMode | null)) || null;
+    const stored =
+      (typeof window !== "undefined" && (localStorage.getItem("theme") as ThemeMode | null)) ||
+      null;
     if (stored) setTheme(stored);
   }, []);
 

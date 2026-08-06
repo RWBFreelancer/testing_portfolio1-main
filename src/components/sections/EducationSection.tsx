@@ -15,20 +15,16 @@ export default function EducationSection() {
 
         <div className="grid gap-6 md:grid-cols-2">
           <div className="education-card rounded-2xl border border-border p-7 shadow-glow">
-            <GraduationCap className="h-7 w-7 text-primary" />
+            <GraduationCap className="h-7 w-7 text-primary" aria-hidden="true" />
             <h3 className="mt-4 font-display text-2xl text-foreground">
               B.S. Electrical Engineering
             </h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Saint Louis University · 2015
-            </p>
+            <p className="mt-1 text-sm text-muted-foreground">Saint Louis University · 2015</p>
           </div>
 
           <div className="education-card rounded-2xl border border-border p-7 shadow-glow">
-            <Award className="h-7 w-7 text-primary" />
-            <h3 className="mt-4 font-display text-2xl text-foreground">
-              Certifications
-            </h3>
+            <Award className="h-7 w-7 text-primary" aria-hidden="true" />
+            <h3 className="mt-4 font-display text-2xl text-foreground">Certifications</h3>
             <ul className="mt-3 space-y-1.5 text-sm text-foreground/85">
               <li>Registered Electrical Engineer · Lic. No. 0057141</li>
               <li>Safety Officer 3 · PEME Consultancy Inc., Baguio City</li>

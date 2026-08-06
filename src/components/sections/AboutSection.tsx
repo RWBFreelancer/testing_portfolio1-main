@@ -19,10 +19,7 @@ export default function AboutSection() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section
-      id="about"
-      className="about-section relative overflow-hidden"
-    >
+    <section id="about" className="about-section relative overflow-hidden">
       <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-10 px-6 py-24 md:px-12 md:py-32 lg:gap-12 lg:px-20 lg:py-[120px]">
         {/* Section Label — above both columns */}
         <motion.span
@@ -45,9 +42,7 @@ export default function AboutSection() {
             transition={{ duration: 0.6 }}
             className="mx-auto flex w-full max-w-[320px] flex-col gap-6 lg:sticky lg:top-24 lg:mx-0 lg:max-w-[500px]"
           >
-            <div
-              className="about-profile-photo w-full overflow-hidden"
-            >
+            <div className="about-profile-photo w-full overflow-hidden">
               <img
                 src={profileImage}
                 alt="Portrait of Rey Binay-an, Automation Engineer"
@@ -74,28 +69,24 @@ export default function AboutSection() {
               Rey W. Binay-an
             </h2>
 
-            <p className="about-role-badge">
-              Automation Engineer &amp; AI Systems Builder
-            </p>
+            <p className="about-role-badge">Automation Engineer &amp; AI Systems Builder</p>
 
-            <p
-              className="max-w-[800px] border-l-[3px] border-primary pl-6 text-[18px] leading-[1.6] text-foreground/90 md:text-[22px]"
-            >
-              I help businesses automate repetitive processes, reduce manual work,
-              and build AI-powered systems that save time, improve customer
-              experience, and increase operational efficiency.
+            <p className="max-w-[800px] border-l-[3px] border-primary pl-6 text-[18px] leading-[1.6] text-foreground/90 md:text-[22px]">
+              I help businesses automate repetitive processes, reduce manual work, and build
+              AI-powered systems that save time, improve customer experience, and increase
+              operational efficiency.
             </p>
 
             <div className="max-w-[800px] space-y-4 text-[16px] leading-relaxed text-foreground/80 md:text-[18px]">
               <p>
-                Over the past 3+ years, I have worked across engineering, process
-                improvement, safety management, and automation development.
+                Over the past 3+ years, I have worked across engineering, process improvement,
+                safety management, and automation development.
               </p>
               <p>
-                Today, I specialize in designing AI agents, workflow automations,
-                and custom integrations using n8n, Zapier, Python, APIs, and modern
-                automation platforms. My goal is simple: eliminate repetitive work
-                so teams can focus on higher-value activities.
+                Today, I specialize in designing AI agents, workflow automations, and custom
+                integrations using n8n, Zapier, Python, APIs, and modern automation platforms. My
+                goal is simple: eliminate repetitive work so teams can focus on higher-value
+                activities.
               </p>
             </div>
 
@@ -108,20 +99,15 @@ export default function AboutSection() {
               </span>
               <div className="flex flex-wrap gap-x-5 gap-y-2 opacity-85">
                 {TECH_STACK.map((t) => (
-                  <span
-                    key={t}
-                    className="text-sm text-foreground/80 md:text-base"
-                  >
+                  <span key={t} className="text-sm text-foreground/80 md:text-base">
                     {t}
                   </span>
                 ))}
               </div>
             </div>
-
           </motion.div>
         </div>
       </div>
     </section>
-
   );
 }

@@ -1,9 +1,9 @@
 export default {
   plugins: {
-    'postcss-preset-env': {
+    "postcss-preset-env": {
       features: {
-        'color-function': true,
-        'is-pseudo-class': false,
+        "color-function": true,
+        "is-pseudo-class": false,
       },
     },
   },

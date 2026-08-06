@@ -39,7 +39,7 @@ export function useCalendlyModal() {
       }
 
       // Manually remove any lingering overlay or inline widget elements
-      const existingOverlays = document.querySelectorAll('.calendly-overlay');
+      const existingOverlays = document.querySelectorAll(".calendly-overlay");
       existingOverlays.forEach((overlay) => overlay.remove());
 
       Calendly.initPopupWidget({ url: CALENDLY_URL });

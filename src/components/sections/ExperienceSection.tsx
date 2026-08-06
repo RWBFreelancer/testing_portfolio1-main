@@ -114,13 +114,7 @@ function renderBullet(text: string) {
   );
 }
 
-function ExperienceEntry({
-  role,
-  index,
-}: {
-  role: (typeof roles)[number];
-  index: number;
-}) {
+function ExperienceEntry({ role, index }: { role: (typeof roles)[number]; index: number }) {
   const [expanded, setExpanded] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const visibleBullets = role.bullets.slice(0, 2);
@@ -141,9 +135,7 @@ function ExperienceEntry({
         </div>
 
         <h3 className="experience-entry__title font-display">{role.title}</h3>
-        <div className="experience-entry__company font-display">
-          {role.company}
-        </div>
+        <div className="experience-entry__company font-display">{role.company}</div>
 
         <ul className="experience-entry__bullets">
           {visibleBullets.map((bullet, bulletIndex) => (
@@ -156,10 +148,7 @@ function ExperienceEntry({
 
         {hiddenBullets.length > 0 && (
           <>
-            <ul
-              className={`experience-entry__extra${expanded ? " expanded" : ""
-                }`}
-            >
+            <ul className={`experience-entry__extra${expanded ? " expanded" : ""}`}>
               {hiddenBullets.map((bullet, bulletIndex) => (
                 <li key={bulletIndex} className="experience-entry__bullet">
                   <span aria-hidden className="experience-entry__bullet-dot" />
@@ -187,22 +176,15 @@ export default function ExperienceSection() {
     <section id="experience" className="experience-section relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-16 max-w-2xl">
-          <span className="text-xs uppercase tracking-[0.3em] text-primary">
-            02 — Experience
-          </span>
+          <span className="text-xs uppercase tracking-[0.3em] text-primary">02 — Experience</span>
           <h2 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">
-            A track record of{" "}
-            <span className="italic text-primary">measurable wins.</span>
+            A track record of <span className="italic text-primary">measurable wins.</span>
           </h2>
         </div>
 
         <ol className="experience-timeline">
           {roles.map((role, index) => (
-            <ExperienceEntry
-              key={`${role.company}-${index}`}
-              role={role}
-              index={index}
-            />
+            <ExperienceEntry key={`${role.company}-${index}`} role={role} index={index} />
           ))}
         </ol>
       </div>

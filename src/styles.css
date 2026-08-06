@@ -87,6 +87,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --glass-bg: rgba(255, 255, 255, 0.06);
   --glass-border: rgba(255, 255, 255, 0.10);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
@@ -870,7 +871,7 @@
     background: rgba(255, 255, 255, 0.06) !important;
   }
 
-  .contact-field:focus {
+  .contact-field:focus-visible {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-glow);
   }
@@ -1021,7 +1022,9 @@ html body .calendly-overlay {
   line-height: 1 !important;
   padding-bottom: 4px !important;
   /* Visual centering for the times symbol */
-  transition: all 0.2s ease !important;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease !important;
 }
 
 .calendly-close-overlay:hover::after {

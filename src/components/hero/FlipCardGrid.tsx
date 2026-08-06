@@ -32,9 +32,7 @@ export default function FlipCardGrid() {
             entryDelayMs={i * ENTRY_STAGGER_MS}
             isFlipped={activeCardId === project.id}
             onFlip={() => handleCardFlip(project.id)}
-            siblingPeekTrigger={
-              activeCardId === project.id ? 0 : siblingPeekTrigger
-            }
+            siblingPeekTrigger={activeCardId === project.id ? 0 : siblingPeekTrigger}
           />
         </div>
       ))}

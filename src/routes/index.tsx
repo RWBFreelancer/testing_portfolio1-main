@@ -21,8 +21,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Rey Binay-an — AI Automation Engineer" },
       {
         property: "og:description",
-        content:
-          "AI voice agents, chatbots, and workflow systems for real business bottlenecks.",
+        content: "AI voice agents, chatbots, and workflow systems for real business bottlenecks.",
       },
     ],
   }),

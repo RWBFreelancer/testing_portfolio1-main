@@ -37,14 +37,9 @@ function validateEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-const MALICIOUS_PATTERNS = [
-  /<script/i,
-  /javascript:/i,
-  /on\w+\s*=/i,
-  /https?:\/\//i,
-  /\bviagra\b/i,
-  /\bcasino\b/i,
-];
+// Deliberately does NOT reject plain URLs — mirrors api/contact.ts, which
+// stopped blocking links since prospects routinely paste their own site.
+const MALICIOUS_PATTERNS = [/<script/i, /javascript:/i, /on\w+\s*=/i, /\bviagra\b/i, /\bcasino\b/i];
 
 function containsMaliciousContent(value: string): boolean {
   return MALICIOUS_PATTERNS.some((p) => p.test(value));

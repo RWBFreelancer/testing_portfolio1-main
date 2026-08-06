@@ -16,8 +16,7 @@ interface FlipCardProps {
 }
 
 const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export default function FlipCard({
   project,
@@ -29,14 +28,8 @@ export default function FlipCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const { tiltDegrees } = useScrollTilt(cardRef);
 
-  const {
-    flipState,
-    dragRotation,
-    handleClick,
-    handleDragStart,
-    handleDragMove,
-    handleDragEnd,
-  } = useFlipCard({ isFlipped, onFlip });
+  const { flipState, dragRotation, handleClick, handleDragStart, handleDragMove, handleDragEnd } =
+    useFlipCard({ isFlipped, onFlip });
 
   const isInteracting = flipState === "dragging" || isFlipped;
 
@@ -60,9 +53,7 @@ export default function FlipCard({
     if (prefersReducedMotion) return;
     clearHoverPeekTimers();
     setHoverPeekRotation(15);
-    hoverPeekTimers.current.push(
-      setTimeout(() => setHoverPeekRotation(0), 220),
-    );
+    hoverPeekTimers.current.push(setTimeout(() => setHoverPeekRotation(0), 220));
   };
 
   const handleHoverEnd = () => {
@@ -109,14 +100,12 @@ export default function FlipCard({
         tabIndex={0}
         aria-label={`View ${project.title} project details`}
         aria-pressed={isFlipped}
-        className="hero-project-card-frame relative h-full w-full preserve-3d cursor-grab select-none active:cursor-grabbing focus-visible:outline-none"
+        className="hero-project-card-frame relative h-full w-full preserve-3d cursor-grab select-none touch-manipulation active:cursor-grabbing focus-visible:outline-none"
         animate={{
           rotateY: computedYRotation,
           rotateX: isInteracting ? 0 : tiltDegrees,
         }}
-        whileHover={
-          isInteracting || prefersReducedMotion ? {} : { rotateX: -6 }
-        }
+        whileHover={isInteracting || prefersReducedMotion ? {} : { rotateX: -6 }}
         transition={activeTransition}
         onClick={handleClick}
         onKeyDown={(e) => {

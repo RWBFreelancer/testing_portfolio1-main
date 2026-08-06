@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import type { ThemeMode } from "@/types";
@@ -22,6 +22,8 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
   const [activeHref, setActiveHref] = useState("#hero");
   const { openCalendly } = useCalendlyModal();
   const shouldReduceMotion = useReducedMotion();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -34,11 +36,36 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+
+    const panel = panelRef.current;
+    panel?.querySelector<HTMLElement>("a[href], button:not([disabled])")?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        menuButtonRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab" || !panel) return;
+
+      const focusable = panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
   useEffect(() => {
@@ -95,13 +122,14 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
                 <a
                   href={l.href}
                   onClick={(e) => {
+                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
                     e.preventDefault();
                     setActiveHref(l.href);
-                    document.getElementById(l.href.slice(1))?.scrollIntoView({ behavior: "smooth" });
+                    document
+                      .getElementById(l.href.slice(1))
+                      ?.scrollIntoView({ behavior: "smooth" });
                   }}
-                  className={`site-navbar__link text-sm${
-                    activeHref === l.href ? " active" : ""
-                  }`}
+                  className={`site-navbar__link text-sm${activeHref === l.href ? " active" : ""}`}
                 >
                   {l.label}
                 </a>
@@ -125,17 +153,14 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
               className="site-navbar__theme-toggle"
             >
               <Sun
-                className={`site-navbar__theme-icon h-5 w-5${
-                  theme === "dark" ? " active" : ""
-                }`}
+                className={`site-navbar__theme-icon h-5 w-5${theme === "dark" ? " active" : ""}`}
               />
               <Moon
-                className={`site-navbar__theme-icon h-5 w-5${
-                  theme === "light" ? " active" : ""
-                }`}
+                className={`site-navbar__theme-icon h-5 w-5${theme === "light" ? " active" : ""}`}
               />
             </button>
             <button
+              ref={menuButtonRef}
               onClick={() => setOpen((v) => !v)}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
@@ -151,6 +176,7 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
         <AnimatePresence>
           {open && (
             <motion.div
+              ref={panelRef}
               id="mobile-nav-panel"
               key="mobile-panel"
               initial={shouldReduceMotion ? false : { height: 0, opacity: 0 }}
@@ -168,11 +194,14 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
                     <a
                       href={l.href}
                       onClick={(e) => {
+                        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
                         e.preventDefault();
                         setActiveHref(l.href);
                         setOpen(false);
                         setTimeout(() => {
-                          document.getElementById(l.href.slice(1))?.scrollIntoView({ behavior: "smooth" });
+                          document
+                            .getElementById(l.href.slice(1))
+                            ?.scrollIntoView({ behavior: "smooth" });
                         }, 50);
                       }}
                       className={`site-navbar__link block w-full px-3 py-4 text-center text-base font-medium${

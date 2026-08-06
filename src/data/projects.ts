@@ -41,8 +41,8 @@ export const projects: Project[] = [
     techStack: ["QuickCEP", "Shopify", "GPT-4"],
     badge: "Always-on customer support",
     demoLabel: "4:22 Demo",
-    ctaLabel: "View Case Study",
-    ctaUrl: "https://www.youtube.com/watch?v=1vhT-IMSvVU",
+    ctaLabel: "View Website",
+    ctaUrl: "https://hi-hyperlite.com/",
   },
   {
     id: "project-3",

@@ -37,9 +37,7 @@ export default function HeroSection() {
           >
             I build AI automations
             <br />
-            <span className="italic text-primary">
-              that solve real bottlenecks.
-            </span>
+            <span className="italic text-primary">that solve real bottlenecks.</span>
           </motion.h1>
 
           <motion.p
@@ -49,8 +47,8 @@ export default function HeroSection() {
             }}
             className="hero-section__subtitle"
           >
-            AI voice agents, chatbots, and workflow systems designed to automate
-            repetitive operations and elevate customer experience.
+            AI voice agents, chatbots, and workflow systems designed to automate repetitive
+            operations and elevate customer experience.
           </motion.p>
 
           <motion.div

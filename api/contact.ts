@@ -2,14 +2,10 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 
-const MALICIOUS_PATTERNS = [
-  /<script/i,
-  /javascript:/i,
-  /on\w+\s*=/i,
-  /https?:\/\//i,
-  /\bviagra\b/i,
-  /\bcasino\b/i,
-];
+// Deliberately does NOT reject plain URLs: prospects routinely link their own
+// site, and blocking that costs more real inquiries than it stops spam. The
+// honeypot and rate limit carry that load instead.
+const MALICIOUS_PATTERNS = [/<script/i, /javascript:/i, /on\w+\s*=/i, /\bviagra\b/i, /\bcasino\b/i];
 
 function isMalicious(value: string | null | undefined) {
   if (!value) return false;
@@ -43,15 +39,27 @@ function recordRequest(ip: string) {
   requestLog.set(ip, timestamps);
 }
 
+const IS_DEV = process.env.NODE_ENV !== "production";
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // ── CORS for local dev ──────────────────────────────────────────────────
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  // ── CORS ────────────────────────────────────────────────────────────────
+  // Wide open in dev so the Vite server can call the function directly. In
+  // production only the site's own origin may post, so a third-party page
+  // can't drive this endpoint from a visitor's browser.
+  const allowedOrigin = IS_DEV ? "*" : (process.env.SITE_ORIGIN ?? "");
+  if (allowedOrigin) {
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+    res.setHeader("Vary", "Origin");
+  }
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") return res.status(200).end();
 
   // ── Health check ────────────────────────────────────────────────────────
+  // Dev only: the env map tells an unauthenticated caller which secrets are
+  // wired up, which is free reconnaissance in production.
   if (req.method === "GET") {
+    if (!IS_DEV) return res.status(404).json({ error: "Not found" });
     return res.json({
       ok: true,
       env: {
@@ -70,7 +78,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // ── 0. Rate limit ───────────────────────────────────────────────────────
   const clientIp = getClientIp(req);
   if (isRateLimited(clientIp)) {
-    return res.status(429).json({ error: "Too many requests. Please wait a few minutes and try again." });
+    return res
+      .status(429)
+      .json({ error: "Too many requests. Please wait a few minutes and try again." });
   }
   recordRequest(clientIp);
 
@@ -95,7 +105,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // ── 4. Malicious content ────────────────────────────────────────────────
   if (isMalicious(message) || isMalicious(name)) {
-    return res.status(400).json({ error: "Your message contains content that cannot be submitted." });
+    return res
+      .status(400)
+      .json({ error: "Your message contains content that cannot be submitted." });
   }
 
   const cleanName = typeof name === "string" ? name.trim() || null : null;
