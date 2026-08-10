@@ -137,3 +137,6 @@ dist
 
 # claude
 .claude
+
+# Vercel
+.vercel
