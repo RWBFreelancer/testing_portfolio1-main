@@ -30,8 +30,7 @@ don't write one into a file.
 I use three devices: a Windows PC, a Windows laptop, and my phone. GitHub is the
 only thing all three can see, so it's the source of truth.
 
-**Please commit and push to `origin` whenever you finish making changes to files
-in this repo.** Use a short, plain description of what changed. If I'm working
+**Please commit and push to `origin` whenever I command you to push.** Use a short, plain description of what changed. If I'm working
 from my phone later, anything unpushed is invisible to me.
 
 If a push fails because the remote has moved ahead, pull with rebase first, then
