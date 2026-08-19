@@ -43,6 +43,13 @@ push again.
 - Workflow JSON exports go in `/workflows`
 - Notes and docs go in `/docs`
 
+## Writing style
+
+Only report to me in ASD-STE100 Simplified Technical English: approved plain
+words, active voice, one instruction or idea per sentence, short sentences,
+short paragraphs. If you must use a technical term, explain it right after.
+Keep paths, commands, and numbers exact.
+
 ## Notes
 
 _Anything project-specific worth remembering between sessions:_
