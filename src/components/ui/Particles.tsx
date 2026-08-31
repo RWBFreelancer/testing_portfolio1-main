@@ -13,7 +13,7 @@ export default function Particles({ count = 18 }: { count?: number }) {
     [count],
   );
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden z-0" aria-hidden>
+    <div className="pointer-events-none fixed inset-0 overflow-hidden z-0" aria-hidden>
       {items.map((p) => (
         <span
           key={p.id}

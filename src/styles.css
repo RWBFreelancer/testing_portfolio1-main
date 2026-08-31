@@ -5,10 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px); 
+  --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: var(--radius-panel);
   --radius-2xl: calc(var(--radius) + 8px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -37,12 +37,38 @@
 
 :root {
   --radius: 1rem;
-  --font-display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --glass-bg: rgba(255, 255, 255, 0.52);
-  --glass-border: rgba(200, 220, 255, 0.60);
-  --glass-shadow: 0 8px 32px rgba(100, 140, 200, 0.18);
-  --glass-blur: blur(20px) saturate(180%);
+  /* Archivo carries a width axis, so headings can run semi-expanded like
+     observatory signage without loading a second file. Mono is reserved for
+     data: dates, metrics, tool names, eyebrow labels. */
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Instrument Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* ---- Type scale. Seven steps, fluid between 390px and 1440px. ---------- */
+  --step-mono: 0.6875rem; /* 11px  — eyebrow + micro labels */
+  --step--2: 0.75rem; /* 12px  — captions, meta */
+  --step--1: 0.875rem; /* 14px  — secondary text, bullets */
+  --step-0: clamp(1rem, 0.97rem + 0.13vw, 1.0625rem); /* 16 → 17  body */
+  --step-1: clamp(1.0625rem, 0.98rem + 0.36vw, 1.25rem); /* 17 → 20  lead */
+  --step-2: clamp(1.25rem, 1.07rem + 0.76vw, 1.625rem); /* 20 → 26  h3 */
+  --step-3: clamp(1.75rem, 1.29rem + 1.9vw, 2.75rem); /* 28 → 44  h2 */
+  --step-4: clamp(2.125rem, 1.42rem + 2.9vw, 3.5rem); /* 34 → 56  h1 */
+
+  /* ---- Two radii. One for controls, one for surfaces. -------------------- */
+  --radius-pill: 999px;
+  --radius-panel: 14px;
+  /* Panels, not glass. The nebula behind the page is already soft; if the
+     panels are soft too, everything mushes. Crisp surfaces on a soft ground is
+     what reads as designed. --glass-blur is none on purpose: it switches off
+     29 backdrop-filters at once. Only the navbar, which genuinely overlaps
+     scrolling content, opts back in via --navbar-blur. */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(94, 124, 168, 0.28);
+  --glass-shadow: 0 1px 2px rgba(28, 48, 80, 0.05), 0 12px 32px -20px rgba(28, 48, 80, 0.45);
+  --glass-blur: none;
+  --navbar-blur: blur(20px) saturate(180%);
+  /* The top edge of a panel catching light. */
+  --panel-rim: inset 0 1px 0 rgba(255, 255, 255, 0.85);
   --accent: #0066cc;
   --accent-glow: rgba(0, 102, 204, 0.25);
   --text-primary: #0a1628;
@@ -50,7 +76,7 @@
   --text-muted: #64748b;
 
   /* Light theme — warm cream + sky blue */
-  --background: #FAF6EE;
+  --background: #faf6ee;
   --foreground: #0a1628;
   --surface: oklch(0.99 0.008 85);
   --card: oklch(0.995 0.005 85);
@@ -70,7 +96,7 @@
   --input: oklch(0.88 0.02 230);
   --ring: oklch(0.65 0.16 240);
   --glow: oklch(0.75 0.14 235);
-  
+
   /* Opacity variants for Tailwind replacements */
   --primary-90: rgba(37, 99, 235, 0.9);
   --primary-80: rgba(37, 99, 235, 0.8);
@@ -88,10 +114,12 @@
 
 .dark {
   color-scheme: dark;
-  --glass-bg: rgba(255, 255, 255, 0.06);
-  --glass-border: rgba(255, 255, 255, 0.10);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-  --glass-blur: blur(20px) saturate(180%);
+  --glass-bg: rgba(10, 20, 44, 0.66);
+  --glass-border: rgba(126, 178, 240, 0.2);
+  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 18px 44px -28px rgba(0, 0, 0, 0.9);
+  --glass-blur: none;
+  --navbar-blur: blur(20px) saturate(180%);
+  --panel-rim: inset 0 1px 0 rgba(150, 200, 255, 0.16);
   --accent: #00d4ff;
   --accent-glow: rgba(0, 212, 255, 0.25);
   --text-primary: #f0f8ff;
@@ -119,7 +147,7 @@
   --input: rgba(255, 255, 255, 0.1);
   --ring: oklch(0.78 0.14 235);
   --glow: oklch(0.78 0.18 240);
-  
+
   /* Opacity variants for Tailwind replacements */
   --primary-90: rgba(96, 165, 250, 0.9);
   --primary-80: rgba(96, 165, 250, 0.8);
@@ -143,6 +171,20 @@
   html {
     scroll-behavior: smooth;
     background: transparent !important;
+    /* The navbar is fixed and 64px tall; without this, anchored sections land
+       underneath it and the top of each one is hidden. */
+    scroll-padding-top: 88px;
+  }
+
+  section[id] {
+    scroll-margin-top: 88px;
+  }
+
+  /* Respect the OS "reduce motion" setting for all scroll jumps. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   body {
@@ -177,27 +219,65 @@
   h3,
   h4 {
     font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 600;
     letter-spacing: -0.02em;
+    line-height: 1.06;
+    text-wrap: balance;
     color: var(--text-primary);
+  }
+
+  body {
+    font-size: var(--step-0);
+  }
+
+  /* One utility for every piece of data on the page: dates, metrics, tool
+     names, eyebrow labels. It is what makes the page look like it was built
+     by someone who reads logs. */
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: var(--step-mono);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
   }
 }
 
 @layer components {
+  .section-heading {
+    font-size: var(--step-3);
+    font-weight: 700;
+    font-stretch: 116%;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    max-width: 18ch;
+  }
+
   .site-navbar {
     position: sticky;
     top: 1rem;
     z-index: 100;
     margin: 0 auto;
     max-width: calc(100% - 2rem);
-    border-radius: 50px;
-    background: rgba(255, 255, 255, 0.50) !important;
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: var(--navbar-blur);
+    -webkit-backdrop-filter: var(--navbar-blur);
     border: 1px solid rgba(200, 220, 255, 0.55);
     box-shadow: var(--glass-shadow);
   }
 
   @media (min-width: 1280px) {
+    .section-heading {
+      font-size: var(--step-3);
+      font-weight: 700;
+      font-stretch: 116%;
+      letter-spacing: -0.03em;
+      line-height: 1.02;
+      max-width: 18ch;
+    }
+
     .site-navbar {
       max-width: 1200px;
     }
@@ -222,6 +302,11 @@
   .site-navbar__logo {
     color: inherit;
     text-decoration: none;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 800;
+    font-stretch: 118%;
+    letter-spacing: -0.03em;
   }
 
   .site-navbar__logo-bin {
@@ -246,7 +331,13 @@
   .site-navbar__link:focus-visible,
   .site-navbar__link.active {
     color: var(--accent);
-    outline: none;
+  }
+
+  /* Keyboard focus must not be shown by color alone (WCAG 2.4.7). */
+  .site-navbar__link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 4px;
   }
 
   .site-navbar__link.active::after {
@@ -271,12 +362,14 @@
     outline: none;
     color: #ffffff;
     background: transparent;
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
     padding: 8px 24px;
     font-weight: 500;
     cursor: pointer;
     z-index: 0;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
   }
 
   .dark .site-navbar__cta {
@@ -315,18 +408,45 @@
 
   .site-navbar__cta:after {
     z-index: -1;
-    content: '';
+    content: "";
     position: absolute;
     width: 100%;
     height: 100%;
     background: #111111;
     left: 0;
     top: 0;
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
   }
 
   .dark .site-navbar__cta:after {
     background: #ffffff;
+  }
+
+  /* Quieter than the booking CTA on purpose: downloading the CV is the
+     secondary action, and two solid pills side by side fight each other. */
+  .site-navbar__cv {
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    padding: 7px 16px;
+    background: var(--glass-bg);
+    color: var(--text-secondary);
+    font-weight: 500;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .site-navbar__cv:hover,
+  .site-navbar__cv:focus-visible {
+    color: var(--text-primary);
+    border-color: var(--accent);
+  }
+
+  .site-navbar__cv:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
   }
 
   .site-navbar__theme-toggle {
@@ -389,58 +509,132 @@
     max-width: 680px;
   }
 
-  .hero-section__badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 20px;
-    padding: 6px 18px;
-    border: 1px solid var(--glass-border);
-    border-radius: 50px;
-    background: var(--glass-bg) !important;
-    color: var(--text-secondary);
-    font-size: 24px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+  .hero-section__eyebrow {
+    display: block;
+    margin-bottom: 22px;
+    color: var(--text-muted);
   }
 
   .hero-section__headline {
+    max-width: 21ch;
     color: var(--text-primary);
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    font-weight: 400;
-    line-height: 1.05;
+    font-size: var(--step-4);
+    font-weight: 700;
+    font-stretch: 118%;
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+  }
+
+  /* The only accented headline phrase on the site. Used once, it is a
+     signature; used in every section, it was a template. */
+  .hero-section__headline-accent {
+    color: var(--accent);
   }
 
   .hero-section__subtitle {
-    margin: 16px 0 0;
+    margin: 20px 0 0;
+    max-width: 54ch;
     color: var(--text-secondary);
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: var(--step-1);
+    line-height: 1.55;
+  }
+
+  .hero-section__availability {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    margin: 22px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hero-section__availability li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 13px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    background: var(--glass-bg);
+    box-shadow: var(--panel-rim);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hero-section__availability-status {
+    color: var(--text-primary) !important;
+    font-weight: 500;
+  }
+
+  .hero-section__availability-dot {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.22);
   }
 
   .hero-section__scroll-cta {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 8px;
-    margin-top: 24px;
-    margin-bottom: 48px;
+    gap: 10px;
+    margin-top: 28px;
+    margin-bottom: 44px;
     color: var(--text-muted);
-    font-size: 13px;
-    letter-spacing: 0.1em;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
   }
 
+  /* The one deliberate grid break on the page. Everywhere else sits in a tidy
+     centred column; here the work escapes it — wider than the text measure,
+     unequal column widths, and each card set a little lower than the last, so
+     the row drifts like objects at different distances. */
   .hero-project-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: stretch;
-    gap: 24px;
-    max-width: 1200px;
+    grid-template-columns: 1.32fr 1fr 1fr;
+    align-items: start;
+    gap: 28px;
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 40px 96px;
+  }
+
+  .hero-project-grid__item:nth-child(2) {
+    transform: translateY(44px);
+  }
+
+  .hero-project-grid__item:nth-child(3) {
+    transform: translateY(88px);
+  }
+
+  /* The drift is decorative; it must not fight a reduced-motion preference or
+     survive into the stacked layouts below. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-project-grid__item:nth-child(2),
+    .hero-project-grid__item:nth-child(3) {
+      transform: none;
+    }
+  }
+
+  @media (max-width: 1100px) {
+    .hero-project-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: 1200px;
+      padding: 0 24px 32px;
+    }
+
+    .hero-project-grid__item:nth-child(2),
+    .hero-project-grid__item:nth-child(3) {
+      transform: none;
+    }
   }
 
   .hero-project-grid__item {
@@ -462,7 +656,7 @@
   }
 
   .hero-project-card-frame {
-    border-radius: 20px;
+    border-radius: var(--radius-panel);
   }
 
   .hero-project-card-frame:focus-visible {
@@ -475,7 +669,7 @@
     flex-direction: column;
     overflow: clip;
     border: 1px solid rgba(200, 220, 255, 0.65);
-    border-radius: 20px;
+    border-radius: var(--radius-panel);
     background: rgba(255, 255, 255, 0.52) !important;
     box-shadow: var(--glass-shadow);
     backdrop-filter: var(--glass-blur);
@@ -495,7 +689,7 @@
     height: 46%;
     min-height: 220px;
     overflow: clip;
-    border-radius: 16px 16px 0 0;
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
   }
 
   .hero-project-card__image {
@@ -516,12 +710,13 @@
     bottom: 12px;
     padding: 4px 12px;
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 50px;
-    background: rgba(0, 0, 0, 0.55);
+    border-radius: var(--radius-pill);
+    background: rgba(0, 0, 0, 0.62);
     color: white;
-    font-size: 12px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    font-family: var(--font-mono);
+    font-size: var(--step-mono);
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
   }
 
   .hero-project-card__play-wrap {
@@ -558,31 +753,34 @@
     margin-bottom: 10px;
     padding: 4px 12px;
     border: 1px solid var(--accent-glow);
-    border-radius: 50px;
-    background: rgba(0, 102, 204, 0.10) !important;
+    border-radius: var(--radius-pill);
+    background: rgba(0, 102, 204, 0.1) !important;
     color: var(--accent);
-    font-size: 11px;
-    letter-spacing: 0.1em;
+    font-family: var(--font-mono);
+    font-size: var(--step-mono);
+    font-weight: 500;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 
   .dark .hero-project-card__category {
-    background: rgba(0, 212, 255, 0.10) !important;
+    background: rgba(0, 212, 255, 0.1) !important;
   }
 
   .hero-project-card__title {
     margin-bottom: 8px;
     color: var(--text-primary);
-    font-size: 1.3rem;
+    font-size: var(--step-2);
     font-weight: 600;
-    line-height: 1.2;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
   }
 
   .hero-project-card__description {
     margin-bottom: 16px;
     color: var(--text-secondary);
-    font-size: 0.875rem;
-    line-height: 1.5;
+    font-size: var(--step--1);
+    line-height: 1.55;
   }
 
   .hero-project-card__metrics {
@@ -594,12 +792,14 @@
   .hero-project-card__metric {
     padding: 5px 12px;
     border: 1px solid var(--glass-border);
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
     background: rgba(0, 0, 0, 0.05);
     color: var(--text-secondary);
-    font-size: 10px;
-    letter-spacing: 0.08em;
+    font-family: var(--font-mono);
+    font-size: var(--step-mono);
+    letter-spacing: 0.06em;
     text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
   }
 
   .dark .hero-project-card__metric {
@@ -630,7 +830,6 @@
 }
 
 @layer components {
-
   .about-section,
   .experience-section {
     position: relative;
@@ -648,7 +847,7 @@
 
   .about-profile-photo {
     border: 2px solid transparent;
-    border-radius: 16px;
+    border-radius: var(--radius-panel);
     background:
       linear-gradient(var(--glass-bg), var(--glass-bg)) padding-box,
       linear-gradient(135deg, var(--accent), transparent) border-box !important;
@@ -657,7 +856,7 @@
 
   .about-profile-photo img {
     display: block;
-    border-radius: 14px;
+    border-radius: var(--radius-panel);
   }
 
   .about-role-badge {
@@ -667,12 +866,11 @@
     border-radius: 0 8px 8px 0;
     background: var(--glass-bg) !important;
     color: var(--accent);
-    font-size: 0.875rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.06em;
     line-height: 1.5;
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
   }
-
 
   .experience-timeline {
     position: relative;
@@ -698,11 +896,9 @@
   .experience-entry__card {
     padding: 20px 24px;
     border: 1px solid var(--glass-border);
-    border-radius: 16px;
+    border-radius: var(--radius-panel);
     background: var(--glass-bg) !important;
-    box-shadow: var(--glass-shadow);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: var(--panel-rim), var(--glass-shadow);
     transition:
       border-color 0.3s ease,
       box-shadow 0.3s ease;
@@ -728,27 +924,35 @@
   .experience-entry__date {
     padding: 3px 10px;
     border: 1px solid var(--glass-border);
-    border-radius: 50px;
-    background: rgba(255, 255, 255, 0.06) !important;
+    border-radius: var(--radius-pill);
+    background: transparent !important;
     color: var(--text-muted);
-    font-size: 11px;
+    font-family: var(--font-mono);
+    font-size: var(--step-mono);
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
   }
 
   .experience-entry__location {
     color: var(--text-muted);
-    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: var(--step-mono);
+    letter-spacing: 0.06em;
   }
 
   .experience-entry__title {
     color: var(--text-primary);
-    font-size: 1.5rem;
-    line-height: 1.2;
+    font-size: var(--step-2);
+    font-weight: 600;
+    line-height: 1.15;
   }
 
   .experience-entry__company {
-    margin-top: 4px;
-    color: var(--accent);
-    font-size: 1rem;
+    margin-top: 5px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.02em;
   }
 
   .experience-entry__bullets,
@@ -769,15 +973,17 @@
       margin-top 0.35s ease;
   }
 
+  /* Large enough for the longest bullet list at 375px width, so no text is cut. */
   .experience-entry__extra.expanded {
-    max-height: 360px;
+    max-height: 1200px;
     margin-top: 10px;
   }
 
   .experience-entry__bullet {
     display: flex;
     gap: 12px;
-    line-height: 1.6;
+    font-size: var(--step--1);
+    line-height: 1.65;
   }
 
   .experience-entry__bullet-dot {
@@ -790,24 +996,304 @@
   }
 
   .experience-entry__toggle {
-    margin-top: 12px;
+    margin-top: 14px;
     color: var(--accent);
-    font-size: 12px;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
     transition: color 0.2s ease;
   }
 
   .experience-entry__toggle:hover,
   .experience-entry__toggle:focus-visible {
     color: var(--text-primary);
-    outline: none;
   }
 
-  .education-card {
-    background: rgba(255, 255, 255, 0.52) !important;
+  /* Keyboard focus must not be shown by color alone (WCAG 2.4.7). */
+  .experience-entry__toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* The pre-automation career, framed as one credential instead of four cards
+     that compete with the automation work above it. */
+  .earlier-career {
+    margin-top: 32px;
+    box-shadow: var(--panel-rim);
+    margin-left: 24px;
+    padding: 24px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-panel);
+    background: var(--glass-bg);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
   }
-  
+
+  .earlier-career__lede {
+    max-width: 66ch;
+    color: var(--text-secondary);
+    font-size: var(--step--1);
+    line-height: 1.65;
+  }
+
+  .earlier-career__toggle {
+    margin-top: 14px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    transition: color 0.2s ease;
+  }
+
+  .earlier-career__toggle:hover,
+  .earlier-career__toggle:focus-visible {
+    color: var(--text-primary);
+  }
+
+  .earlier-career__toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .earlier-career__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+    list-style: none;
+    transition:
+      max-height 0.4s ease,
+      margin-top 0.4s ease;
+  }
+
+  /* Tall enough for all seven roles at 375px width, so nothing is cut off. */
+  .earlier-career__list.expanded {
+    max-height: 1600px;
+    margin-top: 18px;
+  }
+
+  .earlier-career__item {
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid var(--glass-border);
+  }
+
+  .earlier-career__dates {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step-mono);
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+    padding-top: 2px;
+  }
+
+  .earlier-career__title {
+    display: block;
+    color: var(--text-primary);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .earlier-career__company {
+    display: block;
+    margin-top: 2px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step-mono);
+    letter-spacing: 0.04em;
+  }
+
+  .earlier-career__note {
+    margin-top: 6px;
+    max-width: 66ch;
+    color: var(--text-secondary);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 520px) {
+    .earlier-career {
+      margin-left: 0;
+      padding: 20px;
+    }
+
+    .earlier-career__item {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+
+  /* A ruled register reads as a record, which is what credentials are. It also
+     cannot grow a hole the way an equal-height card grid does. */
+  .about-name {
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    font-weight: 800;
+    font-stretch: 120%;
+    letter-spacing: -0.04em;
+    line-height: 0.96;
+    color: var(--text-primary);
+  }
+
+  .about-lede {
+    color: var(--text-primary);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .about-body {
+    color: var(--text-secondary);
+    font-size: var(--step-0);
+    line-height: 1.65;
+  }
+
+  /* Tool names are data. Setting them in mono says so without a logo wall. */
+  .about-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .about-stack span {
+    padding: 5px 12px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.02em;
+  }
+
+  .contact-cta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 48px;
+    width: 100%;
+    padding: 40px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-panel);
+    background: var(--glass-bg);
+    box-shadow: var(--panel-rim), var(--glass-shadow);
+  }
+
+  .contact-cta__lede {
+    margin-top: 18px;
+    max-width: 54ch;
+    color: var(--text-secondary);
+    font-size: var(--step-0);
+    line-height: 1.6;
+  }
+
+  .contact-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 20px;
+    margin-top: 28px;
+  }
+
+  .contact-cta__note {
+    color: var(--text-muted);
+  }
+
+  .contact-cta__links {
+    display: flex;
+    gap: 32px;
+  }
+
+  .contact-cta__link-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .contact-cta__icons {
+    display: flex;
+    gap: 10px;
+  }
+
+  @media (max-width: 900px) {
+    .contact-cta {
+      grid-template-columns: 1fr;
+      align-items: start;
+      gap: 36px;
+      padding: 28px;
+    }
+  }
+
+  .credential-register {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--glass-border);
+  }
+
+  .credential-register__row {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr) minmax(0, 240px) 110px;
+    align-items: baseline;
+    gap: 20px;
+    padding: 18px 4px;
+    border-bottom: 1px solid var(--glass-border);
+    transition: background-color 0.2s ease;
+  }
+
+  .credential-register__row:hover {
+    background: var(--glass-bg);
+  }
+
+  .credential-register__year {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--step-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .credential-register__title {
+    color: var(--text-primary);
+    font-size: var(--step-0);
+    font-weight: 500;
+  }
+
+  .credential-register__issuer {
+    color: var(--text-secondary);
+    font-size: var(--step--1);
+  }
+
+  .credential-register__kind {
+    justify-self: start;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 860px) {
+    .credential-register__row {
+      grid-template-columns: 76px minmax(0, 1fr);
+      gap: 4px 16px;
+      padding: 16px 4px;
+    }
+
+    .credential-register__year {
+      grid-row: 1 / span 2;
+    }
+
+    .credential-register__kind {
+      grid-column: 2;
+      order: 3;
+      margin-top: 4px;
+    }
+  }
+
   .dark .education-card {
     background: var(--glass-bg) !important;
   }
@@ -836,7 +1322,7 @@
     flex: 1 1 0;
     padding: 32px;
     border: 1px solid var(--glass-border);
-    border-radius: 24px;
+    border-radius: var(--radius-panel);
     background: rgba(255, 255, 255, 0.52) !important;
     box-shadow: var(--glass-shadow);
     backdrop-filter: var(--glass-blur);
@@ -857,7 +1343,7 @@
     width: 100%;
     padding: 12px 16px;
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    border-radius: var(--radius-panel);
     background: rgba(255, 255, 255, 0.55) !important;
     color: var(--text-primary);
     font-size: 0.9rem;
@@ -881,11 +1367,13 @@
   }
 
   .site-footer {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.04em;
     padding: 24px 0;
     border-top: 1px solid var(--glass-border);
     background: transparent !important;
     color: var(--text-muted);
-    font-size: 0.8rem;
     text-align: center;
   }
 
@@ -952,11 +1440,19 @@
 
 .particle {
   position: absolute;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
   background: var(--glow);
   filter: blur(1px);
   animation: float-up linear infinite;
   pointer-events: none;
+}
+
+/* Stop the constant particle motion for users who ask for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .particle {
+    animation: none;
+    opacity: 0.4;
+  }
 }
 
 /* --- Custom Calendly Modal Styles --- */
@@ -971,8 +1467,9 @@ html body .calendly-overlay {
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
+  /* 100% not 100vw: 100vw ignores the scrollbar and adds a horizontal scrollbar. */
+  width: 100% !important;
+  height: 100dvh !important;
   z-index: 9999 !important;
   backdrop-filter: blur(4px) !important;
   border: none !important;
@@ -1046,7 +1543,7 @@ html body .calendly-overlay {
   width: 100% !important;
   max-width: 1060px !important;
   margin: auto !important;
-  border-radius: 12px !important;
+  border-radius: var(--radius-panel) !important;
   overflow: hidden !important;
   /* box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important; */
 }

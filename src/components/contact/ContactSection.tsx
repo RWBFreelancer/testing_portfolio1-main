@@ -46,7 +46,7 @@ function SocialLink({ href, label, tooltip, icon }: SocialLinkProps) {
           whileHover={prefersReducedMotion ? {} : { scale: 1.08 }}
           whileTap={prefersReducedMotion ? {} : { scale: 0.92 }}
           transition={{ type: "spring", stiffness: 260, damping: 24 }}
-          className="flex h-14 w-14 items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-muted-foreground backdrop-blur-md transition-colors hover:border-primary hover:text-primary hover:shadow-[0_0_12px_var(--accent-glow)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--glass-border)] bg-transparent text-muted-foreground transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {icon}
         </motion.a>
@@ -194,15 +194,15 @@ function ContactFormCard() {
       </AnimatePresence>
 
       <div
-        className="contact-form-container mx-auto w-full bg-white/50 dark:bg-white/5 border border-black/10 dark:border-white/10 !backdrop-blur-md rounded-2xl p-8 sm:p-10 lg:py-12 !flex-none"
+        className="contact-form-container mx-auto w-full rounded-[var(--radius-panel)] border border-[var(--glass-border)] bg-[var(--glass-bg)] p-8 sm:p-10 lg:py-12 !flex-none"
         style={{ boxShadow: "none" }}
       >
         <div className="mx-auto w-full max-w-[560px] flex h-full flex-col gap-5">
           <div className="flex flex-col gap-1 text-center sm:text-left">
-            <span className="text-xs uppercase tracking-[0.3em] text-primary mb-2 block">
-              Prefer to write first?
-            </span>
-            <h3 className="font-display text-2xl text-foreground">Send a Message</h3>
+            <span className="label-mono text-primary mb-2 block">Prefer to write first?</span>
+            <h3 className="section-heading" style={{ fontSize: "var(--step-2)" }}>
+              Send a message
+            </h3>
             <p className="text-sm text-muted-foreground">I'll get back to you within 24 hours.</p>
           </div>
 
@@ -321,7 +321,7 @@ function ContactFormCard() {
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-primary bg-transparent px-6 py-4 text-[15px] font-semibold text-primary transition-all hover:bg-[var(--primary-10)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-primary bg-transparent px-6 py-4 text-[length:var(--step--1)] font-semibold text-primary transition-all hover:bg-[var(--primary-10)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {status === "submitting" ? (
                   <>
@@ -355,106 +355,77 @@ export default function ContactSection() {
         aria-labelledby="contact-heading"
       >
         <div className="mx-auto flex flex-col gap-12 sm:gap-16 items-center w-full max-w-7xl">
-          {/* 1. HERO CTA BLOCK (Wrapped in a card container) */}
+          {/* Was a symmetric 1-3-1 grid: two tall empty rails holding four small
+              icons, with the whole block centred. Left-aligned and single-column
+              takes roughly half the height and stops out-measuring the work. */}
           <motion.div
-            className="mx-auto w-full bg-white/50 dark:bg-white/5 border border-black/10 dark:border-white/10 !backdrop-blur-md rounded-2xl p-8 sm:p-10 lg:py-16 grid grid-cols-2 lg:grid-cols-5 items-center gap-10 lg:gap-4"
+            className="contact-cta"
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-80px" }}
             custom={0}
-            style={{ boxShadow: "none" }}
           >
-            {/* Left rail — LinkedIn & GitHub (1/5) */}
-            <div className="order-2 lg:order-1 lg:col-span-1 flex flex-col items-center justify-center gap-4 lg:self-stretch border-t border-black/10 dark:border-white/10 pt-8 lg:border-t-0 lg:pt-0 lg:border-r">
-              <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-muted-foreground">
-                Connect
-              </span>
-              <div className="flex flex-row lg:flex-col items-center gap-4">
-                <SocialLink
-                  href="https://www.linkedin.com/in/reywbinay-an/"
-                  label="LinkedIn"
-                  tooltip="View LinkedIn Profile"
-                  icon={<Linkedin className="h-6 w-6" />}
-                />
-                <SocialLink
-                  href="https://github.com/RWBFreelancer"
-                  label="GitHub"
-                  tooltip="View GitHub Profile"
-                  icon={<Github className="h-6 w-6" />}
-                />
+            <div className="contact-cta__main">
+              <span className="label-mono text-primary">Let&rsquo;s talk</span>
+              <h2 id="contact-heading" className="section-heading mt-4">
+                Tell me what you&rsquo;d like to automate.
+              </h2>
+              <p className="contact-cta__lede">
+                Bring a process that eats your week. In 30 minutes I will tell you whether it can be
+                automated, roughly what it takes, and what it would save. No pitch.
+              </p>
+
+              <div className="contact-cta__actions">
+                <button
+                  onClick={openCalendly}
+                  aria-label="Open Calendly booking modal"
+                  className="site-navbar__cta inline-flex items-center justify-center gap-2 !py-3.5"
+                >
+                  <Calendar size={17} />
+                  Book a Call
+                </button>
+                <span className="contact-cta__note label-mono">
+                  30 min · no commitment · Baguio City, PH
+                </span>
               </div>
             </div>
 
-            {/* Middle — Main CTA content (3/5) */}
-            <div className="order-1 lg:order-2 col-span-2 lg:col-span-3 flex flex-col items-center gap-8">
-              {/* Inner Content Centered */}
-              <div className="flex flex-col gap-5 text-center w-full max-w-[680px]">
-                <div>
-                  <span className="text-xs uppercase tracking-[0.3em] text-primary block mb-3">
-                    04 — Let's talk
-                  </span>
-                  <h2
-                    id="contact-heading"
-                    className="font-display text-3xl sm:text-4xl lg:text-5xl leading-tight text-foreground"
-                  >
-                    Tell me what you'd like to
-                    <br />
-                    <span className="italic text-primary">improve or automate.</span>
-                  </h2>
+            <div className="contact-cta__links">
+              <div className="contact-cta__link-group">
+                <span className="label-mono text-muted-foreground">Hire me</span>
+                <div className="contact-cta__icons">
+                  <SocialLink
+                    href="https://www.onlinejobs.ph/jobseekers/info/859381"
+                    label="OnlineJobs.ph profile"
+                    tooltip="View OnlineJobs.ph Profile"
+                    icon={<Briefcase className="h-5 w-5" />}
+                  />
+                  <SocialLink
+                    href="https://www.upwork.com/freelancers/~01c1eaec96fb3b5c6c?mp_source=share"
+                    label="Upwork profile"
+                    tooltip="View Upwork Profile"
+                    icon={<Handshake className="h-5 w-5" />}
+                  />
                 </div>
-
-                <p className="text-[15px] sm:text-base leading-relaxed text-[var(--foreground-85)] mx-auto max-w-[600px]">
-                  Whether you need AI automation, GoHighLevel support, or customer service workflow
-                  improvements — let's talk for 30 minutes, starting with a free workflow audit. No
-                  pitch, just clarity.
-                </p>
               </div>
 
-              {/* Button & Footer Elements */}
-              <div className="w-full flex flex-col gap-5 items-center text-center mt-2">
-                <div className="w-full max-w-[420px]">
-                  <button
-                    onClick={openCalendly}
-                    aria-label="Open Calendly booking modal"
-                    className="site-navbar__cta flex w-full items-center justify-center gap-2 !py-4 text-[15px]"
-                  >
-                    <Calendar size={18} />
-                    Book a Call
-                  </button>
+              <div className="contact-cta__link-group">
+                <span className="label-mono text-muted-foreground">Connect</span>
+                <div className="contact-cta__icons">
+                  <SocialLink
+                    href="https://www.linkedin.com/in/reywbinay-an/"
+                    label="LinkedIn"
+                    tooltip="View LinkedIn Profile"
+                    icon={<Linkedin className="h-5 w-5" />}
+                  />
+                  <SocialLink
+                    href="https://github.com/RWBFreelancer"
+                    label="GitHub"
+                    tooltip="View GitHub Profile"
+                    icon={<Github className="h-5 w-5" />}
+                  />
                 </div>
-
-                <div className="flex flex-col gap-1 w-full text-center">
-                  <p className="text-[13px] text-foreground leading-snug">
-                    30-minute discovery call &middot;{" "}
-                    <span className="opacity-70">No commitment. No sales pressure.</span>
-                  </p>
-                </div>
-
-                <p className="text-xs text-muted-foreground/70 w-full text-center pt-2">
-                  Baguio City, Philippines
-                </p>
-              </div>
-            </div>
-
-            {/* Right rail — OnlineJobs.ph & Upwork (1/5) */}
-            <div className="order-3 lg:col-span-1 flex flex-col items-center justify-center gap-4 lg:self-stretch border-t border-black/10 dark:border-white/10 pt-8 lg:border-t-0 lg:pt-0 lg:border-l">
-              <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-muted-foreground">
-                Hire me
-              </span>
-              <div className="flex flex-row lg:flex-col items-center gap-4">
-                <SocialLink
-                  href="https://www.onlinejobs.ph/jobseekers/info/859381"
-                  label="OnlineJobs.ph profile"
-                  tooltip="View OnlineJobs.ph Profile"
-                  icon={<Briefcase className="h-6 w-6" />}
-                />
-                <SocialLink
-                  href="https://www.upwork.com/freelancers/~01c1eaec96fb3b5c6c?mp_source=share"
-                  label="Upwork profile"
-                  tooltip="View Upwork Profile"
-                  icon={<Handshake className="h-6 w-6" />}
-                />
               </div>
             </div>
           </motion.div>

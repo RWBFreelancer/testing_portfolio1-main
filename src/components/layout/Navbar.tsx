@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Download } from "lucide-react";
 import type { ThemeMode } from "@/types";
 import { useCalendlyModal } from "@/hooks/useCalendlyModal";
 
@@ -15,6 +15,8 @@ const links = [
   { href: "#experience", label: "Experience" },
   { href: "#contact", label: "Contact" },
 ];
+
+export const CV_URL = "/Reynaldo-Binay-an-CV.pdf";
 
 export default function Navbar({ theme, onThemeToggle }: Props) {
   const [open, setOpen] = useState(false);
@@ -110,7 +112,7 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
       <header className={`site-navbar${scrolled ? " scrolled" : ""}`}>
         <nav className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Left: Logo */}
-          <a href="#hero" className="site-navbar__logo font-display text-2xl">
+          <a href="#hero" className="site-navbar__logo">
             <span className="site-navbar__logo-bin">Bin</span>
             <span className="site-navbar__logo-ai">AI</span>
           </a>
@@ -138,14 +140,27 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
           </ul>
 
           {/* Right: CTA + icons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Recruiters copy your history into their own tracker; give them the file. */}
+            <a
+              href={CV_URL}
+              download
+              className="site-navbar__cv hidden items-center gap-1.5 text-sm lg:inline-flex"
+            >
+              <Download className="h-4 w-4" aria-hidden />
+              CV
+            </a>
+            {/* Visible on every width: most job-board visitors arrive on a phone. */}
             <button
               type="button"
               onClick={openCalendly}
               aria-label="Book a discovery call"
-              className="site-navbar__cta hidden items-center gap-2 text-sm sm:inline-flex"
+              className="site-navbar__cta inline-flex items-center gap-2 whitespace-nowrap !px-4 text-[13px] sm:!px-6 sm:text-sm"
             >
-              Book a Call <span aria-hidden>→</span>
+              Book a Call{" "}
+              <span aria-hidden className="hidden sm:inline">
+                →
+              </span>
             </button>
             <button
               onClick={onThemeToggle}
@@ -213,16 +228,15 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
                   </li>
                 ))}
                 <li className="w-full pt-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOpen(false);
-                      openCalendly();
-                    }}
-                    className="site-navbar__cta flex w-full items-center justify-center gap-2 text-sm font-medium"
+                  <a
+                    href={CV_URL}
+                    download
+                    onClick={() => setOpen(false)}
+                    className="site-navbar__cv flex w-full items-center justify-center gap-2 text-base font-medium"
                   >
-                    Book a Call <span aria-hidden>→</span>
-                  </button>
+                    <Download className="h-4 w-4" aria-hidden />
+                    Download CV
+                  </a>
                 </li>
               </ul>
             </motion.div>
