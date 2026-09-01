@@ -141,22 +141,31 @@ Everywhere else, `opacity` only. The repeated 24px fade-up on roughly fifteen
 elements was the Framer Motion default, and motion that never varies stops
 being motion and becomes a loading delay.
 
-Every animated component honours `useReducedMotion()`. The project-grid drift
-also has a `prefers-reduced-motion` reset in CSS.
+Every animated component honours `useReducedMotion()`, including the hero deck
+fan and the per-card scroll tilt: under reduced motion the fan transition is
+instant and the tilt is held flat.
 
 ---
 
 ## 7. The one grid break
 
 Everything on the page sits in a tidy centred column, except the project
-demos. Those get:
+demos. Those are a **deck fan** — a hand of cards, not a row:
 
-- unequal columns (`1.32fr 1fr 1fr`)
 - a wider container than the text measure (1440px vs 1200px)
-- each card translated 44px lower than the last, so the row drifts like
-  objects at different distances
+- eight fixed slots; slots with no project yet show a "coming soon" card
+- one card is at the front, the rest fan out left and right, tucked tighter
+  the further out they sit, dimmed to 74% and scaled down
+- the fan spread is measured from the real container width, so the outermost
+  card never reaches under the arrow buttons
 
-It resets to a plain grid below 1100px and under `prefers-reduced-motion`.
+Navigation is overlay arrow buttons, dots, arrow keys, Home/End, and clicking
+a background card. There is deliberately **no** scroll or wheel navigation: the
+deck sits in the hero, so capturing the wheel would trap a visitor who only
+wanted to scroll down the page.
+
+It resets to a plain grid below 1100px, where it shows the real projects plus
+a single "coming soon" card rather than the full eight slots.
 
 **Rule:** this is the *only* grid break. A second one makes both of them
 ordinary. If a future section wants to be special, it takes this one's place.

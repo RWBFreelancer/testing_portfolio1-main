@@ -15,6 +15,8 @@ export default function CardBack({ project, isVisible }: Props) {
         WebkitBackfaceVisibility: "hidden",
         transform: "rotateY(180deg)",
       }}
+      aria-hidden={!isVisible}
+      inert={!isVisible}
     >
       <div className="flex h-full w-full flex-col">
         <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-black">
@@ -39,21 +41,23 @@ export default function CardBack({ project, isVisible }: Props) {
             <div className="grid grid-cols-3 gap-2 border-b border-border pb-2.5">
               {project.metrics.map((m) => (
                 <div key={m.label} className="text-center">
-                  <div className="font-display text-base sm:text-lg text-primary">{m.value}</div>
-                  <div className="mt-0.5 text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground leading-tight">
+                  <div className="font-mono text-[length:var(--step-1)] text-[var(--accent)]">
+                    {m.value}
+                  </div>
+                  <div className="mt-0.5 font-mono text-[length:var(--step-mono)] uppercase tracking-wider text-muted-foreground leading-tight">
                     {m.label}
                   </div>
                 </div>
               ))}
             </div>
-            <p className="mt-2.5 text-[12px] sm:text-sm leading-relaxed text-foreground/85 break-words">
+            <p className="mt-2.5 text-[length:var(--step--1)] leading-relaxed text-foreground/85 break-words">
               {project.description}
             </p>
             <div className="mt-2.5 flex flex-wrap gap-1.5">
               {project.techStack.map((t) => (
                 <span
                   key={t}
-                  className="rounded-full bg-[var(--primary-10)] px-2 py-0.5 text-[10px] sm:text-[11px] text-primary"
+                  className="rounded-full bg-[var(--accent-glow)] px-2 py-0.5 font-mono text-[length:var(--step-mono)] text-[var(--accent)]"
                 >
                   {t}
                 </span>
@@ -66,7 +70,7 @@ export default function CardBack({ project, isVisible }: Props) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="mt-3 inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="cta-primary mt-3 w-full shrink-0 justify-center"
           >
             {project.ctaLabel}
             <ArrowUpRight className="h-4 w-4" />

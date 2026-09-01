@@ -25,26 +25,6 @@ export const projects: Project[] = [
     ctaUrl: "https://www.youtube.com/watch?v=P8bSvgO0-MI",
   },
   {
-    id: "project-2",
-    title: "Hyperlite LED Chatbot",
-    category: "AI Automation · Chatbot",
-    tagline: "24/7 AI chatbot handling support, product recommendations, and warranty inquiries.",
-    description:
-      "A QuickCEP-powered conversational assistant for an LED lighting ecommerce brand. Resolves support tickets, recommends fixtures, and processes warranty intake around the clock.",
-    metrics: [
-      { label: "First response", value: "<30s" },
-      { label: "Resolution rate", value: "95%" },
-      { label: "Coverage", value: "24/7" },
-    ],
-    youtubeId: "1vhT-IMSvVU",
-    thumbnailUrl: thumb2,
-    techStack: ["QuickCEP", "Shopify", "GPT-4"],
-    badge: "Always-on customer support",
-    demoLabel: "4:22 Demo",
-    ctaLabel: "View Website",
-    ctaUrl: "https://hi-hyperlite.com/",
-  },
-  {
     id: "project-3",
     title: "Family Law Inbound Agent",
     category: "AI Automation · Voice AI",
@@ -63,5 +43,25 @@ export const projects: Project[] = [
     demoLabel: "5:21 Demo",
     ctaLabel: "Watch the Demo",
     ctaUrl: "https://www.youtube.com/watch?v=9Hb7Q9BXREw",
+  },
+  {
+    id: "project-2",
+    title: "Hyperlite LED Chatbot",
+    category: "AI Automation · Chatbot",
+    tagline: "24/7 AI chatbot handling support, product recommendations, and warranty inquiries.",
+    description:
+      "A QuickCEP-powered conversational assistant for an LED lighting ecommerce brand. Resolves support tickets, recommends fixtures, and processes warranty intake around the clock.",
+    metrics: [
+      { label: "First response", value: "<30s" },
+      { label: "Resolution rate", value: "95%" },
+      { label: "Coverage", value: "24/7" },
+    ],
+    youtubeId: "1vhT-IMSvVU",
+    thumbnailUrl: thumb2,
+    techStack: ["QuickCEP", "Shopify", "GPT-4"],
+    badge: "Always-on customer support",
+    demoLabel: "4:22 Demo",
+    ctaLabel: "View Website",
+    ctaUrl: "https://hi-hyperlite.com/",
   },
 ];

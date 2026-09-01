@@ -3,13 +3,23 @@ import { motion } from "framer-motion";
 import { PlayCircle } from "lucide-react";
 import type { Project } from "@/types";
 
-export default function CardFront({ project }: { project: Project }) {
+export default function CardFront({
+  project,
+  isVisible = true,
+}: {
+  project: Project;
+  isVisible?: boolean;
+}) {
   const [hovered, setHovered] = useState(false);
 
+  // backface-visibility hides the turned-away face on screen, but leaves it in
+  // the tab order and the accessibility tree. inert removes it from both.
   return (
     <div
       className="hero-project-card absolute inset-0 backface-hidden"
       style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+      aria-hidden={!isVisible}
+      inert={!isVisible}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

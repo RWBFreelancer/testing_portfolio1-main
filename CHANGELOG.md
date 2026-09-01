@@ -7,6 +7,98 @@ Dates are `YYYY-MM-DD`.
 
 ---
 
+## [0.3.0] — 2026-09-01
+
+Branch: `main`
+
+The hero project row became a deck fan, so more than three projects fit. An
+adversarial review of the new deck followed, and its findings are fixed here.
+
+### Added
+
+- Hero deck fan. Eight fixed slots, one card at the front, the rest fanned
+  left and right. Replaces the three-column `.hero-project-grid`.
+- `CardPlaceholder` — a "More work coming soon" card for a slot with no
+  project yet. Slots 4-8 use it today.
+- Overlay arrow buttons, a dot strip, a `NN / NN` counter, and an instruction
+  line above the deck. Arrow keys, Home and End work on the deck itself.
+- `useMediaQuery` hook. The fan positions are inline transforms, which a
+  stylesheet cannot undo, so the fallback layout has to be a JS decision.
+- The fan spread is measured from the real container width with a
+  `ResizeObserver`, so eight cards fit at any width from 1101px up.
+
+### Changed
+
+- The deck card surface got its own `--card-bg` token, at 0.96 alpha instead
+  of the shared `--glass-bg` at 0.82. The fan overlaps its own cards, and at
+  0.82 the title of the card behind read through the card in front. Still not
+  fully opaque, so the page ground still tints it. Panels elsewhere on the
+  page do not overlap, so they keep `--glass-bg`.
+- Project order: the Hyperlite LED Chatbot is third in the roster now, behind
+  the two family-law voice agents.
+
+### Removed
+
+- Wheel and scroll navigation of the deck. It was built, then cut: the deck is
+  in the hero, so capturing the wheel meant a visitor scrolling down the page
+  had to flick seven times before the page moved. That is scroll-jacking.
+- `useIdlePeek`. The sibling-peek mechanism it served was removed with the old
+  grid, and the hook could no longer fire.
+- `FlipCard`'s unused `entryDelayMs` prop and an empty `whileHover={{}}`.
+
+### Fixed
+
+Everything below came out of an adversarial review of the deck.
+
+- The turned-away card face stayed in the tab order and the accessibility
+  tree. `backface-visibility: hidden` hides a face on screen only. Both faces
+  now take `aria-hidden` and `inert`, so keyboard focus never lands on an
+  invisible "Watch the Demo" link and a screen reader stops reading every
+  project twice.
+- The deck used `role="listbox"` / `role="option"`, which forbids focusable
+  descendants — and every card held a button and a link. It is now the
+  `carousel` / `slide` roledescription pattern, with a polite live region that
+  announces the card as it changes.
+- The arrow buttons used `disabled`, so reaching either end of the deck threw
+  focus to `<body>` and the next Tab restarted at the top of the page. They
+  now use `aria-disabled` and stay focusable.
+- An open card kept its YouTube video playing after the visitor scrolled away.
+  An `IntersectionObserver` now closes the card when the deck leaves the view.
+- `useScrollTilt` ignored `prefers-reduced-motion` entirely, and `FlipCard`
+  read the preference once at module load, so it never noticed a change made
+  mid-session. Both now go through `useReducedMotion()`, and the tilt is held
+  flat when reduced motion is on.
+- The dots were 9px targets — WCAG 2.2 asks for 24px — and the inactive dot
+  measured 1.91:1 against the light ground, where 3:1 is the minimum. The
+  painted dot is still 9px inside a 24px button, at full `--text-muted`.
+- `CardBack` broke the type scale in five places (`text-[9px]`, `text-[10px]`,
+  `text-[12px]`, `text-base`, `text-sm`) and set metric values and tool names
+  in Archivo rather than mono. It now uses `--step-*` and `--font-mono`, and
+  matches the card front it flips from.
+- `CardBack` also used `--primary`, a second blue, so flipping a card changed
+  the accent colour. It uses `--accent` and `.cta-primary` now.
+- Two deck surfaces hard-coded `rgba(0, 102, 204, …)`, the light-theme blue,
+  under a `var(--accent)` foreground. In dark theme the wash stayed blue while
+  the icon went cyan. Both are `color-mix` on `--accent` now.
+- At 1280px both arrow buttons overlapped the outermost card's tilted top
+  corner by about 22px, and won on `z-index`, so a click aimed at the card
+  stepped the deck instead. The reserved edge lane went from 76px to 140px,
+  which clears the 60px button plus the 96px rotation swing.
+- The card front's tagline could push the metrics past the card's clipped
+  bottom edge with no scrollbar. It is capped at three lines.
+- The stacked fallback below 1101px rendered all eight slots, which on a phone
+  is about 2,700px of "coming soon". It now shows the real projects plus one
+  placeholder.
+- Clicking a background card to bring it to the front stopped working. The
+  `inert` attribute added above keeps a hidden card out of the tab order, but
+  it swallows clicks too. The click target is now a transparent overlay button
+  that is a sibling of the inert wrapper, so the card is clickable while its
+  content stays hidden from the keyboard and the screen reader. Hovering a
+  background card now also shows a small "View" badge.
+- A dead `@media (max-width: 1024px)` rule that restated the base rule.
+
+---
+
 ## [0.2.1] — 2026-09-01
 
 Branch: `redesign/hire-ready-and-visual-system`
