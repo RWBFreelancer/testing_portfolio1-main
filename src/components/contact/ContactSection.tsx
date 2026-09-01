@@ -158,7 +158,7 @@ function SuccessModal({ onClose, onBookCall }: { onClose: () => void; onBookCall
               onClose();
               onBookCall();
             }}
-            className="site-navbar__cta flex flex-1 items-center justify-center gap-2 !py-2.5 !text-sm"
+            className="cta-primary flex-1 !py-2.5 !text-sm"
           >
             <Calendar size={15} />
             Book a Call
@@ -193,11 +193,8 @@ function ContactFormCard() {
         )}
       </AnimatePresence>
 
-      <div
-        className="contact-form-container mx-auto w-full rounded-[var(--radius-panel)] border border-[var(--glass-border)] bg-[var(--glass-bg)] p-8 sm:p-10 lg:py-12 !flex-none"
-        style={{ boxShadow: "none" }}
-      >
-        <div className="mx-auto w-full max-w-[560px] flex h-full flex-col gap-5">
+      <div className="contact-form-container">
+        <div className="flex h-full w-full flex-col gap-5">
           <div className="flex flex-col gap-1 text-center sm:text-left">
             <span className="label-mono text-primary mb-2 block">Prefer to write first?</span>
             <h3 className="section-heading" style={{ fontSize: "var(--step-2)" }}>
@@ -242,7 +239,7 @@ function ContactFormCard() {
                 onChange={(e) => updateField("name", e.target.value)}
                 placeholder="Your name"
                 autoComplete="name"
-                className="contact-field !bg-background/50"
+                className="contact-field"
               />
             </div>
 
@@ -262,7 +259,7 @@ function ContactFormCard() {
                 placeholder="you@company.com"
                 autoComplete="email"
                 required
-                className="contact-field !bg-background/50"
+                className="contact-field"
               />
             </div>
 
@@ -307,7 +304,7 @@ function ContactFormCard() {
                 placeholder="What process, workflow, or task would you like to improve or automate?"
                 rows={3}
                 required
-                className="contact-field !bg-background/50 resize-none leading-relaxed"
+                className="contact-field resize-none leading-relaxed"
               />
             </div>
 
@@ -380,7 +377,7 @@ export default function ContactSection() {
                 <button
                   onClick={openCalendly}
                   aria-label="Open Calendly booking modal"
-                  className="site-navbar__cta inline-flex items-center justify-center gap-2 !py-3.5"
+                  className="cta-primary !px-7 !py-3.5 text-[15px]"
                 >
                   <Calendar size={17} />
                   Book a Call
@@ -432,7 +429,7 @@ export default function ContactSection() {
 
           {/* 2. SECONDARY CARD (Low-Pressure Fallback) */}
           <motion.div
-            className="w-full flex justify-center"
+            className="w-full"
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"

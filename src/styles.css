@@ -62,18 +62,38 @@
      what reads as designed. --glass-blur is none on purpose: it switches off
      29 backdrop-filters at once. Only the navbar, which genuinely overlaps
      scrolling content, opts back in via --navbar-blur. */
-  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-bg: rgba(255, 255, 255, 0.82);
   --glass-border: rgba(94, 124, 168, 0.28);
-  --glass-shadow: 0 1px 2px rgba(28, 48, 80, 0.05), 0 12px 32px -20px rgba(28, 48, 80, 0.45);
+  --glass-shadow:
+    0 1px 2px rgba(28, 48, 80, 0.05), 0 2px 8px -4px rgba(28, 48, 80, 0.14),
+    0 24px 56px -34px rgba(28, 48, 80, 0.55);
   --glass-blur: none;
   --navbar-blur: blur(20px) saturate(180%);
   /* The top edge of a panel catching light. */
   --panel-rim: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  /* A single soft highlight falling across the top-left of a panel, as if one
+     light source lit the whole page. Layered over the fill, never instead of
+     it, so text always sits on an opaque ground. */
+  --panel-sheen: radial-gradient(
+    140% 100% at 8% -10%,
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0) 58%
+  );
   --accent: #0066cc;
   --accent-glow: rgba(0, 102, 204, 0.25);
+  /* The one loud control on the page. Gradient plus glow, with an ink colour
+     that clears 4.5:1 against the darker end of the gradient. */
+  --cta-from: #1272e6;
+  --cta-to: #0b47a8;
+  --cta-ink: #ffffff;
+  --cta-glow: rgba(14, 90, 200, 0.42);
+  /* Inputs sit one step deeper than the panel they live in. */
+  --field-bg: rgba(255, 255, 255, 0.62);
   --text-primary: #0a1628;
   --text-secondary: #334155;
-  --text-muted: #64748b;
+  /* Composited over the light nebula the old #64748b landed at 4.41:1 in the
+     footer, just under the bar. */
+  --text-muted: #55637a;
 
   /* Light theme — warm cream + sky blue */
   --background: #faf6ee;
@@ -83,7 +103,9 @@
   --card-foreground: #0a1628;
   --popover: oklch(0.995 0.005 85);
   --popover-foreground: #0a1628;
-  --primary: oklch(0.65 0.16 240);
+  /* Also used as a text colour via Tailwind's text-primary, so it has to
+     clear 4.5:1 on a light panel — not just look right as a button fill. */
+  --primary: oklch(0.52 0.17 245);
   --primary-foreground: oklch(0.99 0.005 85);
   --secondary: oklch(0.92 0.03 230);
   --secondary-foreground: #334155;
@@ -114,17 +136,31 @@
 
 .dark {
   color-scheme: dark;
-  --glass-bg: rgba(10, 20, 44, 0.66);
-  --glass-border: rgba(126, 178, 240, 0.2);
-  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 18px 44px -28px rgba(0, 0, 0, 0.9);
+  --glass-bg: rgba(10, 20, 44, 0.78);
+  --glass-border: rgba(126, 178, 240, 0.22);
+  --glass-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5), 0 2px 10px -4px rgba(0, 0, 0, 0.6),
+    0 28px 64px -34px rgba(0, 0, 0, 0.95);
   --glass-blur: none;
   --navbar-blur: blur(20px) saturate(180%);
-  --panel-rim: inset 0 1px 0 rgba(150, 200, 255, 0.16);
+  --panel-rim: inset 0 1px 0 rgba(150, 200, 255, 0.18);
+  --panel-sheen: radial-gradient(
+    140% 100% at 8% -10%,
+    rgba(104, 170, 255, 0.13),
+    rgba(104, 170, 255, 0) 58%
+  );
   --accent: #00d4ff;
   --accent-glow: rgba(0, 212, 255, 0.25);
+  --cta-from: #5fe6ff;
+  --cta-to: #2f86ff;
+  --cta-ink: #041325;
+  --cta-glow: rgba(0, 190, 255, 0.45);
+  --field-bg: rgba(4, 12, 30, 0.55);
   --text-primary: #f0f8ff;
   --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  /* Was #64748b, which measured 3.84:1 on a panel. Mono meta lives at 11px,
+     so it needs the full 4.5:1. */
+  --text-muted: #8c9db5;
 
   /* Dark theme — cosmic navy with sky blue glow */
   --background: #010717;
@@ -352,74 +388,111 @@
     transform: translateX(-50%);
   }
 
+  /* The one loud control on the page. Named .cta-primary going forward;
+     .site-navbar__cta is kept because the contact section and the success
+     modal already call it. Gradient fill, ink text, and a glow that reads as
+     lit rather than as a drop shadow. */
+  .cta-primary,
   .site-navbar__cta {
     position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     border: none;
     outline: none;
-    color: #ffffff;
-    background: transparent;
+    color: var(--cta-ink);
+    background: linear-gradient(135deg, var(--cta-from) 0%, var(--cta-to) 100%);
     border-radius: var(--radius-pill);
-    padding: 8px 24px;
-    font-weight: 500;
+    padding: 9px 26px;
+    font-weight: 600;
+    letter-spacing: 0.005em;
     cursor: pointer;
-    z-index: 0;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.34),
+      0 1px 2px rgba(0, 0, 0, 0.24),
+      0 10px 26px -12px var(--cta-glow);
     transition:
       transform 0.25s ease,
-      box-shadow 0.25s ease;
+      box-shadow 0.25s ease,
+      filter 0.25s ease;
   }
 
-  .dark .site-navbar__cta {
-    color: #111111;
+  /* A specular band that sweeps across on hover. Pure decoration, so it sits
+     behind the label and is switched off under reduced motion. */
+  .cta-primary::before,
+  .site-navbar__cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      105deg,
+      transparent 32%,
+      rgba(255, 255, 255, 0.42) 48%,
+      transparent 64%
+    );
+    transform: translateX(-120%);
+    transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
+  .cta-primary:hover::before,
+  .cta-primary:focus-visible::before,
+  .site-navbar__cta:hover::before,
+  .site-navbar__cta:focus-visible::before {
+    transform: translateX(120%);
+  }
+
+  .cta-primary:hover,
+  .cta-primary:focus-visible,
   .site-navbar__cta:hover,
   .site-navbar__cta:focus-visible {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px var(--accent-glow);
+    filter: saturate(1.06);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.42),
+      0 2px 4px rgba(0, 0, 0, 0.22),
+      0 18px 38px -14px var(--cta-glow);
     outline: none;
   }
 
+  /* Focus must not read as hover alone (WCAG 2.4.7). */
+  .cta-primary:focus-visible,
+  .site-navbar__cta:focus-visible {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.42),
+      0 0 0 2px var(--background),
+      0 0 0 4px var(--accent),
+      0 18px 38px -14px var(--cta-glow);
+  }
+
+  .cta-primary:active,
+  .site-navbar__cta:active {
+    transform: translateY(0);
+    box-shadow:
+      inset 0 2px 6px rgba(0, 0, 0, 0.28),
+      0 6px 16px -10px var(--cta-glow);
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .cta-primary,
     .site-navbar__cta {
       transition: box-shadow 0.25s ease;
     }
 
+    .cta-primary::before,
+    .site-navbar__cta::before {
+      display: none;
+    }
+
+    .cta-primary:hover,
+    .cta-primary:focus-visible,
     .site-navbar__cta:hover,
     .site-navbar__cta:focus-visible {
       transform: none;
     }
-  }
-
-  .site-navbar__cta:active {
-    color: #000000;
-  }
-
-  .dark .site-navbar__cta:active {
-    color: #ffffff;
-  }
-
-  .site-navbar__cta:active:after {
-    background: transparent;
-  }
-
-  .site-navbar__cta:after {
-    z-index: -1;
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #111111;
-    left: 0;
-    top: 0;
-    border-radius: var(--radius-pill);
-  }
-
-  .dark .site-navbar__cta:after {
-    background: #ffffff;
   }
 
   /* Quieter than the booking CTA on purpose: downloading the CV is the
@@ -668,20 +741,14 @@
     height: 100%;
     flex-direction: column;
     overflow: clip;
-    border: 1px solid rgba(200, 220, 255, 0.65);
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius-panel);
-    background: rgba(255, 255, 255, 0.52) !important;
-    box-shadow: var(--glass-shadow);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    background: var(--panel-sheen), var(--glass-bg);
+    box-shadow: var(--panel-rim), var(--glass-shadow);
     transition:
       box-shadow 0.3s ease,
-      border-color 0.3s ease;
-  }
-
-  .dark .hero-project-card {
-    border: 1px solid var(--glass-border);
-    background: var(--glass-bg) !important;
+      border-color 0.3s ease,
+      transform 0.3s ease;
   }
 
   .hero-project-card__thumb {
@@ -897,7 +964,7 @@
     padding: 20px 24px;
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-panel);
-    background: var(--glass-bg) !important;
+    background: var(--panel-sheen), var(--glass-bg);
     box-shadow: var(--panel-rim), var(--glass-shadow);
     transition:
       border-color 0.3s ease,
@@ -1019,14 +1086,12 @@
      that compete with the automation work above it. */
   .earlier-career {
     margin-top: 32px;
-    box-shadow: var(--panel-rim);
     margin-left: 24px;
     padding: 24px;
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-panel);
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    background: var(--panel-sheen), var(--glass-bg);
+    box-shadow: var(--panel-rim), var(--glass-shadow);
   }
 
   .earlier-career__lede {
@@ -1168,17 +1233,24 @@
     letter-spacing: 0.02em;
   }
 
-  .contact-cta {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
-    gap: 48px;
+  /* Both contact cards share one shell: same width, same fill, same rim.
+     They read as a pair because they are literally the same panel. */
+  .contact-cta,
+  .contact-form-container {
     width: 100%;
+    max-width: 820px;
+    margin-inline: auto;
     padding: 40px;
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-panel);
-    background: var(--glass-bg);
+    background: var(--panel-sheen), var(--glass-bg);
     box-shadow: var(--panel-rim), var(--glass-shadow);
+  }
+
+  .contact-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
   }
 
   .contact-cta__lede {
@@ -1193,7 +1265,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 16px 20px;
+    gap: 14px 20px;
     margin-top: 28px;
   }
 
@@ -1201,9 +1273,14 @@
     color: var(--text-muted);
   }
 
+  /* Sits under the button now, not floated into a bottom-right corner. The
+     hairline rule separates the ask from the alternatives. */
   .contact-cta__links {
     display: flex;
-    gap: 32px;
+    flex-wrap: wrap;
+    gap: 20px 44px;
+    padding-top: 28px;
+    border-top: 1px solid var(--glass-border);
   }
 
   .contact-cta__link-group {
@@ -1217,12 +1294,15 @@
     gap: 10px;
   }
 
-  @media (max-width: 900px) {
-    .contact-cta {
-      grid-template-columns: 1fr;
-      align-items: start;
-      gap: 36px;
-      padding: 28px;
+  @media (max-width: 640px) {
+    .contact-cta,
+    .contact-form-container {
+      padding: 26px;
+    }
+
+    .contact-cta__actions {
+      align-items: stretch;
+      flex-direction: column;
     }
   }
 
@@ -1319,14 +1399,6 @@
   .contact-form-container {
     display: flex;
     flex-direction: column;
-    flex: 1 1 0;
-    padding: 32px;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-panel);
-    background: rgba(255, 255, 255, 0.52) !important;
-    box-shadow: var(--glass-shadow);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
   }
 
   .contact-form-container form {
@@ -1335,26 +1407,18 @@
     flex-direction: column;
   }
 
-  .dark .contact-form-container {
-    background: rgba(255, 255, 255, 0.06) !important;
-  }
-
   .contact-field {
     width: 100%;
     padding: 12px 16px;
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-panel);
-    background: rgba(255, 255, 255, 0.55) !important;
+    background: var(--field-bg);
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: var(--step--1);
     outline: none;
     transition:
       border-color 0.2s ease,
       box-shadow 0.2s ease;
-  }
-
-  .dark .contact-field {
-    background: rgba(255, 255, 255, 0.06) !important;
   }
 
   .contact-field:focus-visible {
@@ -1379,12 +1443,6 @@
 
   .site-footer a {
     color: inherit;
-  }
-
-  @media (max-width: 640px) {
-    .contact-form-container {
-      padding: 24px;
-    }
   }
 }
 

@@ -96,3 +96,58 @@ requests, no horizontal overflow.
 - Project metrics carry no attribution or measurement note.
 - The site still shows no automation actually running — the proof is three
   YouTube videos totalling about 11 minutes.
+
+---
+
+## [0.2.1] — 2026-09-01
+
+Branch: `redesign/hire-ready-and-visual-system`
+
+Polish pass on the contact section and the panel treatment, plus a contrast
+audit that turned up three real failures.
+
+### Fixed
+
+- The two contact cards had different backgrounds. The form card still carried
+  a hardcoded `rgba(255,255,255,0.52)` fill with a `!important` and an inline
+  `boxShadow: none`, so it missed the panel fill, the lit rim and the shadow
+  that the Book-a-Call card had. Both now share one shell.
+- The Book-a-Call card was a two-column grid with the social icons bottom-right
+  against a tall left column, which read lopsided. It is now a single column,
+  same 820px width as the form card, with the links on a hairline rule below
+  the button.
+- Text contrast, measured by compositing every translucent layer down to the
+  page ground:
+  - dark `--text-muted` was 3.84:1 on a panel → `#8c9db5`
+  - light `--primary`, used as a text colour via `text-primary`, was 3.17:1
+    → `oklch(0.52 0.17 245)`
+  - light `--text-muted` was 4.41:1 in the footer → `#55637a`
+  All measured text now clears 4.5:1, or 3:1 for large type.
+- Removed `!bg-background/50` from the three form fields; it was overriding the
+  new `--field-bg` token.
+
+### Added
+
+- `.cta-primary` — the one loud control. Gradient fill, ink label, layered
+  glow, and a specular sweep on hover that is disabled under reduced motion.
+  Focus draws a real ring rather than reusing the hover shadow.
+  `.site-navbar__cta` shares the rule, so every "Book a Call" matches.
+- `--cta-from` / `--cta-to` / `--cta-ink` / `--cta-glow` tokens, per theme.
+- `--panel-sheen` — one soft highlight falling from the top-left, layered over
+  the panel fill on the project, experience, earlier-career and contact
+  surfaces, so the whole page reads as lit by a single source.
+- `--field-bg` token for inputs.
+
+### Changed
+
+- Panel fill raised for legibility: dark `0.66` → `0.78`, light `0.72` → `0.82`.
+- `--glass-shadow` is now three layered stops instead of two, which reads as
+  depth rather than as a dropped rectangle.
+- Removed the old `::after` pill hack behind the CTA and two more dead
+  `backdrop-filter` declarations.
+
+### Verified
+
+22 text styles, 9 font sizes, 4 blurred surfaces, radii still on token. No
+console errors, no failed requests, no horizontal overflow at 390px or 1440px,
+both themes.
