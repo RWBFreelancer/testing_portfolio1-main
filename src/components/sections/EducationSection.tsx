@@ -1,36 +1,67 @@
-import { GraduationCap, Award } from "lucide-react";
+/**
+ * Was two equal-height cards: the degree card held two lines of text and then
+ * 150px of nothing, because the certifications card set the row height.
+ * Credentials are a list of facts, so this renders them as one - a ruled
+ * register rather than a card grid.
+ */
+const credentials = [
+  {
+    year: "2025",
+    title: "Oracle Cloud Infrastructure Generative AI Professional",
+    issuer: "Oracle",
+    kind: "Certification",
+  },
+  {
+    year: "2025",
+    title: "Oracle Cloud Infrastructure Certified Data Science Professional",
+    issuer: "Oracle",
+    kind: "Certification",
+  },
+  {
+    year: "2025",
+    title: "Oracle Cloud Infrastructure Certified AI Foundations Associate",
+    issuer: "Oracle",
+    kind: "Certification",
+  },
+  {
+    year: "2015",
+    title: "B.S. Electrical Engineering",
+    issuer: "Saint Louis University, Baguio City",
+    kind: "Degree",
+  },
+  {
+    year: "Active",
+    title: "Registered Electrical Engineer",
+    issuer: "PRC Licence No. 0057141",
+    kind: "Licence",
+  },
+  {
+    year: "Active",
+    title: "Safety Officer 3",
+    issuer: "PEME Consultancy Inc., Baguio City",
+    kind: "Certification",
+  },
+];
 
 export default function EducationSection() {
   return (
-    <section id="education" className="relative py-24 sm:py-32">
+    <section id="education" className="relative py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-14 max-w-2xl">
-          <span className="text-xs uppercase tracking-[0.3em] text-primary">
-            03 — Education & Credentials
-          </span>
-          <h2 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">
-            Engineering <span className="italic text-primary">foundation.</span>
-          </h2>
+        <div className="mb-12 max-w-2xl">
+          <span className="label-mono text-primary">Education &amp; Credentials</span>
+          <h2 className="section-heading mt-4">Licensed engineer, certified in AI.</h2>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="education-card rounded-2xl border border-border p-7 shadow-glow">
-            <GraduationCap className="h-7 w-7 text-primary" aria-hidden="true" />
-            <h3 className="mt-4 font-display text-2xl text-foreground">
-              B.S. Electrical Engineering
-            </h3>
-            <p className="mt-1 text-sm text-muted-foreground">Saint Louis University · 2015</p>
-          </div>
-
-          <div className="education-card rounded-2xl border border-border p-7 shadow-glow">
-            <Award className="h-7 w-7 text-primary" aria-hidden="true" />
-            <h3 className="mt-4 font-display text-2xl text-foreground">Certifications</h3>
-            <ul className="mt-3 space-y-1.5 text-sm text-foreground/85">
-              <li>Registered Electrical Engineer · Lic. No. 0057141</li>
-              <li>Safety Officer 3 · PEME Consultancy Inc., Baguio City</li>
-            </ul>
-          </div>
-        </div>
+        <ul className="credential-register">
+          {credentials.map((c) => (
+            <li key={c.title} className="credential-register__row">
+              <span className="credential-register__year">{c.year}</span>
+              <span className="credential-register__title">{c.title}</span>
+              <span className="credential-register__issuer">{c.issuer}</span>
+              <span className="credential-register__kind">{c.kind}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

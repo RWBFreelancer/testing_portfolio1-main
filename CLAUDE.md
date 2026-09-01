@@ -55,3 +55,13 @@ Keep paths, commands, and numbers exact.
 _Anything project-specific worth remembering between sessions:_
 
 -
+
+## Design system
+
+The visual system (typefaces, type scale, surface treatment, radii, motion
+rules) is documented in `docs/2026-09-01-hire-ready-and-visual-system.md`.
+Read it before adding UI. Short version: use the `--step-*` type scale, never
+a raw font size; set data in JetBrains Mono; surfaces are flat panels with a
+lit rim, not frosted glass; two radii only.
+
+Change history lives in `CHANGELOG.md`.

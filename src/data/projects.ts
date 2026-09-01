@@ -21,7 +21,7 @@ export const projects: Project[] = [
     techStack: ["GHL", "n8n", "Retell AI"],
     badge: "Automated payment recovery calls",
     demoLabel: "1:26 Demo",
-    ctaLabel: "View Case Study",
+    ctaLabel: "Watch the Demo",
     ctaUrl: "https://www.youtube.com/watch?v=P8bSvgO0-MI",
   },
   {
@@ -61,7 +61,7 @@ export const projects: Project[] = [
     techStack: ["GHL", "n8n", "Retell AI"],
     badge: "Automated intake & scheduling",
     demoLabel: "5:21 Demo",
-    ctaLabel: "View Case Study",
+    ctaLabel: "Watch the Demo",
     ctaUrl: "https://www.youtube.com/watch?v=9Hb7Q9BXREw",
   },
 ];

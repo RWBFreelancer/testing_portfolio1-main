@@ -1,103 +1,92 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-const roles = [
+/**
+ * Two tiers on purpose. A hiring manager scanning for automation skill should
+ * not have to read past four facilities and safety roles to find it. The older
+ * engineering career still earns its place, but as one compact credential
+ * block rather than as four cards competing with the automation work.
+ */
+const automationRoles = [
   {
     title: "Freelance AI Automation Developer",
     company: "Freelance / Multiple Clients",
-    location: "Remote - Part-Time",
-    dates: "05/2026 - Present",
+    location: "Remote · Part-Time",
+    dates: "01/2026 - Present",
     bullets: [
-      "Build automation workflows for small business clients using **n8n, Zapier, and Make**.",
-      "Connect CRMs such as **GoHighLevel and HubSpot** to automation tools like **n8n, Claude Code, and Make**.",
-      "Develop websites and dashboards using **Claude Code, Codex, Cursor, and Antigravity**.",
-      "Develop voice agents using **ElevenLabs, Retell, and Vapi**.",
+      "Built an inbound voice agent that qualifies **law firm** leads and an outbound agent that chases overdue invoices, using **Retell AI** wired to **n8n and GoHighLevel** so every call updates the CRM.",
+      "Built an inbound voice agent that qualifies **mechanic repair** leads, filters them in **n8n**, and pushes only qualified jobs into **Fieldpulse**.",
+      "Built and maintain **Make** scenarios connected to **Meta Ads**, and extended a client's self-coded CRM with **Claude Code**.",
+      "Ship client-facing websites and dashboards with **Claude Code, Codex, Cursor, and Antigravity**.",
+    ],
+  },
+  {
+    title: "Facebook Automation Specialist",
+    company: "Freelance / Multiple Clients",
+    location: "Remote · Part-Time",
+    dates: "08/2025 - 06/2026",
+    bullets: [
+      "Built **n8n** workflows that watch Facebook Page inboxes, sort customer messages with **ChatGPT and Claude**, and send accurate auto-replies.",
+      "Connected the **Facebook Graph API** to n8n to handle comment replies, direct messages, and lead sorting across several client pages at once.",
+      "Set up escalation rules so sensitive or unclear questions go to a real person instead of the AI.",
+      "Cut client response times and turned more inbox conversations into sales.",
     ],
   },
   {
     title: "Technical Virtual Assistant",
     company: "Hi-Hyperlite",
-    location: "Remote - Full-Time",
+    location: "Remote · Full-Time",
     dates: "07/2024 - 07/2026",
     bullets: [
-      "Implemented AI-powered automation (QuickCEP CRM, n8n, AutoHotKey) - **cutting response time from 2 hours to under 30 minutes**.",
-      "Created customized lighting simulations using DIALux, AutoCAD, and Photoshop, resulting in **80% client approval rate** on first submission.",
-      "Delivered multi-channel support (email, phone, chat) maintaining **95% first-contact resolution**.",
+      "Implemented AI-powered automation (QuickCEP CRM, n8n, AutoHotKey) — **cutting response time from 2 hours to under 30 minutes**.",
+      "Delivered multi-channel support across email, phone, and chat, holding **95% first-contact resolution**.",
+      "Created lighting simulations in DIALux, AutoCAD, and Photoshop, earning an **80% client approval rate** on first submission.",
     ],
   },
+];
+
+const earlierCareer = [
   {
     title: "Resident Engineer",
     company: "The SM Store Baguio",
-    location: "Baguio City",
-    dates: "03/2024 - 07/2024",
-    bullets: [
-      "Orchestrated comprehensive maintenance for mechanical, electrical, plumbing, and fire protection systems.",
-      "Directed renovation projects in adherence to Philippine building codes, on schedule and within budget.",
-      "Implemented preventive maintenance scheduling in Microsoft Planner, reducing emergency repairs.",
-    ],
+    dates: "2024",
+    note: "Ran maintenance for all mechanical, electrical, plumbing, and fire safety systems, and led code-compliant renovations on time and on budget.",
   },
   {
     title: "Safety Officer 3",
     company: "Global Agility Solutions, LLC",
-    location: "Baguio City",
-    dates: "01/2019 - 02/2024",
-    bullets: [
-      "Reduced workplace incidents by **30% over five years** through inspections and corrective measures.",
-      "Built training modules and visual safety campaigns achieving **100% employee compliance**.",
-      "Used AI tools (Perplexity, Claude) to analyze incident patterns - cutting repeat incidents to near zero.",
-      "Ensured full RA 11058 / OSH compliance with **zero violations** on external audits.",
-    ],
+    dates: "2019 - 2024",
+    note: "Cut workplace incidents by 30% over five years, hit 100% training compliance, and passed every external audit with zero violations.",
   },
   {
     title: "Virtual Assistant",
     company: "Atlantic for Wholesale & Distribution, LLC",
-    location: "Remote - Part-Time",
-    dates: "10/2021 - 06/2023",
-    bullets: [
-      "Built Python-based scraping tools that identified new product opportunities and generated additional revenue.",
-      "Grew social following from **150 to 9,500** and increased engagement by **65%**.",
-      "Optimized site code (HTML/CSS/JS/React) for a **10% page-load improvement**.",
-    ],
+    dates: "2021 - 2023",
+    note: "Built Python scraping tools that surfaced new product opportunities, and grew a social following from 150 to 9,500.",
   },
   {
     title: "Technical Virtual Assistant",
     company: "G&K Electrical Services",
-    location: "Remote - Part-Time",
-    dates: "01/2021 - 08/2021",
-    bullets: [
-      "Created precise engineering designs for lighting and solar installs using AutoCAD, DIALux, and SketchUp.",
-      "Implemented Trello-based workflow system - perfect on-time delivery and client retention.",
-    ],
+    dates: "2021",
+    note: "Produced lighting and solar designs in AutoCAD, DIALux, and SketchUp, managed through a Trello workflow.",
   },
   {
     title: "Maintenance Supervisor",
     company: "The SM Store Baguio",
-    location: "Baguio City",
-    dates: "01/2018 - 06/2018",
-    bullets: [
-      "Led electricians and plumbers; responded to emergencies within **15 minutes**.",
-      "Implemented a preventive maintenance program that reduced critical failures.",
-    ],
+    dates: "2018",
+    note: "Led electricians and plumbers with a 15-minute emergency response time.",
   },
   {
     title: "Chat Support Representative",
     company: "Chatsmith Online",
-    location: "Baguio City",
-    dates: "01/2017 - 09/2018",
-    bullets: [
-      "Real-time support for U.S. real estate clients - **95% CSAT** and sub-30s response times.",
-      "Performed LIDAR data labeling, improving AI training data accuracy by **25%**.",
-    ],
+    dates: "2017 - 2018",
+    note: "Handled 100-150 chats a day for U.S. real estate clients at 95% satisfaction, and labelled LIDAR data for AI training.",
   },
   {
     title: "Cadet Engineer",
     company: "Benguet Electric Cooperative (BENECO)",
-    location: "Baguio City",
-    dates: "10/2015 - 09/2016",
-    bullets: [
-      "Improved electrical system reliability via systematic meter and pole maintenance.",
-      "Streamlined permit processing, reducing approval times.",
-    ],
+    dates: "2015 - 2016",
+    note: "Maintained meters and line poles, and streamlined the electrical permit process.",
   },
 ];
 
@@ -114,7 +103,13 @@ function renderBullet(text: string) {
   );
 }
 
-function ExperienceEntry({ role, index }: { role: (typeof roles)[number]; index: number }) {
+function ExperienceEntry({
+  role,
+  index,
+}: {
+  role: (typeof automationRoles)[number];
+  index: number;
+}) {
   const [expanded, setExpanded] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const visibleBullets = role.bullets.slice(0, 2);
@@ -122,10 +117,10 @@ function ExperienceEntry({ role, index }: { role: (typeof roles)[number]; index:
 
   return (
     <motion.li
-      initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={shouldReduceMotion ? false : { opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.5, delay: shouldReduceMotion ? 0 : index * 0.05 }}
+      transition={{ duration: 0.45, delay: shouldReduceMotion ? 0 : index * 0.06 }}
       className="experience-entry"
     >
       <div className="experience-entry__card">
@@ -148,7 +143,11 @@ function ExperienceEntry({ role, index }: { role: (typeof roles)[number]; index:
 
         {hiddenBullets.length > 0 && (
           <>
-            <ul className={`experience-entry__extra${expanded ? " expanded" : ""}`}>
+            <ul
+              id={`experience-extra-${index}`}
+              aria-hidden={!expanded}
+              className={`experience-entry__extra${expanded ? " expanded" : ""}`}
+            >
               {hiddenBullets.map((bullet, bulletIndex) => (
                 <li key={bulletIndex} className="experience-entry__bullet">
                   <span aria-hidden className="experience-entry__bullet-dot" />
@@ -161,6 +160,7 @@ function ExperienceEntry({ role, index }: { role: (typeof roles)[number]; index:
               className="experience-entry__toggle"
               onClick={() => setExpanded((value) => !value)}
               aria-expanded={expanded}
+              aria-controls={`experience-extra-${index}`}
             >
               {expanded ? "Show less ↑" : "Show more ↓"}
             </button>
@@ -171,22 +171,70 @@ function ExperienceEntry({ role, index }: { role: (typeof roles)[number]; index:
   );
 }
 
+function EarlierCareer() {
+  const [expanded, setExpanded] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      initial={shouldReduceMotion ? false : { opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.45 }}
+      className="earlier-career"
+    >
+      <p className="earlier-career__lede">
+        Before automation: <strong className="text-foreground">9 years</strong> as a licensed
+        electrical engineer, safety officer, and operations lead. That is where the systems thinking
+        comes from — reading a process, finding the failure point, and designing the fix.
+      </p>
+
+      <button
+        type="button"
+        className="earlier-career__toggle"
+        onClick={() => setExpanded((value) => !value)}
+        aria-expanded={expanded}
+        aria-controls="earlier-career-list"
+      >
+        {expanded ? "Hide earlier roles ↑" : `Show all ${earlierCareer.length} earlier roles ↓`}
+      </button>
+
+      <ul
+        id="earlier-career-list"
+        aria-hidden={!expanded}
+        className={`earlier-career__list${expanded ? " expanded" : ""}`}
+      >
+        {earlierCareer.map((role) => (
+          <li key={`${role.company}-${role.dates}`} className="earlier-career__item">
+            <span className="earlier-career__dates">{role.dates}</span>
+            <div>
+              <span className="earlier-career__title">{role.title}</span>
+              <span className="earlier-career__company">{role.company}</span>
+              <p className="earlier-career__note">{role.note}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+}
+
 export default function ExperienceSection() {
   return (
-    <section id="experience" className="experience-section relative py-24 sm:py-32">
+    <section id="experience" className="experience-section relative py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-16 max-w-2xl">
-          <span className="text-xs uppercase tracking-[0.3em] text-primary">02 — Experience</span>
-          <h2 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">
-            A track record of <span className="italic text-primary">measurable wins.</span>
-          </h2>
+        <div className="mb-12 max-w-2xl">
+          <span className="label-mono text-primary">Experience</span>
+          <h2 className="section-heading mt-4">Every claim here has a number on it.</h2>
         </div>
 
         <ol className="experience-timeline">
-          {roles.map((role, index) => (
-            <ExperienceEntry key={`${role.company}-${index}`} role={role} index={index} />
+          {automationRoles.map((role, index) => (
+            <ExperienceEntry key={`${role.company}-${role.dates}`} role={role} index={index} />
           ))}
         </ol>
+
+        <EarlierCareer />
       </div>
     </section>
   );
