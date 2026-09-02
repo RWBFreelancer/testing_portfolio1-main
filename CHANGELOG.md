@@ -7,6 +7,50 @@ Dates are `YYYY-MM-DD`.
 
 ---
 
+## [0.5.0] - 2026-09-02
+
+Branch: `main`
+
+Card art and the share card, generated with fal.ai at build time.
+
+### Added
+
+- `scripts/fal-generate.mjs` - generates the decorative art with fal.ai
+  (FLUX dev). Run by hand, never at build or at runtime: the visitor's browser
+  must never call an image API. The key is read from the environment and is
+  never written into this repo.
+- `scripts/make-og.mjs` - renders `public/og-image.png` in headless Chrome
+  over the site's own backdrop, using the real site fonts. Shot at 2x and
+  resampled to 1200x630.
+
+### Changed
+
+- The three project thumbnails are cyan line-art illustrations in one shared
+  style, replacing the text-on-gradient title cards. They also got smaller:
+  14-18 kB each down to 8-10 kB.
+- The play button sits bottom left instead of centred. Each illustration has
+  one centred subject and a centred button landed straight on it - on the
+  inbound card, a circle on a circle.
+- The share card carries the new headline, the real site fonts, and the site's
+  own nebula. It was still selling "that solve real bottlenecks" in a serif
+  face that appears nowhere on the site. 971 kB to 91 kB.
+- `index.html` meta and OG descriptions now say "small and medium businesses"
+  rather than "real business bottlenecks".
+
+### Notes
+
+Two things fal.ai was deliberately not used for.
+
+Text: diffusion models garble letterforms, so anything carrying real words is
+composed in a browser from real fonts instead.
+
+Proof: no generated product screenshot, dashboard, client logo, testimonial,
+or person presented as a client. That would fabricate evidence of work, which
+is the credibility problem the card copy was rewritten to avoid. The two open
+items that need real proof - third-party references, and footage of the
+automations actually running - cannot be closed by an image model, and are
+still open.
+
 ## [0.4.0] - 2026-09-02
 
 Branch: `main`

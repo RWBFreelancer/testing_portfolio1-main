@@ -889,22 +889,24 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 62%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.45), transparent 42%);
   }
 
+  /* Bottom left, opposite the duration badge, not centred. The card art has a
+     single centred subject and a centred play button lands straight on top of
+     it - worst on the inbound card, where a circle sat on a circle. */
   .hero-holo-card__play {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    bottom: 12px;
+    left: 12px;
     display: flex;
-    width: 54px;
-    height: 54px;
+    width: 44px;
+    height: 44px;
     align-items: center;
     justify-content: center;
-    margin: -27px 0 0 -27px;
     border: 1.5px solid rgba(255, 255, 255, 0.4);
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     color: #fff;

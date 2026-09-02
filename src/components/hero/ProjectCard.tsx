@@ -54,7 +54,7 @@ export default function ProjectCard({
           />
           <span className="hero-holo-card__shade" aria-hidden />
           <span className="hero-holo-card__play" aria-hidden>
-            <PlayCircle className="h-7 w-7" strokeWidth={1.5} />
+            <PlayCircle className="h-6 w-6" strokeWidth={1.5} />
           </span>
           <span className="hero-holo-card__demo label-mono" aria-hidden>
             {project.demoLabel}

@@ -269,8 +269,16 @@ Carried over from the audits; none of it is done.
 3. ~~**Unattributed metrics.**~~ Removed in 0.4.0 rather than left standing.
    The cards state the problem and the solution instead. A number may only
    come back with a client, a date range, and a method attached to it.
-4. **The thumbnails are title cards, not the product.** All three are text on
-   a gradient. None shows the automation, a workflow, or a real screen.
+4. **The thumbnails are illustrations, not the product.** Since 0.5.0 they are
+   cyan line art generated with fal.ai (`scripts/fal-generate.mjs`), which is
+   honest decoration and reads as one set. They still do not show the
+   automation running. Only a real screen recording closes this.
+
+   **Rule for generated art:** decoration only. Never a product screenshot, a
+   dashboard, a client logo, a testimonial, or a person presented as a client
+   - that fabricates evidence. Never text either: models garble letterforms,
+   so anything with real words (the share card) is composed in a browser from
+   real fonts by `scripts/make-og.mjs`.
 5. **The automation is never shown.** The proof is three YouTube videos
    totalling about 11 minutes. No workflow diagram, no before-and-after,
    nothing a visitor can poke.
