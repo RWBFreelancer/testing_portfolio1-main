@@ -1,5 +1,5 @@
-import bgDark from "@/assets/bg-dark.jpg";
-import bgLight from "@/assets/bg-light.jpg";
+import bgDark from "@/assets/bg-dark.webp";
+import bgLight from "@/assets/bg-light.webp";
 import type { ThemeMode } from "@/types";
 
 export function syncBackgroundLayer(theme: ThemeMode) {

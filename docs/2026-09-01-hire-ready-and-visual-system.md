@@ -141,31 +141,88 @@ Everywhere else, `opacity` only. The repeated 24px fade-up on roughly fifteen
 elements was the Framer Motion default, and motion that never varies stops
 being motion and becomes a loading delay.
 
-Every animated component honours `useReducedMotion()`, including the hero deck
-fan and the per-card scroll tilt: under reduced motion the fan transition is
-instant and the tilt is held flat.
+Every animated component honours reduced motion. In React that is
+`useReducedMotion()`; in CSS every lift, zoom and drift lives inside a
+`@media (prefers-reduced-motion: no-preference)` block. Under reduced motion
+the hero star field paints one static frame and stops its loop, and the cards
+keep their colour changes but lose the movement.
 
 ---
 
-## 7. The one grid break
+## 7. The project row
 
 Everything on the page sits in a tidy centred column, except the project
-demos. Those are a **deck fan** — a hand of cards, not a row:
+demos. Those sit in a wider **holo-tilt row** (1320px vs 1200px).
 
-- a wider container than the text measure (1440px vs 1200px)
-- eight fixed slots; slots with no project yet show a "coming soon" card
-- one card is at the front, the rest fan out left and right, tucked tighter
-  the further out they sit, dimmed to 74% and scaled down
-- the fan spread is measured from the real container width, so the outermost
-  card never reaches under the arrow buttons
+This replaced a deck fan in 0.4.0. The fan was a hand of cards with eight
+fixed slots, arrows, dots and a counter. Three personas reviewed it and all
+three failed it. Do not bring it back. What was wrong with it is the rule set
+for anything that replaces this row:
 
-Navigation is overlay arrow buttons, dots, arrow keys, Home/End, and clicking
-a background card. There is deliberately **no** scroll or wheel navigation: the
-deck sits in the hero, so capturing the wheel would trap a visitor who only
-wanted to scroll down the page.
+- **Render the work, not a slot count.** The fan had eight slots and three
+  projects, so five cards read "coming soon". Never show a stranger what has
+  not been built. The row renders `projects.length`.
+- **No clicks to read.** The fan showed one readable card; the other seven
+  were dimmed slivers. Every card here is fully readable at once.
+- **No manual.** The fan needed a 27-word instruction line. A pattern that
+  has to explain itself is the wrong pattern.
+- **The theme goes behind the cards, never on them.** The galaxy is a canvas
+  star field *behind* the row. The cards stay flat panels with a lit rim, per
+  section 4.
 
-It resets to a plain grid below 1100px, where it shows the real projects plus
-a single "coming soon" card rather than the full eight slots.
+Each card carries: automation type, title, **Problem**, **Solution**, tech
+stack. Problem before solution, in plain words, so a visitor who does not know
+what n8n is can still tell whether this is their kind of problem.
+
+The thumbnail is inset by a 10px frame, not flush to the card edge. Its radius
+is `calc(var(--radius-panel) - 10px)` so the inner and outer curves stay
+concentric — that is the one place a derived radius is allowed, and it is not
+a third radius in the system.
+
+**Copy rule for `projects.ts`:** the Problem states the situation the work was
+built for, never a statistic about a client. The Solution names the real tools.
+A named tool is checkable; an adjective is not. No number appears on a card
+without a client, a date range, and a method behind it.
+
+### The hover
+
+On hover the panel tilts up to 6.5 degrees towards the pointer, a nebula sheen
+tracks the pointer across its face, a rim highlight rakes across, and the
+thumbnail slides the opposite way behind its frame. Rules that hold it
+together:
+
+- **Perspective lives on the wrapper, not the card.** On the card each one
+  gets its own vanishing point at its own centre, and three cards tilt as if
+  they were three separate scenes.
+- **Never through React state.** `useHoloTilt` writes CSS custom properties
+  straight to the element and batches them into one animation frame. A pointer
+  move must repaint, never re-render.
+- **Tilt tracks fast, settles slow.** `data-tilting` swaps the transition to
+  80ms while the pointer drives it, and back to a 420ms ease on leave.
+- **Readability outranks the effect.** The sheen sits above the body copy, so
+  it is held down and checked: body text stays near 6:1 on the tinted panel.
+  Body text is pushed only 16px in Z; more resamples the glyphs and softens
+  them.
+- **The light card is not white.** `--card-bg` is a cool paper tone. A sheen
+  over pure white has no tone to shift, so it reads as a stain. This is why
+  the first light-theme attempt looked washed out even after the rake colour
+  was fixed.
+- **The hover colours are per-theme tokens, never derived.** `--holo-sheen-a`,
+  `--holo-sheen-b`, `--holo-rim` and `--holo-glow` are set separately in each
+  theme. A single set cannot work for both: a white rake is invisible on the
+  near-white light card, and a blue rake is invisible on the dark one. Deriving
+  them from `--accent` produced the washed-out light theme that 0.4.0 shipped
+  first.
+- **Mouse only.** Touch and pen have no hover, so a tilt or a sheen would
+  latch on at the first tap and stay. The hook ignores them and the effects
+  are hidden under `(hover: none)`.
+- **Reduced motion kills the movement, keeps the colour.** No tilt, no
+  parallax, no lift; the sheen still fades.
+
+Three columns above 1100px, two down to 720px, one below that.
+
+Demo videos open in a **muted** modal. The iframe mounts only while the modal
+is open. Nothing on this site may start audio from a single click.
 
 **Rule:** this is the *only* grid break. A second one makes both of them
 ordinary. If a future section wants to be special, it takes this one's place.
@@ -204,13 +261,16 @@ future change did not regress the system.
 
 Carried over from the audits; none of it is done.
 
-1. **Images.** ~2.5MB of unoptimised JPEGs. No WebP, no `srcset`.
-   `bg-dark.jpg` is 666KB and loads eagerly. Project images ship at 1280px
-   and display at 366px.
+1. ~~**Images.**~~ Done in 0.4.0. All assets are WebP, sized to the layout by
+   `scripts/optimize-images.mjs`. 2448 kB became 108 kB. Run that script after
+   adding or replacing any asset.
 2. **No third-party proof.** Zero testimonials, client names, or logos. Every
-   trust signal is self-authored.
-3. **Unattributed metrics.** "3.2x recovery lift" has no client, date range,
-   or measurement note.
-4. **The automation is never shown.** The proof is three YouTube videos
+   trust signal is self-authored. This is now the largest open item.
+3. ~~**Unattributed metrics.**~~ Removed in 0.4.0 rather than left standing.
+   The cards state the problem and the solution instead. A number may only
+   come back with a client, a date range, and a method attached to it.
+4. **The thumbnails are title cards, not the product.** All three are text on
+   a gradient. None shows the automation, a workflow, or a real screen.
+5. **The automation is never shown.** The proof is three YouTube videos
    totalling about 11 minutes. No workflow diagram, no before-and-after,
    nothing a visitor can poke.

@@ -66,7 +66,9 @@
   /* The deck fan overlaps its own cards, so a card needs more cover than a
      standalone panel: at 0.82 the title of the card behind reads through. Not
      fully opaque, so the page ground still tints it. */
-  --card-bg: rgba(255, 255, 255, 0.96);
+  /* Not pure white. A sheen laid over #fff reads as a stain, because there is
+     no tone for it to shift. This cool paper tone gives it one. */
+  --card-bg: rgba(244, 247, 252, 0.97);
   --glass-border: rgba(94, 124, 168, 0.28);
   --glass-shadow:
     0 1px 2px rgba(28, 48, 80, 0.05), 0 2px 8px -4px rgba(28, 48, 80, 0.14),
@@ -85,6 +87,17 @@
   );
   --accent: #0066cc;
   --accent-glow: rgba(0, 102, 204, 0.25);
+
+  /* Holo-tilt hover colours. These have to be set per theme, not derived.
+     On the near-white light card a white rake is invisible and a pale wash
+     just greys the panel, which reads as "washed out" rather than as an
+     effect. Light gets saturated colour and a blue rake; dark gets the
+     light-adding treatment that works over a dark panel. */
+  --holo-sheen-a: rgba(66, 146, 226, 0.2);
+  --holo-sheen-b: rgba(138, 108, 226, 0.14);
+  --holo-rim: rgba(40, 96, 175, 0.16);
+  --holo-glow: rgba(0, 102, 204, 0.3);
+
   /* The one loud control on the page. Gradient plus glow, with an ink colour
      that clears 4.5:1 against the darker end of the gradient. */
   --cta-from: #1272e6;
@@ -156,6 +169,12 @@
   );
   --accent: #00d4ff;
   --accent-glow: rgba(0, 212, 255, 0.25);
+
+  --holo-sheen-a: rgba(0, 212, 255, 0.16);
+  --holo-sheen-b: rgba(150, 110, 255, 0.11);
+  --holo-rim: rgba(255, 255, 255, 0.1);
+  --holo-glow: var(--accent-glow);
+
   --cta-from: #5fe6ff;
   --cta-to: #2f86ff;
   --cta-ink: #041325;
@@ -594,7 +613,7 @@
   }
 
   .hero-section__headline {
-    max-width: 21ch;
+    max-width: 24ch;
     color: var(--text-primary);
     font-size: var(--step-4);
     font-weight: 700;
@@ -658,500 +677,403 @@
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.22);
   }
 
-  .hero-section__scroll-cta {
+  /* The hero call to action. A screener who is already sold acts here, not
+     after scrolling past three cards. */
+  .hero-section__actions {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
-    margin-top: 28px;
-    margin-bottom: 44px;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: 0.08em;
-  }
-
-  /* The one deliberate grid break on the page. Everywhere else sits in a tidy
-     centred column; here the work escapes it — the projects sit in a fanned
-     deck, like a hand of cards, and the front card is the one you read. */
-  .hero-deck-wrap {
-    max-width: 1440px;
-    margin: 0 auto;
-    padding: 0 40px 96px;
-  }
-
-  /* The instruction line sits above the deck, where a first-time visitor reads
-     before they touch anything. */
-  .hero-deck__lead {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 12px;
-    margin: 0 auto 18px;
-    padding: 9px 20px 9px 12px;
-    width: fit-content;
+    margin-top: 30px;
+    margin-bottom: 56px;
+  }
+
+  .hero-section__cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .hero-section__cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-pill);
     background: var(--glass-bg);
     box-shadow: var(--panel-rim);
-    color: var(--text-primary);
+    color: var(--text-secondary);
     font-size: var(--step--1);
-    text-align: center;
+    font-weight: 500;
+    transition:
+      border-color 0.25s ease,
+      color 0.25s ease;
   }
 
-  .hero-deck__lead-icon {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 8px;
-    border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--accent) 12%, transparent);
-    color: var(--accent);
+  .hero-section__cta-secondary:hover,
+  .hero-section__cta-secondary:focus-visible {
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    color: var(--text-primary);
   }
 
-  .hero-deck__stage {
+  /* ---------------------------------------------------------------------
+     The holo-tilt row.
+
+     Three cards side by side, every one fully readable with no clicks. The
+     galaxy sits BEHIND them as a drifting star field; the cards themselves
+     stay flat panels with a lit rim, per the design system.
+
+     On hover a card tilts in 3D towards the pointer and a nebula sheen tracks
+     across its face. Every value the pointer drives is written to a CSS custom
+     property on the element, never to React state, so a mouse move repaints
+     but never re-renders.
+     --------------------------------------------------------------------- */
+  .hero-holo {
     position: relative;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 40px 96px;
   }
 
-  .hero-deck {
-    position: relative;
-    height: 620px;
-    display: grid;
-    place-items: center;
-    perspective: 1600px;
-    border-radius: var(--radius-panel);
-  }
-
-  .hero-deck:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--accent);
-  }
-
-  .hero-deck__card {
+  /* The sky stops level with the bottom of the card row, so it never bleeds
+     into the next section. The container is row + 96px of bottom padding. */
+  .hero-holo__sky {
     position: absolute;
-    width: 340px;
-    height: 520px;
-    transform-origin: center bottom;
-    will-change: transform;
-  }
-
-  .hero-deck__card-face {
-    height: 100%;
+    top: -14px;
+    left: 0;
     width: 100%;
+    height: calc(100% - 82px);
+    pointer-events: none;
+    z-index: 0;
   }
 
-  /* Covers the whole background card, so clicking anywhere on it brings that
-     card to the front. */
-  .hero-deck__card-hit {
+  .hero-holo__row {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+    align-items: stretch;
+  }
+
+  /* The perspective lives on the wrapper, not the card. On the card itself
+     every card would get its own vanishing point at its own centre, and the
+     three would tilt as if they were three separate scenes. */
+  .hero-holo-card {
+    position: relative;
+    perspective: 1100px;
+  }
+
+  .hero-holo-card__inner {
+    position: relative;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-panel);
+    background: var(--panel-sheen), var(--card-bg);
+    box-shadow: var(--panel-rim), var(--glass-shadow);
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))
+      translate3d(0, var(--lift, 0px), 0);
+    transition:
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  /* While the pointer is actually driving the tilt the transform has to keep
+     up with it. A 420ms ease here would lag a whole hand-movement behind. */
+  .hero-holo-card[data-tilting="true"] .hero-holo-card__inner {
+    transition:
+      transform 80ms linear,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .hero-holo-card:hover .hero-holo-card__inner,
+  .hero-holo-card:focus-within .hero-holo-card__inner {
+    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    box-shadow: var(--panel-rim), 0 26px 60px var(--holo-glow);
+  }
+
+  /* The nebula sheen. It follows the pointer, sits above the card face and
+     below nothing else, and never eats a click. */
+  .hero-holo-card__sheen {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    border-radius: var(--radius-panel);
+    background:
+      radial-gradient(
+        520px circle at var(--mx, 50%) var(--my, 50%),
+        var(--holo-sheen-a) 0%,
+        transparent 72%
+      ),
+      radial-gradient(
+        420px circle at calc(100% - var(--mx, 50%)) calc(100% - var(--my, 50%)),
+        var(--holo-sheen-b) 0%,
+        transparent 78%
+      );
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 320ms ease;
+  }
+
+  .hero-holo-card:hover .hero-holo-card__sheen,
+  .hero-holo-card:focus-within .hero-holo-card__sheen {
+    opacity: 1;
+  }
+
+  /* A single bright edge, as if one light source were raking across the panel.
+     It is what stops the sheen reading as a coloured blur. */
+  .hero-holo-card__rim {
     position: absolute;
     inset: 0;
     z-index: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: var(--radius-panel);
+    background: linear-gradient(
+      var(--rim-angle, 120deg),
+      transparent 22%,
+      var(--holo-rim) 50%,
+      transparent 78%
+    );
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 320ms ease;
+  }
+
+  .hero-holo-card:hover .hero-holo-card__rim {
+    opacity: 1;
+  }
+
+  /* No width: the button stretches to the padded box on its own, and a 100%
+     width would push past the frame. The radius is the panel radius less the
+     10px frame, so the inner and outer curves stay concentric. */
+  .hero-holo-card__thumb {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 10;
     padding: 0;
     border: 0;
-    border-radius: var(--radius-panel);
+    overflow: clip;
+    border-radius: calc(var(--radius-panel) - 10px);
     background: none;
     cursor: pointer;
   }
 
-  .hero-deck__card-hit-badge {
-    padding: 8px 18px;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-pill);
-    background: var(--panel-sheen), var(--glass-bg);
-    box-shadow:
-      var(--panel-rim),
-      0 10px 26px rgba(0, 0, 0, 0.3);
-    color: var(--text-primary);
-    font-family: var(--font-mono);
-    font-size: var(--step-mono);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    opacity: 0;
-    transform: translateY(6px);
-    transition:
-      opacity 0.2s ease,
-      transform 0.2s ease;
+  .hero-holo-card__thumb:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--accent);
   }
 
-  .hero-deck__card-hit:hover .hero-deck__card-hit-badge {
-    opacity: 1;
-    transform: translateY(0);
+  /* The image is oversized by the parallax range in each direction, so sliding
+     it can never expose an edge inside the frame. */
+  .hero-holo-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.09) translate3d(var(--px, 0px), var(--py, 0px), 0);
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .hero-deck__card-hit-badge {
-      transition: none;
-      transform: none;
-    }
+  .hero-holo-card[data-tilting="true"] .hero-holo-card__image {
+    transition: transform 80ms linear;
   }
 
-  /* Big round overlay arrows, the pattern people already know from every photo
-     carousel. They sit above the cards and stay visible at all times. */
-  .hero-deck__nav {
+  .hero-holo-card__shade {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 62%);
+  }
+
+  .hero-holo-card__play {
     position: absolute;
     top: 50%;
-    z-index: 40;
-    display: flex;
-    width: 60px;
-    height: 60px;
-    align-items: center;
-    justify-content: center;
-    transform: translateY(-50%);
-    border: 1px solid var(--glass-border);
-    border-radius: 50%;
-    background: var(--panel-sheen), var(--glass-bg);
-    box-shadow:
-      var(--panel-rim),
-      0 12px 32px rgba(0, 0, 0, 0.28);
-    color: var(--text-primary);
-    cursor: pointer;
-    transition:
-      border-color 0.2s ease,
-      background-color 0.2s ease,
-      color 0.2s ease,
-      box-shadow 0.2s ease,
-      transform 0.2s ease,
-      opacity 0.2s ease;
-  }
-
-  .hero-deck__nav--prev {
-    left: 4px;
-  }
-
-  .hero-deck__nav--next {
-    right: 4px;
-  }
-
-  .hero-deck__nav:hover:not([aria-disabled="true"]) {
-    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
-    color: var(--accent);
-    box-shadow:
-      var(--panel-rim),
-      0 16px 40px var(--accent-glow);
-    transform: translateY(-50%) scale(1.08);
-  }
-
-  .hero-deck__nav:active:not([aria-disabled="true"]) {
-    transform: translateY(-50%) scale(0.96);
-  }
-
-  .hero-deck__nav:focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 2px var(--accent),
-      0 12px 32px rgba(0, 0, 0, 0.28);
-  }
-
-  .hero-deck__nav[aria-disabled="true"] {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-
-  .hero-deck__footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 14px;
-  }
-
-  .hero-deck__count {
-    color: var(--text-muted);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .hero-deck__dots {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  /* The painted dot stays 9px, but the button around it is 24px, which is the
-     smallest target WCAG 2.2 accepts. */
-  .hero-deck__dot {
-    display: grid;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    place-items: center;
-    border: 0;
-    border-radius: 50%;
-    background: none;
-    cursor: pointer;
-  }
-
-  .hero-deck__dot::after {
-    content: "";
-    display: block;
-    width: 9px;
-    height: 9px;
-    border: 1px solid transparent;
-    border-radius: 50%;
-    background: var(--text-muted);
-    transition:
-      width 0.25s ease,
-      background-color 0.2s ease,
-      border-radius 0.25s ease;
-  }
-
-  .hero-deck__dot[data-empty="true"]::after {
-    background: transparent;
-    border-color: var(--text-muted);
-  }
-
-  .hero-deck__dot[data-active="true"]::after {
-    width: 26px;
-    border-radius: var(--radius-pill);
-    border-color: transparent;
-    background: var(--accent);
-  }
-
-  .hero-deck__dot:hover::after {
-    background: var(--accent);
-    border-color: transparent;
-  }
-
-  .hero-deck__dot:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--accent);
-  }
-
-  /* Below the fan breakpoint the deck falls back to a plain column. */
-  .hero-deck-stack {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px 32px;
-  }
-
-  .hero-deck-stack__item {
-    min-height: 520px;
-    height: 100%;
-  }
-
-  /* Face-down slot: a card with no project behind it yet. */
-  .hero-card-placeholder {
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    padding: 32px 24px;
-    border-style: dashed;
-    border-color: color-mix(in srgb, var(--text-muted) 34%, transparent);
-    background: var(--card-bg);
-    text-align: center;
-  }
-
-  .hero-card-placeholder__mark {
+    left: 50%;
     display: flex;
     width: 54px;
     height: 54px;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--accent-glow);
+    margin: -27px 0 0 -27px;
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
     border-radius: 50%;
-    background: color-mix(in srgb, var(--accent) 12%, transparent);
-    color: var(--accent);
-  }
-
-  .hero-card-placeholder__body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    max-width: 26ch;
-  }
-
-  .hero-card-placeholder__slot {
-    color: var(--text-muted);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .hero-card-placeholder__title {
-    font-size: var(--step-1);
-    color: var(--text-primary);
-  }
-
-  .hero-card-placeholder__copy {
-    font-size: var(--step--1);
-    line-height: 1.6;
-    color: var(--text-muted);
-  }
-
-  .hero-project-card-shell {
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #fff;
     transition: transform 0.3s ease;
   }
 
-  .hero-project-card-shell:hover {
-    transform: translateY(-6px);
-  }
-
-  .hero-project-card-shell:hover .hero-project-card {
-    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
-    box-shadow: 0 16px 48px var(--accent-glow);
-  }
-
-  .hero-project-card-frame {
-    border-radius: var(--radius-panel);
-  }
-
-  .hero-project-card-frame:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent);
-  }
-
-  .hero-project-card {
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    overflow: clip;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-panel);
-    background: var(--panel-sheen), var(--card-bg);
-    box-shadow: var(--panel-rim), var(--glass-shadow);
-    transition:
-      box-shadow 0.3s ease,
-      border-color 0.3s ease,
-      transform 0.3s ease;
-  }
-
-  .hero-project-card__thumb {
-    position: relative;
-    height: 46%;
-    min-height: 220px;
-    overflow: clip;
-    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
-  }
-
-  .hero-project-card__image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .hero-project-card__shade {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent 65%) !important;
-  }
-
-  .hero-project-card__demo {
+  .hero-holo-card__demo {
     position: absolute;
     right: 12px;
     bottom: 12px;
-    padding: 4px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 4px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: var(--radius-pill);
     background: rgba(0, 0, 0, 0.62);
-    color: white;
-    font-family: var(--font-mono);
-    font-size: var(--step-mono);
-    letter-spacing: 0.06em;
+    color: #fff;
     font-variant-numeric: tabular-nums;
   }
 
-  .hero-project-card__play-wrap {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .hero-project-card__play {
-    display: flex;
-    width: 52px;
-    height: 52px;
-    align-items: center;
-    justify-content: center;
-    border: 1.5px solid rgba(255, 255, 255, 0.35);
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15) !important;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-
-  .hero-project-card__info {
+  /* The text sits forward of the card face, so the tilt reads as depth rather
+     than as the whole panel skewing flat. */
+  .hero-holo-card__body {
+    position: relative;
+    z-index: 3;
     display: flex;
     flex: 1;
-    min-height: 0;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
+    gap: 12px;
+    padding: 16px 10px 10px;
+    /* Just enough push to read as depth. More than this resamples the text on
+       hover and softens every glyph. */
+    transform: translateZ(16px);
   }
 
-  .hero-project-card__category {
-    display: inline-flex;
-    margin-bottom: 10px;
-    padding: 4px 12px;
+  .hero-holo-card__kind {
+    align-self: flex-start;
+    padding: 4px 11px;
     border: 1px solid var(--accent-glow);
     border-radius: var(--radius-pill);
-    background: rgba(0, 102, 204, 0.1) !important;
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
     color: var(--accent);
-    font-family: var(--font-mono);
-    font-size: var(--step-mono);
-    font-weight: 500;
-    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 
-  .dark .hero-project-card__category {
-    background: rgba(0, 212, 255, 0.1) !important;
-  }
-
-  .hero-project-card__title {
-    margin-bottom: 8px;
+  /* Reserve two lines. One card with a wrapping title would otherwise push its
+     PROBLEM label out of line with the cards beside it, and a row that does not
+     line up reads as unfinished. */
+  .hero-holo-card__title {
+    margin: 0;
+    min-height: 2.28em;
     color: var(--text-primary);
     font-size: var(--step-2);
     font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: 1.12;
+    line-height: 1.14;
   }
 
-  /* The card is overflow: clip, so a long tagline would push the metrics off
-     the bottom edge without a scrollbar. Cap it at three lines instead. */
-  .hero-project-card__description {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    margin-bottom: 16px;
-    overflow: hidden;
+  /* Problem then solution, each labelled. The label carries the meaning, so a
+     screen reader hears "Problem" before the sentence, not after it. */
+  .hero-holo-card__facts {
+    margin: 0;
+    display: grid;
+    gap: 4px;
+  }
+
+  .hero-holo-card__facts dt {
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .hero-holo-card__facts dt + dd {
+    margin: 0 0 12px;
     color: var(--text-secondary);
     font-size: var(--step--1);
     line-height: 1.55;
   }
 
-  .hero-project-card__metrics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+  .hero-holo-card__facts dd:last-child {
+    margin-bottom: 0;
   }
 
-  .hero-project-card__metric {
-    padding: 5px 12px;
+  .hero-holo-card__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: auto 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hero-holo-card__stack li {
+    padding: 4px 10px;
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-pill);
     background: rgba(0, 0, 0, 0.05);
     color: var(--text-secondary);
-    font-family: var(--font-mono);
-    font-size: var(--step-mono);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    font-variant-numeric: tabular-nums;
   }
 
-  .dark .hero-project-card__metric {
+  .dark .hero-holo-card__stack li {
     background: rgba(255, 255, 255, 0.06);
   }
 
-  .hero-project-card__metric strong {
-    color: var(--accent);
-    font-weight: 700;
+  /* Every lift and zoom is opt-in. A visitor who asked the OS for less motion
+     keeps the colour changes and loses the movement. The tilt itself is
+     switched off in JavaScript, so no custom property is ever written. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-holo-card:hover .hero-holo-card__inner,
+    .hero-holo-card:focus-within .hero-holo-card__inner {
+      --lift: -6px;
+    }
+
+    .hero-holo-card__thumb:hover .hero-holo-card__play {
+      transform: scale(1.1);
+    }
+  }
+
+  /* A touch screen has no hover, so the sheen and the rim would latch on at
+     the first tap and stay. Show them only where a real pointer exists. */
+  @media (hover: none), (pointer: coarse) {
+    .hero-holo-card__sheen,
+    .hero-holo-card__rim {
+      display: none;
+    }
+  }
+
+  /* The demo player. The iframe mounts only while this is open. */
+  /* Width and gap are set with Tailwind utilities on the component itself:
+     DialogContent ships max-w-lg, and a utility beats @layer components. */
+  .hero-demo-modal {
+    border-radius: var(--radius-panel);
+    box-shadow: var(--panel-rim), var(--glass-shadow);
+  }
+
+  .hero-demo-modal__title {
+    color: var(--text-primary);
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-demo-modal__subtitle {
+    color: var(--text-secondary);
+    font-size: var(--step--1);
+    line-height: 1.5;
+  }
+
+  .hero-demo-modal__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: clip;
+    border-radius: var(--radius-panel);
+    background: #000;
+  }
+
+  .hero-demo-modal__frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .hero-demo-modal__note {
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 1100px) {
+    .hero-holo__row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   @media (max-width: 720px) {
@@ -1160,8 +1082,13 @@
       padding-bottom: 64px;
     }
 
-    .hero-deck-stack {
+    .hero-holo {
+      padding: 0 20px 64px;
+    }
+
+    .hero-holo__row {
       grid-template-columns: 1fr;
+      gap: 22px;
     }
   }
 }

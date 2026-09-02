@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import profileImage from "@/assets/profile.jpg";
+import profileImage from "@/assets/profile.webp";
 
 const TECH_STACK = [
   "n8n",

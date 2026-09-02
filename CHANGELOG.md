@@ -7,6 +7,93 @@ Dates are `YYYY-MM-DD`.
 
 ---
 
+## [0.4.0] - 2026-09-02
+
+Branch: `main`
+
+A second adversarial review, run through three personas - an agency hiring
+manager screening 40 portfolios, a non-technical business owner, and an HR
+screener - returned a verdict of REHAUL on the deck fan. The fan showed one
+readable card out of eight, five of which were empty placeholders, and it
+needed a 27-word instruction line to explain itself. It is replaced by a
+row of holo-tilt cards: every project side by side, readable with no clicks.
+
+### Added
+
+- `HoloDeck` - the project row. It renders `projects.length` cards. There is
+  no fixed slot count and no placeholder, so a stranger never sees what has
+  not been built yet.
+- `StarField` - a canvas star field behind the row. One layer, not 90 DOM
+  nodes. The loop stops when the hero leaves the viewport or the tab is
+  hidden, and reduced motion gets one static frame and no loop.
+- `useHoloTilt` - the hover effect. The card tilts up to 6.5 degrees towards
+  the pointer, a nebula sheen tracks its position, a rim highlight rakes
+  across, and the thumbnail slides the opposite way behind the frame. Every
+  pointer-driven value is written to a CSS custom property on the element and
+  batched into one animation frame, so a mouse move repaints but never
+  re-renders. Mouse pointers only; touch and pen have no hover to leave.
+- `ProjectCard` - one flat card, no flip. Automation type, title, Problem,
+  Solution, tech stack. All of it visible at once.
+- `DemoModal` - the demo player. The iframe mounts only while the dialog is
+  open, so no YouTube code loads on first paint and closing really stops
+  playback.
+- A real hero call to action: **Book a Call** and **Download CV**, next to the
+  availability row.
+- `scripts/optimize-images.mjs` - resizes each asset to the largest size the
+  layout can use and writes a WebP beside it. Run by hand, not at build time.
+
+### Changed
+
+- Project cards now carry `problem` and `solution` instead of metrics. The
+  numbers claimed 3.2x, 100%, 95% and +62% with no client, date range or
+  method behind any of them, so they are gone until they can be attributed.
+- Demo videos open muted. The flip card autoplayed with sound on one click,
+  which failed WCAG 2.1 SC 1.4.2 (Audio Control).
+- Images are WebP and sized to the layout: 2448 kB of JPEG became 108 kB.
+- The hero headline is now "I build AI systems for small and medium
+  businesses." It names the buyer instead of describing the craft, so a small
+  business owner can tell in one line that this is aimed at them.
+- The light card is `rgba(244, 247, 252, 0.97)`, a cool paper tone, not pure
+  white. A sheen laid over `#fff` has no tone to shift, so it reads as a stain
+  rather than as light. `--card-bg` is used only by this card.
+- The thumbnail is inset by a 10px frame instead of running flush to the card
+  edge, with a radius of `calc(var(--radius-panel) - 10px)` so the inner and
+  outer curves stay concentric. Flush, the video read as a picture pasted on
+  the front; framed, it reads as a tile inside the panel.
+- The sheen bloom is wider and gentler (520px, fading to 72%) and the rake
+  spans 22%-78% instead of 38%-62%. A narrow hard band reads as a drawn line;
+  a wide soft one reads as light.
+- Card copy is grounded. The Problem lines no longer assert statistics about
+  real clients that cannot be attributed ("half the calls were never logged",
+  "buyers waited hours"). Each Problem now states the situation the work was
+  built for, and each Solution names the real tools - Retell, GoHighLevel,
+  n8n, QuickCEP, Shopify - because a named tool is checkable and an adjective
+  is not.
+- The holo hover colours are set per theme, not derived from `--accent`. On
+  the near-white light card the old white rake was invisible and the pale
+  wash only greyed the panel, which read as washed out. Light now gets a
+  saturated blue bloom and a blue rake; dark is unchanged. Checked: body copy
+  stays near 6:1 on the tinted panel.
+- The hero states "Philippines" next to UTC+8. A timezone is a hint, not an
+  answer, for a screener checking work location.
+- `Project.metrics` is now optional. `Project.description`, `badge`,
+  `ctaLabel` and `ctaUrl` are unread by the hero and marked as such.
+
+### Removed
+
+- `FlipCardGrid`, `FlipCard`, `CardFront`, `CardBack`, `CardPlaceholder`,
+  the `useFlipCard` and `useScrollTilt` hooks, and the `FlipState` type.
+- The arrow buttons, the dot strip, the `NN / NN` counter, and the
+  instruction line. A pattern that needs a manual is the wrong pattern.
+- The six source JPEGs, replaced by WebP.
+
+### Fixed
+
+- The card hover lift ignored `prefers-reduced-motion`. Every lift, zoom and
+  drift in the row is now inside a `no-preference` query.
+- Thumbnails shipped at 1280px into a 340px slot with no lazy loading. They
+  now carry `sizes`, `decoding`, and lazy loading on all but the first card.
+
 ## [0.3.0] — 2026-09-01
 
 Branch: `main`

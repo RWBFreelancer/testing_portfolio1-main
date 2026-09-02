@@ -1,8 +1,12 @@
 import { motion, useReducedMotion } from "framer-motion";
-import FlipCardGrid from "./FlipCardGrid";
+import { Download } from "lucide-react";
+import { useCalendlyModal } from "@/hooks/useCalendlyModal";
+import { CV_URL } from "@/components/layout/Navbar";
+import HoloDeck from "./HoloDeck";
 
 export default function HeroSection() {
   const shouldReduceMotion = useReducedMotion();
+  const { openCalendly } = useCalendlyModal();
 
   return (
     <section id="hero" className="hero-section">
@@ -35,9 +39,9 @@ export default function HeroSection() {
             }}
             className="hero-section__headline font-display"
           >
-            I build AI automations
+            I build AI systems for
             <br />
-            <span className="hero-section__headline-accent">that solve real bottlenecks.</span>
+            <span className="hero-section__headline-accent">small and medium businesses.</span>
           </motion.h1>
 
           <motion.p
@@ -65,23 +69,35 @@ export default function HeroSection() {
               Available for new work
             </li>
             <li>20 hrs/wk</li>
-            <li>UTC+8 · overlaps 9am–1pm EST</li>
+            <li>Philippines · UTC+8 · overlaps 9am–1pm EST</li>
             <li>Rate on request</li>
           </motion.ul>
 
+          {/* The hero used to spend this line telling the visitor to scroll.
+              A screener who is already sold should be able to act here. */}
           <motion.div
             variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1 },
+              hidden: { opacity: 0, y: 12 },
+              visible: { opacity: 1, y: 0 },
             }}
-            className="hero-section__scroll-cta"
+            className="hero-section__actions"
           >
-            <span>Here are some of my recent projects</span>
-            <span aria-hidden>↓</span>
+            <button
+              type="button"
+              onClick={openCalendly}
+              className="site-navbar__cta hero-section__cta-primary"
+            >
+              Book a Call <span aria-hidden>→</span>
+            </button>
+
+            <a href={CV_URL} download className="hero-section__cta-secondary">
+              <Download className="h-4 w-4" aria-hidden />
+              Download CV
+            </a>
           </motion.div>
         </motion.div>
 
-        <FlipCardGrid />
+        <HoloDeck />
       </div>
     </section>
   );
