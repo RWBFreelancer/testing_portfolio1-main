@@ -141,6 +141,13 @@ Everywhere else, `opacity` only. The repeated 24px fade-up on roughly fifteen
 elements was the Framer Motion default, and motion that never varies stops
 being motion and becomes a loading delay.
 
+The backdrop is animated too: the same nebula image, oversized 7% on every
+side, drifting and breathing on a 96s `transform` loop, with a colour-only
+bloom over it on a 37s loop. Transform and opacity only, so it is composited
+on the GPU. It adds no image weight. Note `max-width: none` on `#bg-layer` -
+Tailwind Preflight's `img { max-width: 100% }` will otherwise clamp it back to
+the viewport and bare the right edge.
+
 Every animated component honours reduced motion. In React that is
 `useReducedMotion()`; in CSS every lift, zoom and drift lives inside a
 `@media (prefers-reduced-motion: no-preference)` block. Under reduced motion

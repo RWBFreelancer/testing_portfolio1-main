@@ -93,6 +93,9 @@
      just greys the panel, which reads as "washed out" rather than as an
      effect. Light gets saturated colour and a blue rake; dark gets the
      light-adding treatment that works over a dark panel. */
+  --bg-bloom-a: rgba(80, 140, 230, 0.1);
+  --bg-bloom-b: rgba(140, 120, 220, 0.07);
+
   --holo-sheen-a: rgba(66, 146, 226, 0.2);
   --holo-sheen-b: rgba(138, 108, 226, 0.14);
   --holo-rim: rgba(40, 96, 175, 0.16);
@@ -169,6 +172,9 @@
   );
   --accent: #00d4ff;
   --accent-glow: rgba(0, 212, 255, 0.25);
+
+  --bg-bloom-a: rgba(0, 150, 255, 0.13);
+  --bg-bloom-b: rgba(120, 80, 255, 0.1);
 
   --holo-sheen-a: rgba(0, 212, 255, 0.16);
   --holo-sheen-b: rgba(150, 110, 255, 0.11);
@@ -257,15 +263,82 @@
       color 0.5s ease;
   }
 
+  /* The nebula is the same single image it always was. It is oversized by 7%
+     on every side so it can drift and breathe without ever exposing an edge,
+     and it sits one layer further back than the bloom above it. */
   #bg-layer {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: -7%;
+    left: -7%;
+    width: 114%;
+    height: 114%;
+    /* Tailwind Preflight sets img { max-width: 100% }, which silently clamped
+       this back to the viewport width and left a bare strip down the right
+       edge once the layer was oversized for the drift. */
+    max-width: none;
     object-fit: cover;
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  /* Two soft glows that swell and fade over the nebula, so the sky reads as
+     lit from within rather than as a photograph pinned behind the page.
+     Colour only - it adds no image weight at all. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
     z-index: -1;
     pointer-events: none;
+    background:
+      radial-gradient(58% 48% at 20% 28%, var(--bg-bloom-a), transparent 70%),
+      radial-gradient(52% 44% at 80% 70%, var(--bg-bloom-b), transparent 72%);
+    opacity: 0.55;
+  }
+
+  /* Both loops are transform and opacity only, so the compositor handles them
+     on the GPU and the main thread never repaints. The periods are long and
+     deliberately not multiples of each other, so the pair never visibly
+     repeats. */
+  @media (prefers-reduced-motion: no-preference) {
+    #bg-layer {
+      animation: bg-drift 96s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    body::before {
+      animation: bg-bloom 37s ease-in-out infinite alternate;
+      will-change: transform, opacity;
+    }
+  }
+
+  @keyframes bg-drift {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    25% {
+      transform: translate3d(-1.2%, 0.9%, 0) scale(1.035);
+    }
+    50% {
+      transform: translate3d(0.7%, 1.7%, 0) scale(1.055);
+    }
+    75% {
+      transform: translate3d(1.5%, -0.7%, 0) scale(1.03);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+
+  @keyframes bg-bloom {
+    from {
+      opacity: 0.4;
+      transform: scale(1) translate3d(0, 0, 0);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1.14) translate3d(1.5%, -1%, 0);
+    }
   }
 
   section,

@@ -37,6 +37,22 @@ Card art and the share card, generated with fal.ai at build time.
 - `index.html` meta and OG descriptions now say "small and medium businesses"
   rather than "real business bottlenecks".
 
+### Changed
+
+- The nebula backdrop drifts and breathes. Same image, no new bytes: the layer
+  is oversized 7% on every side and animated with `transform` only, over a
+  96s loop, with a colour-only bloom on `body::before` on a 37s loop. The two
+  periods are not multiples of each other, so the pair never visibly repeats.
+  Both are transform and opacity, so the compositor runs them on the GPU and
+  the main thread never repaints. Off entirely under reduced motion.
+
+### Fixed
+
+- `#bg-layer` needed `max-width: none`. Tailwind Preflight sets
+  `img { max-width: 100% }`, which clamped the oversized backdrop back to the
+  viewport width and left a bare strip down the right edge. It was invisible
+  while the layer was exactly 100% wide.
+
 ### Notes
 
 Two things fal.ai was deliberately not used for.
