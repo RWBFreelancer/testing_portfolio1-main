@@ -4,6 +4,7 @@
  *   set -a; . path/to/fal.env; set +a       # or export FAL_KEY yourself
  *   node scripts/fal-generate.mjs cards     # the three project illustrations
  *   node scripts/fal-generate.mjs og        # the social-share backdrop
+ *   node scripts/fal-generate.mjs backdrops # the portrait page backgrounds
  *   node scripts/fal-generate.mjs cards --variants 3 --out .fal-drafts
  *
  * The key is read from the environment and is never written to this repo.
@@ -86,18 +87,46 @@ const OG = [
   "photographic, high dynamic range, subtle grain",
 ].join(", ");
 
+/* Portrait backdrops. The landscape nebula is 1.55 wide; cover-cropped into a
+   0.46 phone viewport it shows under 30% of the image, and everything of
+   interest in it falls outside the crop, so the sky goes flat black. These are
+   drawn tall so a phone gets a composition instead of a slice.
+
+   They carry their own style, not STYLE: the card art is flat cyan line work,
+   and these have to match the existing photographic nebulas instead. */
+const BACKDROPS = {
+  "bg-dark-portrait": [
+    "vertical deep-space nebula photograph, tall portrait composition",
+    "near-black background #010717 with deep navy blue",
+    "a luminous blue and cyan nebula cloud sweeping diagonally from the upper left",
+    "a second fainter cloud low in the frame, dark and quiet through the middle",
+    "scattered fine stars of varying brightness, one faint distant planet edge",
+    "deep, calm and unobtrusive, nothing bright enough to fight text laid over it",
+    "photographic, high dynamic range, fine grain, no text, no logos, no people",
+  ].join(", "),
+
+  "bg-light-portrait": [
+    "vertical high-altitude sky photograph, tall portrait composition",
+    "very pale blue and soft cream white, bright airy and clean",
+    "soft diffuse cloud banks in the upper area and lower corner",
+    "a gentle open expanse through the middle, almost plain",
+    "pale and low contrast throughout, nothing dark enough to fight text over it",
+    "photographic, soft natural light, fine grain, no text, no logos, no people",
+  ].join(", "),
+};
+
 const args = process.argv.slice(2);
 const target = args[0] ?? "cards";
 const variants = Number(args[args.indexOf("--variants") + 1]) || 1;
 const outDir = args.includes("--out") ? args[args.indexOf("--out") + 1] : ".fal-drafts";
 
 /** fal returns a hosted URL; pull the bytes down and keep them locally. */
-async function generate(name, prompt, width, height, index) {
+async function generate(name, prompt, width, height, index, ownStyle = false) {
   const res = await fetch(MODEL, {
     method: "POST",
     headers: { Authorization: `Key ${FAL_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      prompt: `${prompt}, ${STYLE}`,
+      prompt: ownStyle ? prompt : `${prompt}, ${STYLE}`,
       image_size: { width, height },
       num_images: 1,
       num_inference_steps: 34,
@@ -131,6 +160,10 @@ if (target === "cards" || target === "all") {
 }
 if (target === "og" || target === "all") {
   for (let i = 0; i < variants; i++) jobs.push(() => generate("og-bg", OG, 1200, 630, i));
+}
+if (target === "backdrops" || target === "all") {
+  for (const [name, prompt] of Object.entries(BACKDROPS))
+    for (let i = 0; i < variants; i++) jobs.push(() => generate(name, prompt, 768, 1536, i, true));
 }
 
 if (!jobs.length) {

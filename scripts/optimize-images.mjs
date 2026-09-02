@@ -25,9 +25,27 @@ const MAX_WIDTH = {
   profile: 900,
   "bg-dark": 1920,
   "bg-light": 1920,
+  // Portrait backdrops are served to phones. 768 covers a 390px viewport at
+  // 2x device pixel ratio with room to spare.
+  "bg-dark-portrait": 768,
+  "bg-light-portrait": 768,
 };
 
 const DEFAULT_WIDTH = 1600;
+
+/**
+ * Per-asset tone correction, applied as a channel multiplier before encoding.
+ *
+ * The generated portrait nebula came back far brighter than the backdrop the
+ * site already had: peak luminance 0.834 against 0.465, and a mean 17x higher.
+ * A backdrop that bright fights every piece of text laid over it, and no
+ * amount of scrim fixes it without turning the sky to mud. This pulls it back
+ * onto the same envelope as bg-dark. Luminance goes roughly as the 2.2 power
+ * of the channel value, so 0.75 here is about a halving of peak luminance.
+ */
+const TONE = {
+  "bg-dark-portrait": 0.75,
+};
 
 const kb = (n) => `${Math.round(n / 1024)} kB`;
 
@@ -51,14 +69,19 @@ for (const file of files) {
 
   // sharp cannot read and write the same path in one pass, so write beside it
   // and swap the file in afterwards.
+  const tone = TONE[name];
+
   const tmp = join(ASSET_DIR, `.tmp-${file}`);
   await sharp(src)
     .resize({ width: targetWidth, withoutEnlargement: true })
+    .linear(tone ?? 1, 0)
     .jpeg({ quality: 78, mozjpeg: true, progressive: true })
     .toFile(tmp);
   await rename(tmp, src);
 
   // The WebP sits next to the JPEG so a <picture> or an import can pick it up.
+  // The jpeg above is already toned, so the webp is made from it and must not
+  // apply the multiplier a second time.
   const webp = join(ASSET_DIR, `${name}.webp`);
   await sharp(src).resize({ width: targetWidth, withoutEnlargement: true }).webp({ quality: 76 }).toFile(webp);
 

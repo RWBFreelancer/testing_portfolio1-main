@@ -109,8 +109,8 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
         )}
       </AnimatePresence>
 
-      <header className={`site-navbar${scrolled ? " scrolled" : ""}`}>
-        <nav className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <header className={`site-navbar${scrolled ? " scrolled" : ""}${open ? " is-open" : ""}`}>
+        <nav className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-5 sm:px-6 lg:px-8">
           {/* Left: Logo */}
           <a href="#hero" className="site-navbar__logo">
             <span className="site-navbar__logo-bin">Bin</span>
@@ -155,7 +155,7 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
               type="button"
               onClick={openCalendly}
               aria-label="Book a discovery call"
-              className="site-navbar__cta inline-flex items-center gap-2 whitespace-nowrap !px-4 text-[13px] sm:!px-6 sm:text-sm"
+              className="site-navbar__cta h-10 shrink-0 items-center gap-2 whitespace-nowrap !px-4 text-[13px] sm:!px-6 sm:text-sm"
             >
               Book a Call{" "}
               <span aria-hidden className="hidden sm:inline">
@@ -180,7 +180,7 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               aria-controls="mobile-nav-panel"
-              className="grid h-11 w-11 place-items-center rounded-full text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:hidden"
+              className="site-navbar__menu-toggle grid h-10 w-10 shrink-0 place-items-center rounded-full text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:hidden"
             >
               {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -198,12 +198,12 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
               animate={{ height: "auto", opacity: 1 }}
               exit={shouldReduceMotion ? undefined : { height: 0, opacity: 0 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="relative z-50 overflow-hidden border-t border-border md:hidden"
+              className="site-navbar__panel relative z-50 overflow-hidden border-t border-border md:hidden"
               role="dialog"
               aria-modal="true"
               aria-label="Mobile navigation"
             >
-              <ul className="flex flex-col items-center justify-center gap-2 px-4 py-4 text-center">
+              <ul className="flex flex-col items-stretch gap-1 px-4 py-3 text-center">
                 {links.map((l) => (
                   <li key={l.href} className="w-full">
                     <a
@@ -219,7 +219,7 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
                             ?.scrollIntoView({ behavior: "smooth" });
                         }, 50);
                       }}
-                      className={`site-navbar__link block w-full px-3 py-4 text-center text-base font-medium${
+                      className={`site-navbar__link block w-full rounded-[14px] px-3 py-3 text-center text-base font-medium${
                         activeHref === l.href ? " active" : ""
                       }`}
                     >
