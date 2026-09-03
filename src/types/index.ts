@@ -1,3 +1,13 @@
+/** One screenshot in a project's gallery. Every one is redacted at build
+ *  time by scripts/make-gallery.mjs: no client name, no customer of a client,
+ *  no email address survives into the committed file. */
+export interface GalleryShot {
+  src: string;
+  /** What the visitor is looking at. Read out to a screen reader as the alt
+   *  text, and shown under the picture, so it has to stand on its own. */
+  caption: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -15,6 +25,9 @@ export interface Project {
    *  that opens nothing. */
   youtubeId?: string;
   thumbnailUrl: string;
+  /** The screenshots behind the card's "View screenshots" button. A project
+   *  with none renders no button rather than an empty dialog. */
+  gallery?: GalleryShot[];
   techStack: string[];
   /** The badge over the thumbnail: a running time when there is a video, and
    *  the standing note when there is not. */

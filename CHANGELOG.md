@@ -7,6 +7,44 @@ Dates are `YYYY-MM-DD`.
 
 ---
 
+## [0.7.0] - 2026-09-03
+
+Branch: `main`
+
+Every card now carries proof as well as a pitch: the video stays at the top,
+and a new button at the foot opens the real screenshots.
+
+### Added
+
+- **View screenshots** button on each project card. It opens a viewer with one
+  picture at a time, a caption, arrow buttons, left/right keys, and a thumbnail
+  strip. `GalleryModal.tsx`. The button appears only where there are pictures,
+  the same rule the play button already followed.
+- `Project.gallery` (optional) and the `GalleryShot` type: a source and a
+  caption. The caption is also the alt text, so it has to stand on its own.
+- `scripts/make-gallery.mjs` - builds the 20 gallery screenshots from Google
+  Drive. Every source is scaled to 1400 px wide first, so the redaction
+  rectangles in the file are the coordinates you see in the shipped image.
+  Run by hand; only the WebP output is committed.
+- 20 redacted screenshots in `src/assets/gallery/`.
+
+### Changed
+
+- **AI Marketing Department**: running time is now `4:22 Demo`, and the tech
+  stack reads Claude Code, Cursor, OpenRouter, fal.ai - what the workspace was
+  built with, instead of the model it happened to be calling.
+
+### Security
+
+- Redaction is baked into every committed WebP, at build time, before the file
+  is written. There is no unredacted copy in this repo, and the text cannot be
+  recovered from the output. Covered: the family law firm's name, the field
+  service client's name (NDA), the marketing agency's own clients and staff,
+  the Make.com folders named after clients, and one live chat's shopper name,
+  email address and IP address.
+
+---
+
 ## [0.6.0] - 2026-09-03
 
 Branch: `main`

@@ -1,4 +1,4 @@
-import { PlayCircle } from "lucide-react";
+import { Images, PlayCircle } from "lucide-react";
 import { useHoloTilt } from "@/hooks/useHoloTilt";
 import type { Project } from "@/types";
 
@@ -15,19 +15,24 @@ import type { Project } from "@/types";
  *
  * A project with no recorded demo yet renders the same frame as a plain figure:
  * no button, no play badge, and the corner says the demo is coming. A play
- * button that opens nothing is worse than no play button.
+ * button that opens nothing is worse than no play button. The screenshot
+ * button under the card follows the same rule: it appears only where there
+ * are screenshots to show.
  */
 export default function ProjectCard({
   project,
   index,
   onPlay,
+  onOpenGallery,
 }: {
   project: Project;
   index: number;
   onPlay: () => void;
+  onOpenGallery: () => void;
 }) {
   const { ref, onPointerMove, onPointerLeave } = useHoloTilt<HTMLDivElement>();
   const hasDemo = Boolean(project.youtubeId);
+  const shotCount = project.gallery?.length ?? 0;
 
   // The frame is a button only when there is something to open. Everything
   // inside it is the same either way.
@@ -98,6 +103,21 @@ export default function ProjectCard({
               </li>
             ))}
           </ul>
+
+          {/* The video is the pitch; the screenshots are the proof. They sit
+              at opposite ends of the card so neither one competes with the
+              other for the same click. */}
+          {shotCount > 0 && (
+            <button
+              type="button"
+              className="hero-holo-card__shots label-mono"
+              onClick={onOpenGallery}
+            >
+              <Images className="h-4 w-4" strokeWidth={1.6} aria-hidden />
+              View screenshots
+              <span className="hero-holo-card__shots-count">{shotCount}</span>
+            </button>
+          )}
         </div>
 
         {/* Decoration, and both sit above the card face. They are last in the

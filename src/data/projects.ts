@@ -6,6 +6,31 @@ import thumbHyperlite from "@/assets/project-hyperlite-chatbot.webp";
 import thumbCrm from "@/assets/project-aios-crm.webp";
 import thumbMake from "@/assets/project-make-audit.webp";
 
+/* The gallery screenshots. Every one is a redacted capture of the real tool,
+   built by scripts/make-card-thumbs.mjs' sibling, scripts/make-gallery.mjs.
+   The blur is baked into the committed file: there is no unredacted copy in
+   this repo, so nothing here can leak a client's name by mistake. */
+import shotOutbound1 from "@/assets/gallery/family-law-outbound-1.webp";
+import shotOutbound2 from "@/assets/gallery/family-law-outbound-2.webp";
+import shotOutbound3 from "@/assets/gallery/family-law-outbound-3.webp";
+import shotInbound1 from "@/assets/gallery/family-law-inbound-1.webp";
+import shotInbound2 from "@/assets/gallery/family-law-inbound-2.webp";
+import shotField1 from "@/assets/gallery/field-service-voice-1.webp";
+import shotField2 from "@/assets/gallery/field-service-voice-2.webp";
+import shotField3 from "@/assets/gallery/field-service-voice-3.webp";
+import shotField4 from "@/assets/gallery/field-service-voice-4.webp";
+import shotHyper1 from "@/assets/gallery/hyperlite-chatbot-1.webp";
+import shotHyper2 from "@/assets/gallery/hyperlite-chatbot-2.webp";
+import shotHyper3 from "@/assets/gallery/hyperlite-chatbot-3.webp";
+import shotCrm1 from "@/assets/gallery/aios-crm-marketing-1.webp";
+import shotCrm2 from "@/assets/gallery/aios-crm-marketing-2.webp";
+import shotCrm3 from "@/assets/gallery/aios-crm-marketing-3.webp";
+import shotCrm4 from "@/assets/gallery/aios-crm-marketing-4.webp";
+import shotCrm5 from "@/assets/gallery/aios-crm-marketing-5.webp";
+import shotMake1 from "@/assets/gallery/make-audit-1.webp";
+import shotMake2 from "@/assets/gallery/make-audit-2.webp";
+import shotMake3 from "@/assets/gallery/make-audit-3.webp";
+
 /* Each card reads problem first, then solution. A visitor who does not know
    what n8n is can still tell whether this person fixes their kind of problem.
 
@@ -29,6 +54,23 @@ export const projects: Project[] = [
       "A Retell voice agent places the calls, writes each outcome straight into GoHighLevel, and hands off to an n8n workflow that runs the follow-up.",
     youtubeId: "P8bSvgO0-MI",
     thumbnailUrl: thumbOutbound,
+    gallery: [
+      {
+        src: shotOutbound1,
+        caption:
+          "The n8n workflow, in three parts: place the call, send the payment link by SMS and email, then write the result back to the CRM.",
+      },
+      {
+        src: shotOutbound2,
+        caption:
+          "The Retell agent. The prompt sets one job only: confirm the client can pay, send the link, verify receipt. The firm name is blurred.",
+      },
+      {
+        src: shotOutbound3,
+        caption:
+          "The same agent on Vapi, with the model, voice and cost per minute side by side. The firm name is blurred.",
+      },
+    ],
     techStack: ["GHL", "n8n", "Retell AI"],
     badge: "Automated payment recovery calls",
     demoLabel: "1:26 Demo",
@@ -48,6 +90,18 @@ export const projects: Project[] = [
       "A Retell voice agent answers every call, asks the intake questions, books the consultation into the firm calendar, and flags urgent matters for the on-call attorney.",
     youtubeId: "9Hb7Q9BXREw",
     thumbnailUrl: thumbInbound,
+    gallery: [
+      {
+        src: shotInbound1,
+        caption:
+          "The n8n workflow: look the caller up in the CRM, read the live calendar, then open or update the lead after the call.",
+      },
+      {
+        src: shotInbound2,
+        caption:
+          "The Retell prompt. Worked examples teach the agent to turn away a caller outside New York State, or outside family law. The firm name is blurred.",
+      },
+    ],
     techStack: ["GHL", "n8n", "Retell AI"],
     badge: "Automated intake & scheduling",
     demoLabel: "5:21 Demo",
@@ -67,6 +121,27 @@ export const projects: Project[] = [
     solution:
       "A voice agent answers every call, takes the name, callback number, location and fault, sorts it into routine service, roadside emergency, existing customer or sales, and sends the owner a recap by email and text within a minute of the call ending.",
     thumbnailUrl: thumbFieldService,
+    gallery: [
+      {
+        src: shotField1,
+        caption:
+          "The live account: 606 calls, 1m 15s average, and the pick-up rate flat at 100%. The workspace name is masked.",
+      },
+      {
+        src: shotField2,
+        caption:
+          "Agent A. Every branch the caller can take is a node, so the agent cannot wander outside them.",
+      },
+      {
+        src: shotField3,
+        caption: "Agent B, the shorter build, kept beside Agent A to compare cost and latency.",
+      },
+      {
+        src: shotField4,
+        caption:
+          "The recap workflow in n8n. Each run sends the owner the call summary by email and text.",
+      },
+    ],
     techStack: ["Retell AI", "n8n", "GPT-4.1"],
     badge: "Every after-hours call answered",
     demoLabel: "Demo coming soon",
@@ -84,6 +159,23 @@ export const projects: Project[] = [
       "A QuickCEP assistant on the Shopify storefront answers those, narrows the catalogue to the right fixture, and takes warranty claims without a human.",
     youtubeId: "1vhT-IMSvVU",
     thumbnailUrl: thumbHyperlite,
+    gallery: [
+      {
+        src: shotHyper1,
+        caption:
+          "The responder flow: read the question, search the product knowledge base, then answer or hand over.",
+      },
+      {
+        src: shotHyper2,
+        caption:
+          "The prompt. It fixes the scope to USA shipping, and gives a fallback line for anything it does not know.",
+      },
+      {
+        src: shotHyper3,
+        caption:
+          "A live chat. The bot answers a fixture question with real dimensions. Every shopper detail is blurred.",
+      },
+    ],
     techStack: ["QuickCEP", "Shopify", "GPT-4"],
     badge: "Always-on customer support",
     demoLabel: "4:22 Demo",
@@ -104,9 +196,35 @@ export const projects: Project[] = [
       "One brief goes in, and the workspace writes a version for each channel it is pointed at, inside that channel's own limits, using only the facts the brand kit allows.",
     youtubeId: "wLjbv97FStY",
     thumbnailUrl: thumbCrm,
-    techStack: ["Gemini 2.5", "AIOS CRM"],
+    gallery: [
+      {
+        src: shotCrm1,
+        caption: "The department picker: copy, creative, SEO and GEO, analytics, campaigns.",
+      },
+      {
+        src: shotCrm2,
+        caption:
+          "The copy room. One brief on the right, one tab per channel on the left, each inside that channel's character limit.",
+      },
+      {
+        src: shotCrm3,
+        caption:
+          "The creative step. Upload a picture, generate one, generate a clip, or publish the text on its own.",
+      },
+      {
+        src: shotCrm4,
+        caption:
+          "The channel picker. Each channel carries its own limit and its own tone, so the writer stays inside them.",
+      },
+      {
+        src: shotCrm5,
+        caption:
+          "The brand kit. It holds the facts the writer may treat as true. Anything missing is tagged, never invented.",
+      },
+    ],
+    techStack: ["Claude Code", "Cursor", "OpenRouter", "fal.ai"],
     badge: "One brief, every channel",
-    demoLabel: "Walkthrough",
+    demoLabel: "4:22 Demo",
     ctaLabel: "Watch the Walkthrough",
     ctaUrl: "https://www.youtube.com/watch?v=wLjbv97FStY",
   },
@@ -122,6 +240,21 @@ export const projects: Project[] = [
     solution:
       "I found the cause of each fault and fixed it: a trigger re-importing months of old leads, a login token standing in for a production one, a CRM schema that would not take custom fields, and a missing database mapping that dropped leads in silence.",
     thumbnailUrl: thumbMake,
+    gallery: [
+      {
+        src: shotMake1,
+        caption:
+          "Client account one. Run counts, data volumes and live toggles stay sharp; every client and staff name is blurred.",
+      },
+      {
+        src: shotMake2,
+        caption: "Client account two, with the same audit: what runs, how often, and what moved.",
+      },
+      {
+        src: shotMake3,
+        caption: "Client account three. The duplicate-lead fault was traced and fixed here.",
+      },
+    ],
     techStack: ["Make.com", "Facebook Lead Ads", "Google Sheets"],
     badge: "Stable scenarios, no duplicate leads",
     demoLabel: "Demo coming soon",
