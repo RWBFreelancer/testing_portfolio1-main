@@ -41,6 +41,48 @@ import shotMake3 from "@/assets/gallery/make-audit-3.webp";
    Every thumbnail is a screenshot of the real tool, built by
    scripts/make-card-thumbs.mjs. None of them is an illustration. */
 export const projects: Project[] = [
+
+  {
+    id: "field-service-voice",
+    title: "Field Service Voice Agent",
+    category: "Voice AI · After hours",
+    tagline:
+      "AI voice agent that answers every after-hours call a mobile repair business was missing.",
+    description:
+      "An after-hours voice agent for a mobile fleet and equipment repair company. The client is not named here, under NDA. The agent is deliberately narrow: it never quotes a price, never books a job, and never promises that a technician is on the way. It takes the details and stops, so every decision that costs money still goes through a person. Holding an LLM inside that boundary, call after call, was the hard part of the build.",
+    problem:
+      "Calls that came in after hours, or while the crew was already on a job, went to voicemail, and each one was work walking away.",
+    solution:
+      "A voice agent answers every call, takes the name, callback number, location and fault, sorts it into routine service, roadside emergency, existing customer or sales, and sends the owner a recap by email and text within a minute of the call ending.",
+    youtubeId: "E_5ZXeye-0E",
+    thumbnailUrl: thumbFieldService,
+    gallery: [
+      {
+        src: shotField1,
+        caption:
+          "The live account: 606 calls, 1m 15s average, and the pick-up rate flat at 100%. The workspace name is masked.",
+      },
+      {
+        src: shotField2,
+        caption:
+          "Agent A. Every branch the caller can take is a node, so the agent cannot wander outside them.",
+      },
+      {
+        src: shotField3,
+        caption: "Agent B, the shorter build, kept beside Agent A to compare cost and latency.",
+      },
+      {
+        src: shotField4,
+        caption:
+          "The recap workflow in n8n. Each run sends the owner the call summary by email and text.",
+      },
+    ],
+    techStack: ["Retell AI", "n8n", "FieldPulse"],
+    badge: "Every after-hours call answered",
+    demoLabel: "3:14 Demo",
+    ctaLabel: "Watch the Demo",
+    ctaUrl: "https://www.youtube.com/watch?v=E_5ZXeye-0E",
+  },
   {
     id: "family-law-outbound",
     title: "Family Law Outbound Agent",
@@ -71,7 +113,7 @@ export const projects: Project[] = [
           "The same agent on Vapi, with the model, voice and cost per minute side by side. The firm name is blurred.",
       },
     ],
-    techStack: ["GHL", "n8n", "Retell AI"],
+    techStack: ["GHL", "n8n", "Vapi"],
     badge: "Automated payment recovery calls",
     demoLabel: "1:26 Demo",
     ctaLabel: "Watch the Demo",
@@ -109,44 +151,6 @@ export const projects: Project[] = [
     ctaUrl: "https://www.youtube.com/watch?v=9Hb7Q9BXREw",
   },
   {
-    id: "field-service-voice",
-    title: "Field Service Voice Agent",
-    category: "Voice AI · After hours",
-    tagline:
-      "AI voice agent that answers every after-hours call a mobile repair business was missing.",
-    description:
-      "An after-hours voice agent for a mobile fleet and equipment repair company. The client is not named here, under NDA. The agent is deliberately narrow: it never quotes a price, never books a job, and never promises that a technician is on the way. It takes the details and stops, so every decision that costs money still goes through a person. Holding an LLM inside that boundary, call after call, was the hard part of the build.",
-    problem:
-      "Calls that came in after hours, or while the crew was already on a job, went to voicemail, and each one was work walking away.",
-    solution:
-      "A voice agent answers every call, takes the name, callback number, location and fault, sorts it into routine service, roadside emergency, existing customer or sales, and sends the owner a recap by email and text within a minute of the call ending.",
-    thumbnailUrl: thumbFieldService,
-    gallery: [
-      {
-        src: shotField1,
-        caption:
-          "The live account: 606 calls, 1m 15s average, and the pick-up rate flat at 100%. The workspace name is masked.",
-      },
-      {
-        src: shotField2,
-        caption:
-          "Agent A. Every branch the caller can take is a node, so the agent cannot wander outside them.",
-      },
-      {
-        src: shotField3,
-        caption: "Agent B, the shorter build, kept beside Agent A to compare cost and latency.",
-      },
-      {
-        src: shotField4,
-        caption:
-          "The recap workflow in n8n. Each run sends the owner the call summary by email and text.",
-      },
-    ],
-    techStack: ["Retell AI", "n8n", "GPT-4.1"],
-    badge: "Every after-hours call answered",
-    demoLabel: "Demo coming soon",
-  },
-  {
     id: "hyperlite-chatbot",
     title: "Hyperlite LED Chatbot",
     category: "Chatbot · Ecommerce",
@@ -176,7 +180,7 @@ export const projects: Project[] = [
           "A live chat. The bot answers a fixture question with real dimensions. Every shopper detail is blurred.",
       },
     ],
-    techStack: ["QuickCEP", "Shopify", "GPT-4"],
+    techStack: ["QuickCEP", "Shopify"],
     badge: "Always-on customer support",
     demoLabel: "4:22 Demo",
     ctaLabel: "View Website",
