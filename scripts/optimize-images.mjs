@@ -15,13 +15,22 @@ import { readdir, stat, rename } from "node:fs/promises";
 import { join, extname, basename } from "node:path";
 import sharp from "sharp";
 
-const ASSET_DIR = new URL("../src/assets/", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
+const ASSET_DIR = new URL("../src/assets/", import.meta.url).pathname.replace(
+  /^\/([A-Za-z]:)/,
+  "$1",
+);
 
 /** The widest each image is ever painted, plus headroom for a 2x screen. */
 const MAX_WIDTH = {
-  "project-1": 900,
-  "project-2": 900,
-  "project-3": 900,
+  // The project cards are built and sized by scripts/make-card-thumbs.mjs,
+  // straight from the screenshots in Google Drive. They are listed here only
+  // so a stray PNG dropped into src/assets gets the same cap.
+  "project-family-law-outbound": 900,
+  "project-family-law-inbound": 900,
+  "project-field-service-voice": 900,
+  "project-hyperlite-chatbot": 900,
+  "project-aios-crm": 900,
+  "project-make-audit": 900,
   profile: 900,
   "bg-dark": 1920,
   "bg-light": 1920,
@@ -83,7 +92,10 @@ for (const file of files) {
   // The jpeg above is already toned, so the webp is made from it and must not
   // apply the multiplier a second time.
   const webp = join(ASSET_DIR, `${name}.webp`);
-  await sharp(src).resize({ width: targetWidth, withoutEnlargement: true }).webp({ quality: 76 }).toFile(webp);
+  await sharp(src)
+    .resize({ width: targetWidth, withoutEnlargement: true })
+    .webp({ quality: 76 })
+    .toFile(webp);
 
   const endSize = (await stat(src)).size;
   const webpSize = (await stat(webp)).size;

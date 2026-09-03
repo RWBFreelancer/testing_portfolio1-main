@@ -7,6 +7,51 @@ Dates are `YYYY-MM-DD`.
 
 ---
 
+## [0.6.0] - 2026-09-03
+
+Branch: `main`
+
+Six projects instead of three, and every thumbnail is now a screenshot of the
+real tool.
+
+### Added
+
+- Three project cards: **Field Service Voice Agent** (an after-hours voice
+  agent for a mobile fleet and equipment repair company, client unnamed under
+  NDA), **AI Marketing Department** (a marketing workspace built into a
+  client's CRM, with the walkthrough video), and **Make.com Audit & Repair**
+  (broken scenarios traced to their cause across several client accounts).
+- `scripts/make-card-thumbs.mjs` - builds the six card thumbnails from the
+  screenshots in Google Drive. Each entry names the crop, so the framing is
+  recorded rather than remembered. Run by hand; only the WebP output is
+  committed.
+- A card with no recorded demo renders a still frame: no play button, and the
+  corner badge says the demo is coming. A play button that opens nothing is
+  worse than no play button. `Project.youtubeId` is optional to carry this.
+
+### Changed
+
+- Every project thumbnail is now a screenshot of the tool that does the work:
+  the n8n workflows, the chatbot flow, the live Retell dashboard, the CRM
+  workspace, the Make scenario list. The generated cyan illustrations are
+  gone. They were decoration in a place where a visitor is looking for proof.
+- The card assets are named after their project rather than `project-1..3`.
+- The top three cards load eagerly, not just the first. On a wide screen the
+  row is three across, and all three are above the fold.
+- Card order groups the work: the three voice agents first, then the chat,
+  CRM and repair jobs.
+
+### Security
+
+- The Make scenario list names the agency's own clients and the people who own
+  each scenario. Those strips are blurred at full resolution before the image
+  is scaled down, so there is no unredacted copy in the repo and nothing to
+  recover from the shipped WebP. The run counts, data volumes, dates,
+  connectors and live toggles stay sharp, and they are the part that is
+  evidence.
+
+---
+
 ## [0.5.0] - 2026-09-02
 
 Branch: `main`
@@ -270,7 +315,7 @@ audit that turned up three real failures.
   - light `--primary`, used as a text colour via `text-primary`, was 3.17:1
     → `oklch(0.52 0.17 245)`
   - light `--text-muted` was 4.41:1 in the footer → `#55637a`
-  All measured text now clears 4.5:1, or 3:1 for large type.
+    All measured text now clears 4.5:1, or 3:1 for large type.
 - Removed `!bg-background/50` from the three form fields; it was overriding the
   new `--field-bg` token.
 
@@ -372,13 +417,13 @@ stops reading as generated.
 
 ### Measured
 
-| | Before | After |
-| --- | --- | --- |
-| Distinct text styles | 44 | 22 |
-| Font sizes | 16 | 9 |
-| `backdrop-filter` surfaces | 33 | 4 |
-| Corner radii | 8 | 2 + circles |
-| Page height (1440px) | 7,032px | 5,753px |
+|                            | Before  | After       |
+| -------------------------- | ------- | ----------- |
+| Distinct text styles       | 44      | 22          |
+| Font sizes                 | 16      | 9           |
+| `backdrop-filter` surfaces | 33      | 4           |
+| Corner radii               | 8       | 2 + circles |
+| Page height (1440px)       | 7,032px | 5,753px     |
 
 Verified at 390 / 820 / 1440px in both themes: no console errors, no failed
 requests, no horizontal overflow.

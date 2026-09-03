@@ -12,6 +12,10 @@ import type { Project } from "@/types";
  * On hover the panel tilts towards the pointer, a nebula sheen tracks across
  * its face, and the thumbnail slides the other way behind the frame. All of it
  * is driven by CSS custom properties written in `useHoloTilt`.
+ *
+ * A project with no recorded demo yet renders the same frame as a plain figure:
+ * no button, no play badge, and the corner says the demo is coming. A play
+ * button that opens nothing is worse than no play button.
  */
 export default function ProjectCard({
   project,
@@ -23,6 +27,18 @@ export default function ProjectCard({
   onPlay: () => void;
 }) {
   const { ref, onPointerMove, onPointerLeave } = useHoloTilt<HTMLDivElement>();
+  const hasDemo = Boolean(project.youtubeId);
+
+  // The frame is a button only when there is something to open. Everything
+  // inside it is the same either way.
+  const Frame = hasDemo ? "button" : "div";
+  const frameProps = hasDemo
+    ? ({
+        type: "button",
+        onClick: onPlay,
+        "aria-label": `Play the ${project.title} demo video`,
+      } as const)
+    : {};
 
   return (
     <div
@@ -32,34 +48,37 @@ export default function ProjectCard({
       onPointerLeave={onPointerLeave}
     >
       <article className="hero-holo-card__inner">
-        <button
-          type="button"
-          className="hero-holo-card__thumb"
-          onClick={onPlay}
-          aria-label={`Play the ${project.title} demo video`}
+        <Frame
+          className={`hero-holo-card__thumb${hasDemo ? "" : " hero-holo-card__thumb--static"}`}
+          {...frameProps}
         >
           <img
             src={project.thumbnailUrl}
             alt=""
             className="hero-holo-card__image"
-            width={1280}
-            height={800}
-            // The first card is the largest thing above the fold, so it loads
-            // eagerly and gets fetch priority. The rest can wait.
-            loading={index === 0 ? "eager" : "lazy"}
+            width={900}
+            height={563}
+            // The top row is the largest thing above the fold, so it loads
+            // eagerly and the first card gets fetch priority. The rest can wait.
+            loading={index < 3 ? "eager" : "lazy"}
             fetchPriority={index === 0 ? "high" : "auto"}
             decoding="async"
             sizes="(max-width: 640px) 90vw, (max-width: 1100px) 45vw, 380px"
             draggable={false}
           />
           <span className="hero-holo-card__shade" aria-hidden />
-          <span className="hero-holo-card__play" aria-hidden>
-            <PlayCircle className="h-6 w-6" strokeWidth={1.5} />
-          </span>
-          <span className="hero-holo-card__demo label-mono" aria-hidden>
+          {hasDemo && (
+            <span className="hero-holo-card__play" aria-hidden>
+              <PlayCircle className="h-6 w-6" strokeWidth={1.5} />
+            </span>
+          )}
+          <span
+            className={`hero-holo-card__demo label-mono${hasDemo ? "" : " hero-holo-card__demo--pending"}`}
+            aria-hidden
+          >
             {project.demoLabel}
           </span>
-        </button>
+        </Frame>
 
         <div className="hero-holo-card__body">
           <p className="hero-holo-card__kind label-mono">{project.category}</p>

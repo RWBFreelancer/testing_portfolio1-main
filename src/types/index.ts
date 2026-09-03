@@ -10,9 +10,14 @@ export interface Project {
   /** Kept optional. Numbers only return when a client name and a date range
    *  can stand behind them. */
   metrics?: { label: string; value: string }[];
-  youtubeId: string;
+  /** Omitted while a project has no recorded demo. The card then shows a still
+   *  frame and says the demo is coming, rather than offering a play button
+   *  that opens nothing. */
+  youtubeId?: string;
   thumbnailUrl: string;
   techStack: string[];
+  /** The badge over the thumbnail: a running time when there is a video, and
+   *  the standing note when there is not. */
   demoLabel: string;
 
   /* Not read by the hero today. Kept because they hold real information -
@@ -20,8 +25,8 @@ export interface Project {
      obvious source for a future case-study page. */
   description: string;
   badge: string;
-  ctaLabel: string;
-  ctaUrl: string;
+  ctaLabel?: string;
+  ctaUrl?: string;
 }
 
 export type ThemeMode = "light" | "dark";

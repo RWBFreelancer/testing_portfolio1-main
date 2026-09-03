@@ -10,7 +10,8 @@ import type { Project } from "@/types";
  *
  * Every project renders, always, side by side. There is no fixed slot count and
  * no placeholder card: the row is exactly as long as the work is. Nothing is
- * hidden behind a click, so the ten-second visitor reads all of it.
+ * hidden behind a click, so the ten-second visitor reads all of it. Six
+ * projects fall as two rows of three on a wide screen.
  *
  * The only state here is which demo is open. The hover tilt is handled inside
  * each card against the DOM, so moving the pointer never re-renders this tree.
@@ -28,7 +29,7 @@ export default function HoloDeck() {
             key={project.id}
             project={project}
             index={i}
-            onPlay={() => setPlaying(project)}
+            onPlay={() => project.youtubeId && setPlaying(project)}
           />
         ))}
       </div>

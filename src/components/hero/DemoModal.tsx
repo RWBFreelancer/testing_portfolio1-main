@@ -17,14 +17,16 @@ export default function DemoModal({
   project: Project | null;
   onClose: () => void;
 }) {
-  const open = project !== null;
+  // A project with no recorded demo never reaches here, but the guard keeps
+  // the iframe from ever being built with an undefined video id.
+  const open = project !== null && project.youtubeId !== undefined;
 
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       {/* max-w-lg and gap-4 are baked into DialogContent, and a Tailwind utility
           beats an @layer components rule, so the override belongs here. */}
       <DialogContent className="hero-demo-modal max-w-[min(960px,94vw)] gap-2.5">
-        {project && (
+        {open && project && (
           <>
             <DialogTitle className="hero-demo-modal__title font-display">
               {project.title}
