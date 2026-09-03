@@ -51,7 +51,7 @@ export default function HeroSection() {
             }}
             className="hero-section__subtitle"
           >
-            Voice agents that answer and qualify. Chatbots that resolve. n8n workflows that move the
+            Voice agents that qualifies leads. Chatbots that resolve customer issues. n8n workflows that move
             data so nobody has to retype it.
           </motion.p>
 
@@ -68,7 +68,7 @@ export default function HeroSection() {
               <span aria-hidden className="hero-section__availability-dot" />
               Available for new work
             </li>
-            <li>20 hrs/wk</li>
+            <li>40 hrs/wk</li>
             <li>Philippines · UTC+8 · overlaps 9am–1pm EST</li>
             <li>Rate on request</li>
           </motion.ul>

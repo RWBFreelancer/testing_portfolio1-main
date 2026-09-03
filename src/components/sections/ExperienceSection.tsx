@@ -225,7 +225,7 @@ export default function ExperienceSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 max-w-2xl">
           <span className="label-mono text-primary">Experience</span>
-          <h2 className="section-heading mt-4">Every claim here has a number on it.</h2>
+          <h2 className="section-heading mt-4">More than 3 years in AI & Automation</h2>
         </div>
 
         <ol className="experience-timeline">
