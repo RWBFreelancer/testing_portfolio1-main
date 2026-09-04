@@ -1005,11 +1005,24 @@
     inset: 0;
     border-radius: inherit;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.45), transparent 42%);
+    transition: background 0.3s ease;
+  }
+
+  /* The picture is the button, so the picture has to react. Deepening the
+     scrim on hover is the only cue that works everywhere: it is colour, not
+     movement, so reduced motion keeps it. A card with no demo is a plain
+     figure and must stay still. */
+  .hero-holo-card__thumb:not(.hero-holo-card__thumb--static):hover .hero-holo-card__shade {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 52%);
   }
 
   /* Bottom left, opposite the duration badge, not centred. The card art has a
      single centred subject and a centred play button lands straight on top of
-     it - worst on the inbound card, where a circle sat on a circle. */
+     it - worst on the inbound card, where a circle sat on a circle.
+
+     The disc is far deeper than the scrim it sits on. At the old 0.5 black it
+     was within five percent of the 0.45 scrim behind it and read as a badge
+     rather than a control. Deep disc, bright ring, is the separation. */
   .hero-holo-card__play {
     position: absolute;
     bottom: 12px;
@@ -1019,13 +1032,25 @@
     height: 44px;
     align-items: center;
     justify-content: center;
-    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(10, 22, 40, 0.82);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     color: #fff;
-    transition: transform 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      background-color 0.3s ease;
+  }
+
+  /* Colour, outside the motion query on purpose. The system rule is that a
+     card keeps its colour changes under reduced motion and loses only the
+     movement. Focus is included because the frame itself takes the focus. */
+  .hero-holo-card__thumb:hover .hero-holo-card__play,
+  .hero-holo-card__thumb:focus-visible .hero-holo-card__play {
+    border-color: #fff;
+    background: var(--accent);
   }
 
   .hero-holo-card__demo {
@@ -1064,13 +1089,16 @@
     transform: translateZ(16px);
   }
 
+  /* Neutral, not accent. Accent now means "you can click this" on this card,
+     and the category is a label. Two accent pills, one clickable and one not,
+     is the attention problem the screenshot button already had. */
   .hero-holo-card__kind {
     align-self: flex-start;
     padding: 4px 11px;
-    border: 1px solid var(--accent-glow);
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--accent) 10%, transparent);
-    color: var(--accent);
+    background: transparent;
+    color: var(--text-muted);
     text-transform: uppercase;
   }
 
@@ -1134,22 +1162,26 @@
     background: rgba(255, 255, 255, 0.06);
   }
 
-  /* The screenshot button. It is the quietest thing on the card on purpose:
-     the video is the pitch, and this is the proof a visitor asks for second.
-     Full width, so it reads as the foot of the panel and not as a stray chip
-     beside the tech stack. */
+  /* The screenshot button. It used to be the quietest thing on the card, and
+     that was the bug: transparent, grey text, and a --glass-border made it a
+     wide copy of the tech-stack chips right above it, which are not clickable.
+     It now rests in accent, so it reads as a control with no pointer on it -
+     the only state a phone ever sees. Full width, so it reads as the foot of
+     the panel. */
   .hero-holo-card__shots {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     width: 100%;
-    margin-top: 12px;
+    /* Wider than the 12px gap inside the body, so the button parts company
+       with the chip row above instead of joining it. */
+    margin-top: 16px;
     padding: 9px 12px;
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--accent-glow);
     border-radius: var(--radius-pill);
-    background: transparent;
-    color: var(--text-secondary);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    color: var(--accent);
     cursor: pointer;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -1159,10 +1191,10 @@
       background-color 0.25s ease;
   }
 
+  /* Stronger than the resting state, which is now where the old hover was. */
   .hero-holo-card__shots:hover {
-    border-color: var(--accent-glow);
-    background: color-mix(in srgb, var(--accent) 8%, transparent);
-    color: var(--accent);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
   }
 
   .hero-holo-card__shots:focus-visible {
@@ -1177,14 +1209,13 @@
     min-width: 1.5em;
     padding: 1px 6px;
     border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--text-secondary) 14%, transparent);
-    color: var(--text-secondary);
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    color: var(--accent);
     font-variant-numeric: tabular-nums;
   }
 
   .hero-holo-card__shots:hover .hero-holo-card__shots-count {
-    background: color-mix(in srgb, var(--accent) 16%, transparent);
-    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 24%, transparent);
   }
 
   /* Every lift and zoom is opt-in. A visitor who asked the OS for less motion
@@ -1199,14 +1230,64 @@
     .hero-holo-card__thumb:hover .hero-holo-card__play {
       transform: scale(1.1);
     }
+
+    /* Both controls breathe while the pointer is anywhere on the card. The
+       card arms them, not each button: a visitor already looking at one card
+       gets told what is clickable inside it. Each pulse is a box-shadow and
+       nothing else, so it layers under the button's own hover state instead
+       of fighting it. */
+    .hero-holo-card:hover .hero-holo-card__play {
+      animation: hero-card-play-pulse 1.8s ease-in-out infinite;
+    }
+
+    /* :focus-visible is held out on purpose. A keyframe outranks a normal
+       declaration, so an animated box-shadow would paint straight over the
+       focus ring of a button that is both focused and inside a hovered card. */
+    .hero-holo-card:hover .hero-holo-card__shots:not(:focus-visible) {
+      animation: hero-card-shots-pulse 1.8s ease-in-out infinite;
+    }
+  }
+
+  /* White, not accent. The disc sits on photo art in both themes, which is why
+     its ring and fill are literals too. Blur plus spread stays under 12px:
+     the thumbnail is `overflow: clip` and the disc is inset 12px, so a wider
+     glow would be sliced off at the picture edge. */
+  @keyframes hero-card-play-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  /* Accent, and wider. Nothing clips this one, but it stays inside the 20px of
+     padding between the button and the card border, so the glow never spills
+     past the panel edge. */
+  @keyframes hero-card-shots-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 8%, transparent);
+    }
+    50% {
+      box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent) 55%, transparent);
+    }
   }
 
   /* A touch screen has no hover, so the sheen and the rim would latch on at
-     the first tap and stay. Show them only where a real pointer exists. */
+     the first tap and stay. Show them only where a real pointer exists. The
+     two pulses latch the same way, and a glow that blinks for ever after one
+     tap is worse than no glow at all. */
   @media (hover: none), (pointer: coarse) {
     .hero-holo-card__sheen,
     .hero-holo-card__rim {
       display: none;
+    }
+
+    .hero-holo-card:hover .hero-holo-card__play,
+    .hero-holo-card:hover .hero-holo-card__shots {
+      animation: none;
     }
   }
 
