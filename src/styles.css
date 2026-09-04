@@ -101,6 +101,22 @@
   --holo-rim: rgba(40, 96, 175, 0.16);
   --holo-glow: rgba(0, 102, 204, 0.3);
 
+  /* The pointer nebula. Its own colours, not the holo pair: those are tuned
+     for a thin rake across a card, and this is a soft cloud over open page.
+
+     Sky blue on cream, cyan and violet on navy, and the blend mode is a token
+     too, because the themes need opposite ones: on cream, screen would paint
+     nothing at all, and on navy, multiply would paint a hole. These values run
+     deeper than the name suggests. Multiply darkens only towards the colour it
+     is given, so a literal skyblue - a pale, high-luminance tint - would hardly
+     move a cream pixel at all. Saturation is what carries a multiply blend, so
+     the hue stays sky and the tone is dropped until it reads. */
+  --cursor-neb-a: rgba(24, 122, 206, 0.72);
+  --cursor-neb-b: rgba(64, 166, 226, 0.6);
+  --cursor-neb-core: rgba(10, 78, 152, 0.92);
+  --cursor-neb-blend: multiply;
+  --cursor-neb-opacity: 0.6;
+
   /* The one loud control on the page. Gradient plus glow, with an ink colour
      that clears 4.5:1 against the darker end of the gradient. */
   --cta-from: #1272e6;
@@ -180,6 +196,14 @@
   --holo-sheen-b: rgba(150, 110, 255, 0.11);
   --holo-rim: rgba(255, 255, 255, 0.1);
   --holo-glow: var(--accent-glow);
+
+  /* Sky blue is a light-theme idea. Navy keeps the cyan and violet pair it
+     already had. */
+  --cursor-neb-a: rgba(0, 212, 255, 0.5);
+  --cursor-neb-b: rgba(150, 110, 255, 0.42);
+  --cursor-neb-core: rgba(200, 245, 255, 0.9);
+  --cursor-neb-blend: screen;
+  --cursor-neb-opacity: 0.7;
 
   --cta-from: #5fe6ff;
   --cta-to: #2f86ff;
@@ -1169,6 +1193,7 @@
      the only state a phone ever sees. Full width, so it reads as the foot of
      the panel. */
   .hero-holo-card__shots {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1218,6 +1243,49 @@
     background: color-mix(in srgb, var(--accent) 24%, transparent);
   }
 
+  /* The glow itself, on a pseudo-element, with only its opacity moving. A
+     box-shadow animation repaints the button on every frame; opacity is
+     composited. That is the difference between one hovered card on a desktop
+     and twelve controls pulsing at once on a phone, for ever. */
+  .hero-holo-card__play::after,
+  .hero-holo-card__shots::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    /* So the glow fades out when the pointer leaves instead of being cut off
+       mid-pulse. On a touch screen the animation never stops, so this only
+       ever shows on a desktop. */
+    transition: opacity 0.35s ease;
+  }
+
+  /* White, not accent. The disc sits on photo art in both themes, which is why
+     its ring and fill are literals too. Blur plus spread stays under 12px:
+     the thumbnail is `overflow: clip` and the disc is inset 12px, so a wider
+     glow would be sliced off at the picture edge. */
+  .hero-holo-card__play::after {
+    box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.7);
+  }
+
+  /* Accent, and wider. Nothing clips this one, but it stays inside the 20px of
+     padding between the button and the card border, so the glow never spills
+     past the panel edge. */
+  .hero-holo-card__shots::after {
+    box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+
+  @keyframes hero-card-glow-pulse {
+    0%,
+    100% {
+      opacity: 0.1;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
   /* Every lift and zoom is opt-in. A visitor who asked the OS for less motion
      keeps the colour changes and loses the movement. The tilt itself is
      switched off in JavaScript, so no custom property is ever written. */
@@ -1231,63 +1299,35 @@
       transform: scale(1.1);
     }
 
-    /* Both controls breathe while the pointer is anywhere on the card. The
-       card arms them, not each button: a visitor already looking at one card
-       gets told what is clickable inside it. Each pulse is a box-shadow and
-       nothing else, so it layers under the button's own hover state instead
-       of fighting it. */
-    .hero-holo-card:hover .hero-holo-card__play {
-      animation: hero-card-play-pulse 1.8s ease-in-out infinite;
-    }
-
-    /* :focus-visible is held out on purpose. A keyframe outranks a normal
-       declaration, so an animated box-shadow would paint straight over the
-       focus ring of a button that is both focused and inside a hovered card. */
-    .hero-holo-card:hover .hero-holo-card__shots:not(:focus-visible) {
-      animation: hero-card-shots-pulse 1.8s ease-in-out infinite;
+    /* With a pointer, the card arms the glow. A visitor already looking at one
+       card is told what is clickable inside it, and the other five stay still.
+       A focused button is held out: its focus ring already says the same
+       thing, and the two together read as noise. */
+    .hero-holo-card:hover .hero-holo-card__play::after,
+    .hero-holo-card:hover .hero-holo-card__shots:not(:focus-visible)::after {
+      animation: hero-card-glow-pulse 1.8s ease-in-out infinite;
     }
   }
 
-  /* White, not accent. The disc sits on photo art in both themes, which is why
-     its ring and fill are literals too. Blur plus spread stays under 12px:
-     the thumbnail is `overflow: clip` and the disc is inset 12px, so a wider
-     glow would be sliced off at the picture edge. */
-  @keyframes hero-card-play-pulse {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1);
-    }
-    50% {
-      box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.7);
-    }
-  }
-
-  /* Accent, and wider. Nothing clips this one, but it stays inside the 20px of
-     padding between the button and the card border, so the glow never spills
-     past the panel edge. */
-  @keyframes hero-card-shots-pulse {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 8%, transparent);
-    }
-    50% {
-      box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent) 55%, transparent);
+  /* A touch screen has nothing to arm the glow with, so both controls pulse
+     from the moment the card is on the page. This is the only thing on a phone
+     that says "tap me": there is no hover state, and a visitor cannot try one
+     to find out. Every card glows, not just one, because there is no pointer
+     to single one out. */
+  @media (hover: none) and (prefers-reduced-motion: no-preference),
+    (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+    .hero-holo-card__play::after,
+    .hero-holo-card__shots:not(:focus-visible)::after {
+      animation: hero-card-glow-pulse 1.8s ease-in-out infinite;
     }
   }
 
   /* A touch screen has no hover, so the sheen and the rim would latch on at
-     the first tap and stay. Show them only where a real pointer exists. The
-     two pulses latch the same way, and a glow that blinks for ever after one
-     tap is worse than no glow at all. */
+     the first tap and stay. Show them only where a real pointer exists. */
   @media (hover: none), (pointer: coarse) {
     .hero-holo-card__sheen,
     .hero-holo-card__rim {
       display: none;
-    }
-
-    .hero-holo-card:hover .hero-holo-card__play,
-    .hero-holo-card:hover .hero-holo-card__shots {
-      animation: none;
     }
   }
 
@@ -2116,6 +2156,76 @@
     animation: none;
     opacity: 0.4;
   }
+}
+
+/* The pointer nebula. Three fixed layers chasing the cursor at three speeds,
+   so a fast flick pulls the outer cloud away from the inner one and they drift
+   back together when the hand stops. CursorNebula writes each position straight
+   onto the node as a transform, so a moving mouse never re-renders the page.
+
+   The wrapper is `display: contents` for the same reason #bg-picture is: a
+   z-index or an opacity on it would make it a stacking context, and a stacking
+   context is an isolated group for blending. The layers would then blend with
+   their own empty container instead of with the page, and mix-blend-mode would
+   silently do nothing. Removing the wrapper's box leaves the three fixed
+   children blending against the page itself. */
+.cursor-neb {
+  display: contents;
+}
+
+/* Anchored at the top-left of the screen; the transform carries them to the
+   cursor. z-index 30 is deliberate: above the content at z-10, so the cloud
+   washes over the cards, but under the navbar and the modals at z-50, which
+   have to stay untinted.
+
+   Blend mode, not plain alpha, so the nebula mixes with what is under it
+   instead of fogging it. Text keeps its contrast direction in both themes,
+   because multiply only darkens dark ink and screen only lightens light ink.
+
+   Dark until a mouse actually moves: a keyboard-only visitor, and anyone on a
+   touch screen, never sees it lit. */
+.cursor-neb__cloud,
+.cursor-neb__core {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  border-radius: 50%;
+  opacity: 0;
+  mix-blend-mode: var(--cursor-neb-blend);
+  pointer-events: none;
+  transition: opacity 420ms ease;
+  will-change: transform;
+}
+
+.cursor-neb[data-live="true"] .cursor-neb__cloud,
+.cursor-neb[data-live="true"] .cursor-neb__core {
+  opacity: var(--cursor-neb-opacity);
+}
+
+/* closest-side, not the default farthest-corner. On a square element the
+   default measures to the half-diagonal while border-radius clips at the
+   half-width, so the fade would still be part-way through when the edge cut
+   it off and the cloud would show a hard rim. */
+.cursor-neb__cloud--a {
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle closest-side, var(--cursor-neb-a), transparent 82%);
+}
+
+/* The slowest and widest layer, so it is the one that visibly lags. */
+.cursor-neb__cloud--b {
+  width: 440px;
+  height: 440px;
+  background: radial-gradient(circle closest-side, var(--cursor-neb-b), transparent 80%);
+}
+
+/* A single bright point riding the cursor. Without it the trail reads as a
+   smudge; with it, it reads as a star dragging its gas behind it. */
+.cursor-neb__core {
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle closest-side, var(--cursor-neb-core), transparent 85%);
 }
 
 /* --- Custom Calendly Modal Styles --- */

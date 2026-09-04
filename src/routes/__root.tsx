@@ -65,6 +65,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 import Particles from "@/components/ui/Particles";
+import CursorNebula from "@/components/ui/CursorNebula";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -78,6 +79,7 @@ function RootComponent() {
         Skip to content
       </a>
       <Particles count={25} />
+      <CursorNebula />
       <div className="relative z-10 flex min-h-screen flex-col">
         <Outlet />
       </div>
