@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Menu, X, Sun, Moon, Download } from "lucide-react";
+import { track } from "@vercel/analytics";
 import type { ThemeMode } from "@/types";
 import { useCalendlyModal } from "@/hooks/useCalendlyModal";
 
@@ -11,6 +12,7 @@ interface Props {
 
 const links = [
   { href: "#hero", label: "Home" },
+  { href: "#work", label: "Work" },
   { href: "#about", label: "About" },
   { href: "#experience", label: "Experience" },
   { href: "#contact", label: "Contact" },
@@ -110,7 +112,10 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
       </AnimatePresence>
 
       <header className={`site-navbar${scrolled ? " scrolled" : ""}${open ? " is-open" : ""}`}>
-        <nav className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-5 sm:px-6 lg:px-8">
+        {/* No max-width cap: the pill is already capped at 1320px, and a 1280px
+            cap inside it re-centred the row and broke the left edge. lg:px-10
+            is 40px, the same side padding the hero text and the card row use. */}
+        <nav className="relative mx-auto flex h-16 w-full items-center justify-between gap-2 px-5 sm:px-6 lg:px-10">
           {/* Left: Logo */}
           <a href="#hero" className="site-navbar__logo">
             <span className="site-navbar__logo-bin">Bin</span>
@@ -145,6 +150,7 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
             <a
               href={CV_URL}
               download
+              onClick={() => track("cv_download", { from: "navbar" })}
               className="site-navbar__cv hidden items-center gap-1.5 text-sm lg:inline-flex"
             >
               <Download className="h-4 w-4" aria-hidden />
@@ -231,7 +237,10 @@ export default function Navbar({ theme, onThemeToggle }: Props) {
                   <a
                     href={CV_URL}
                     download
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                      track("cv_download", { from: "mobile-menu" });
+                      setOpen(false);
+                    }}
                     className="site-navbar__cv flex w-full items-center justify-center gap-2 text-base font-medium"
                   >
                     <Download className="h-4 w-4" aria-hidden />

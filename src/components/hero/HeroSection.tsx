@@ -1,8 +1,8 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { Download } from "lucide-react";
+import { ChevronDown, Download } from "lucide-react";
+import { track } from "@vercel/analytics";
 import { useCalendlyModal } from "@/hooks/useCalendlyModal";
 import { CV_URL } from "@/components/layout/Navbar";
-import HoloDeck from "./HoloDeck";
 
 export default function HeroSection() {
   const shouldReduceMotion = useReducedMotion();
@@ -29,7 +29,7 @@ export default function HeroSection() {
             }}
             className="hero-section__eyebrow label-mono"
           >
-            Rey W. Binay-an — Automation Engineer
+            Rey W. Binay-an - AI Automation Engineer
           </motion.p>
 
           <motion.h1
@@ -39,9 +39,9 @@ export default function HeroSection() {
             }}
             className="hero-section__headline font-display"
           >
-            I build AI systems for
+            Less time on repeat work.
             <br />
-            <span className="hero-section__headline-accent">small and medium businesses.</span>
+            <span className="hero-section__headline-accent">More revenue for you.</span>
           </motion.h1>
 
           <motion.p
@@ -51,12 +51,18 @@ export default function HeroSection() {
             }}
             className="hero-section__subtitle"
           >
-            Voice agents that qualifies leads. Chatbots that resolve customer issues. n8n workflows that move
-            data so nobody has to retype it.
+            Automations that cut hours of repeat work.
+            <br />
+            Revenue systems like after hours agents and speed to lead follow up.
+            <br />
+            Live in 2 to 4 weeks.
           </motion.p>
 
           {/* Rate, hours and timezone are the first three filters on
-              OnlineJobs.ph and Upwork. Leaving them buried costs the screen. */}
+              OnlineJobs.ph and Upwork. Leaving them buried costs the screen.
+              No figure is published by choice, so the rate line names the
+              pricing model instead — a buyer who reads "on request" reads a
+              dead end, and one who reads "fixed price" reads a bounded risk. */}
           <motion.ul
             variants={{
               hidden: { opacity: 0, y: 12 },
@@ -69,8 +75,8 @@ export default function HeroSection() {
               Available for new work
             </li>
             <li>40 hrs/wk</li>
-            <li>Philippines · UTC+8 · overlaps 9am–1pm EST</li>
-            <li>Rate on request</li>
+            <li>Philippines · UTC+8 · 9pm–1am overlap with US East</li>
+            <li>Fixed-price builds · quote after the call</li>
           </motion.ul>
 
           {/* The hero used to spend this line telling the visitor to scroll.
@@ -90,14 +96,34 @@ export default function HeroSection() {
               Book a Call <span aria-hidden>→</span>
             </button>
 
-            <a href={CV_URL} download className="hero-section__cta-secondary">
+            <a
+              href={CV_URL}
+              download
+              onClick={() => track("cv_download", { from: "hero" })}
+              className="hero-section__cta-secondary"
+            >
               <Download className="h-4 w-4" aria-hidden />
               Download CV
             </a>
           </motion.div>
-        </motion.div>
 
-        <HoloDeck />
+          {/* The hero fills the first screen, so the project row is below the
+              fold by design. This cue names what is down there and links to
+              it, so the visitor never has to guess whether to scroll. */}
+          <motion.a
+            href="#work"
+            variants={{
+              hidden: { opacity: 0, y: 12 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            className="hero-section__scroll-cue"
+          >
+            <span className="hero-section__scroll-cue-label label-mono">6 projects below</span>
+            <span aria-hidden className="hero-section__scroll-cue-arrow">
+              <ChevronDown className="h-4 w-4" />
+            </span>
+          </motion.a>
+        </motion.div>
       </div>
     </section>
   );

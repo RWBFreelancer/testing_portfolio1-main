@@ -1,11 +1,16 @@
 import { useRef, useState } from "react";
+import { track } from "@vercel/analytics";
 
+// Named after the thing being bought, not the category it belongs to. The old
+// list ("AI Automation", "Process Improvement") did not contain the two things
+// actually sold, and had no honest chip for a visitor who does not yet know
+// what can be automated — which is most of them.
 export const SERVICE_OPTIONS = [
-  "AI Automation",
-  "GoHighLevel",
-  "Customer Service Workflow",
-  "Process Improvement",
-  "Other",
+  "Voice agent (inbound or outbound)",
+  "Chatbot / customer support",
+  "n8n or Make workflow",
+  "Fix a broken automation",
+  "Not sure yet — help me work it out",
 ] as const;
 
 export type ServiceOption = (typeof SERVICE_OPTIONS)[number];
@@ -19,6 +24,13 @@ export interface ContactFormState {
 }
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
+
+interface ContactResponse {
+  error?: string;
+  success?: boolean;
+  emailSent?: boolean;
+  dbSaved?: boolean;
+}
 
 const RATE_LIMIT_MAX = 3;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -57,6 +69,11 @@ export function useContactForm() {
   const [form, setForm] = useState<ContactFormState>(INITIAL_STATE);
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  // The API answers 200 with emailSent:false when Resend is unset or fails.
+  // Treating that as a plain success told the visitor "received" when nothing
+  // was delivered, so the lead vanished with a green tick. The UI reads this
+  // and offers the direct email instead.
+  const [emailSent, setEmailSent] = useState(true);
   const formRef = useRef<HTMLFormElement>(null);
 
   const updateField = (field: keyof ContactFormState, value: string) => {
@@ -76,6 +93,7 @@ export function useContactForm() {
     setForm(INITIAL_STATE);
     setStatus("idle");
     setErrorMessage("");
+    setEmailSent(true);
   };
 
   const submit = async () => {
@@ -123,13 +141,18 @@ export function useContactForm() {
         }),
       });
 
-      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      const data = (await res.json().catch(() => ({}))) as ContactResponse;
 
       if (!res.ok) {
         throw new Error(data.error || "Request failed");
       }
 
       recordSubmission();
+      const delivered = data.emailSent !== false;
+      setEmailSent(delivered);
+      // delivered:false is the silent-lead-loss case. It must be visible in
+      // analytics, not only in a server log nobody reads.
+      track("contact_form_submit", { delivered });
       setStatus("success");
     } catch (err) {
       console.error("Submission error:", err);
@@ -146,6 +169,7 @@ export function useContactForm() {
     form,
     status,
     errorMessage,
+    emailSent,
     SERVICE_OPTIONS,
     updateField,
     toggleService,

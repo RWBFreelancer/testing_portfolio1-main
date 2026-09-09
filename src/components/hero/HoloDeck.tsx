@@ -23,7 +23,9 @@ export default function HoloDeck() {
   const [viewing, setViewing] = useState<Project | null>(null);
 
   return (
-    <div className="hero-holo">
+    /* id="work" so the projects can be linked to directly. A proposal on
+       Upwork needs a URL that lands on the work, not on the top of the page. */
+    <div id="work" className="hero-holo" style={{ scrollMarginTop: "88px" }}>
       <StarField />
 
       <div className="hero-holo__row">

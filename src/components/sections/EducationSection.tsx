@@ -29,10 +29,13 @@ const credentials = [
     issuer: "Saint Louis University, Baguio City",
     kind: "Degree",
   },
+  // The licence number is deliberately not published. Next to a full legal
+  // name, a city and a photograph it is identity-theft material, and no
+  // automation buyer verifies a PRC electrical licence. Give it on request.
   {
     year: "Active",
     title: "Registered Electrical Engineer",
-    issuer: "PRC Licence No. 0057141",
+    issuer: "Professional Regulation Commission, Philippines",
     kind: "Licence",
   },
   {
@@ -45,8 +48,8 @@ const credentials = [
 
 export default function EducationSection() {
   return (
-    <section id="education" className="relative py-20 sm:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="education" className="relative">
+      <div className="section-shell">
         <div className="mb-12 max-w-2xl">
           <span className="label-mono text-primary">Education &amp; Credentials</span>
           <h2 className="section-heading mt-4">Licensed engineer, certified in AI.</h2>

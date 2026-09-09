@@ -53,6 +53,9 @@
   --step-2: clamp(1.25rem, 1.07rem + 0.76vw, 1.625rem); /* 20 → 26  h3 */
   --step-3: clamp(1.75rem, 1.29rem + 1.9vw, 2.75rem); /* 28 → 44  h2 */
   --step-4: clamp(2.125rem, 1.42rem + 2.9vw, 3.5rem); /* 34 → 56  h1 */
+  /* Hero display only. The hero owns a whole screen now, so its headline
+     carries that screen; every other h1 on the site stays at --step-4. */
+  --step-5: clamp(2.375rem, 1.35rem + 4.3vw, 4.75rem); /* 38 → 76  hero */
 
   /* ---- Two radii. One for controls, one for surfaces. -------------------- */
   --radius-pill: 999px;
@@ -442,8 +445,11 @@
       max-width: 18ch;
     }
 
+    /* 1320px is .hero-section__text and .hero-holo and .section-shell. The
+       pill edge now lands on the same line as the first project card, and the
+       nav's own 40px inner padding puts the logo on the headline's left edge. */
     .site-navbar {
-      max-width: 1200px;
+      max-width: 1320px;
     }
   }
 
@@ -719,36 +725,56 @@
   .hero-section {
     position: relative;
     overflow: hidden;
-    padding-top: 100px;
-    padding-bottom: 80px;
+    /* The hero owns the first screen on its own. The project row was inside
+       this section and shared the fold with the headline; now it is the next
+       thing you scroll to, and the scroll cue points at it. 64px navbar plus
+       its 1rem offset is 80px, so subtract that to fill exactly one screen. */
+    display: flex;
+    align-items: center;
+    min-height: calc(100svh - 80px);
+    /* The navbar is sticky at top:1rem and is 64px tall, so it already sits in
+       the flow above this. 56px is the gap from its underside to the eyebrow,
+       and .hero-section__actions carries the same 56px down to the project
+       row. One rhythm above and below the text block, not 88px then 36px. */
+    padding-top: 56px;
+    /* .hero-holo carries the bottom space, so this must stay 0 or the gap into
+       About is counted twice. */
+    padding-bottom: 0;
     background: transparent !important;
   }
 
   .hero-section__inner {
     position: relative;
     z-index: 1;
+    width: 100%;
   }
 
+  /* Must match .hero-holo exactly: same max-width, same side padding. The text
+     block used to be 1200px/24px against the row's 1320px/40px, which put the
+     headline 44px inside the first card at 1440px wide. */
   .hero-section__text {
-    max-width: 1200px;
+    max-width: 1320px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 40px;
   }
 
+  /* 880, not 680. The project row used to share this screen and the short
+     column kept the two apart; the row is its own screen now, so the text is
+     free to run wider and hold the fold on its own. */
   .hero-section__text > * {
-    max-width: 680px;
+    max-width: 880px;
   }
 
   .hero-section__eyebrow {
     display: block;
-    margin-bottom: 22px;
+    margin-bottom: 14px;
     color: var(--text-muted);
   }
 
   .hero-section__headline {
-    max-width: 24ch;
+    max-width: 20ch;
     color: var(--text-primary);
-    font-size: var(--step-4);
+    font-size: var(--step-5);
     font-weight: 700;
     font-stretch: 118%;
     letter-spacing: -0.035em;
@@ -761,11 +787,13 @@
     color: var(--accent);
   }
 
+  /* --step-0, not --step-1. The subtitle is three short sentences now, so it
+     does not need lead size to be read, and one step down buys back a line. */
   .hero-section__subtitle {
-    margin: 20px 0 0;
-    max-width: 54ch;
+    margin: 16px 0 0;
+    max-width: 62ch;
     color: var(--text-secondary);
-    font-size: var(--step-1);
+    font-size: var(--step-0);
     line-height: 1.55;
   }
 
@@ -774,7 +802,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 8px 10px;
-    margin: 22px 0 0;
+    margin: 18px 0 0;
     padding: 0;
     list-style: none;
   }
@@ -817,8 +845,56 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 12px;
-    margin-top: 30px;
-    margin-bottom: 56px;
+    margin-top: 24px;
+    margin-bottom: 0;
+  }
+
+  /* The scroll cue. It is a real link to #work, not a decoration, so a
+     keyboard or a click both land on the project row. */
+  .hero-section__scroll-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 40px;
+    color: var(--text-muted);
+    transition: color 0.25s ease;
+  }
+
+  .hero-section__scroll-cue:hover,
+  .hero-section__scroll-cue:focus-visible {
+    color: var(--text-primary);
+  }
+
+  .hero-section__scroll-cue-label {
+    letter-spacing: 0.08em;
+  }
+
+  .hero-section__scroll-cue-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    background: var(--glass-bg);
+    box-shadow: var(--panel-rim);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-section__scroll-cue-arrow {
+      animation: hero-scroll-nudge 1.9s ease-in-out infinite;
+    }
+  }
+
+  @keyframes hero-scroll-nudge {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(5px);
+    }
   }
 
   .hero-section__cta-primary {
@@ -867,17 +943,22 @@
     position: relative;
     max-width: 1320px;
     margin: 0 auto;
-    padding: 0 40px 96px;
+    /* 80px matches .section-shell, so the card row sits the same distance from
+       About as any two sections sit from each other. The row is its own screen
+       now, so it carries top space as well. */
+    padding: 80px 40px;
   }
 
   /* The sky stops level with the bottom of the card row, so it never bleeds
-     into the next section. The container is row + 96px of bottom padding. */
+     into the next section. The container is row + 80px of bottom padding, and
+     the sky is pulled up 14px, so subtract 80 - 14 = 66. Change the padding
+     and this number changes with it. */
   .hero-holo__sky {
     position: absolute;
-    top: -14px;
+    top: 66px;
     left: 0;
     width: 100%;
-    height: calc(100% - 82px);
+    height: calc(100% - 146px);
     pointer-events: none;
     z-index: 0;
   }
@@ -1526,12 +1607,27 @@
 
   @media (max-width: 720px) {
     .hero-section {
-      padding-top: 92px;
-      padding-bottom: 64px;
+      padding-top: 40px;
+      padding-bottom: 0;
+    }
+
+    /* Follows .hero-holo down to 20px so the edges still agree on a phone. */
+    .hero-section__text {
+      padding: 0 20px;
+    }
+
+    .hero-section__scroll-cue {
+      margin-top: 32px;
     }
 
     .hero-holo {
-      padding: 0 20px 64px;
+      padding: 56px 20px;
+    }
+
+    /* 56 - 14 = 42 above the row, and 56 below it. */
+    .hero-holo__sky {
+      top: 42px;
+      height: calc(100% - 98px);
     }
 
     .hero-holo__row {
@@ -1542,6 +1638,28 @@
 }
 
 @layer components {
+  /* One shell for every section below the hero.
+     Before this, four sections carried four different sets of Tailwind
+     spacing classes: About at max-w-1400/px-20, the other three at
+     max-w-7xl/px-8, and Contact alone at py-32. On a 1440px screen the left
+     edges landed at 100px, 112px, 112px and 112px, and the gap into Contact
+     was 224px against 176px everywhere else.
+     The max-width and side padding match .hero-holo and .hero-section__text
+     exactly, so the whole page shares one left edge. 80px top and bottom on
+     every section gives a 160px gap between any two of them. */
+  .section-shell {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 80px 40px;
+  }
+
+  @media (max-width: 720px) {
+    .section-shell {
+      padding: 56px 20px;
+    }
+  }
+
   .about-section,
   .experience-section {
     position: relative;
@@ -1918,6 +2036,28 @@
     color: var(--text-muted);
   }
 
+  /* The route that works when Calendly, Resend or Supabase does not. Quiet
+     enough that it never competes with the accent, present enough that a
+     visitor never hits a dead end. */
+  .contact-cta__fallback {
+    margin-top: 16px;
+    max-width: 54ch;
+    color: var(--text-muted);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  .contact-cta__fallback-link {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 160ms ease;
+  }
+
+  .contact-cta__fallback-link:hover {
+    color: var(--text-primary);
+  }
+
   /* Sits under the button now, not floated into a bottom-right corner. The
      hairline rule separates the ask from the alternatives. */
   .contact-cta__links {
@@ -1940,7 +2080,8 @@
   }
 
   @media (max-width: 640px) {
-    .contact-cta,
+    /* .contact-form-container only. .contact-cta has no desktop padding, so
+       adding 26px here inset its heading past every other section's text. */
     .contact-form-container {
       padding: 26px;
     }
@@ -2088,6 +2229,16 @@
 
   .site-footer a {
     color: inherit;
+  }
+
+  .site-footer__email {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 160ms ease;
+  }
+
+  .site-footer__email:hover {
+    color: var(--text-primary);
   }
 }
 

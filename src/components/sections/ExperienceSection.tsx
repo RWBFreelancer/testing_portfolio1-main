@@ -86,7 +86,7 @@ const earlierCareer = [
     title: "Cadet Engineer",
     company: "Benguet Electric Cooperative (BENECO)",
     dates: "2015 - 2016",
-    note: "Maintained meters and line poles, and streamlined the electrical permit process.",
+    note: "Maintained meters and line poles, and made the electrical permit process faster.",
   },
 ];
 
@@ -221,11 +221,11 @@ function EarlierCareer() {
 
 export default function ExperienceSection() {
   return (
-    <section id="experience" className="experience-section relative py-20 sm:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="experience" className="experience-section relative">
+      <div className="section-shell">
         <div className="mb-12 max-w-2xl">
           <span className="label-mono text-primary">Experience</span>
-          <h2 className="section-heading mt-4">More than 3 years in AI & Automation</h2>
+          <h2 className="section-heading mt-4">More than 2 years in AI & Automation</h2>
         </div>
 
         <ol className="experience-timeline">

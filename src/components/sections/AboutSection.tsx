@@ -20,7 +20,7 @@ export default function AboutSection() {
 
   return (
     <section id="about" className="about-section relative overflow-hidden">
-      <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-10 px-6 py-20 md:px-12 md:py-24 lg:gap-12 lg:px-20 lg:py-24">
+      <div className="section-shell flex flex-col gap-12">
         {/* Section Label — above both columns */}
         <motion.span
           initial={shouldReduceMotion ? false : { opacity: 0 }}
@@ -63,25 +63,34 @@ export default function AboutSection() {
           >
             <h2 className="about-name text-center lg:text-left">Rey W. Binay-an</h2>
 
-            <p className="about-role-badge">Automation Engineer &amp; AI Systems Builder</p>
+            {/* One job title across the site: hero eyebrow, page title, here. */}
+            <p className="about-role-badge">AI Automation Engineer</p>
 
+            {/* The old lede was three abstractions in one sentence — save time,
+                improve customer experience, increase efficiency — which the copy
+                rules in docs/2026-09-01 ban by name. Open on a countable fact
+                instead. Every project named here is a card in the hero. */}
             <p className="about-lede max-w-[62ch] border-l-2 border-primary pl-6">
-              I help businesses automate repetitive processes, reduce manual work, and build
-              AI-powered systems that save time, improve customer experience, and increase
-              operational efficiency.
+              Six AI systems are running in production right now: two voice agents for family law
+              firms, an after-hours agent for a mobile repair fleet, a chatbot for an LED store, a
+              marketing workspace inside an agency&rsquo;s CRM, and a rescue job on three broken
+              Make.com accounts. Each one replaced work a person was doing by hand.
             </p>
 
             <div className="about-body max-w-[62ch] space-y-4">
               <p>
-                I spent 9 years as a licensed electrical engineer, safety officer, and operations
-                lead before moving into automation full time. That background is why I read a
-                business as a system first and reach for a tool second.
+                I spent nine years as a licensed electrical engineer, a safety officer, and an
+                operations lead before I moved into automation. That is why I read a business as a
+                system first and reach for a tool second. I find where the work leaks out, then I
+                close the leak.
               </p>
+              {/* Closes on the two objections that actually stop a small business
+                  owner from booking: lock-in, and what happens when it breaks. */}
               <p>
-                Today, I specialize in designing AI agents, workflow automations, and custom
-                integrations using n8n, Zapier, Python, APIs, and modern automation platforms. My
-                goal is simple: eliminate repetitive work so teams can focus on higher-value
-                activities.
+                I build with Retell, Vapi, n8n, Make, GoHighLevel and Python. I test against real
+                calls and real messages, not happy paths. Every build ships with a handover
+                document, so your team can run it without me — and I stay on call if you would
+                rather I did.
               </p>
             </div>
 

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/hero/HeroSection";
+import HoloDeck from "@/components/hero/HoloDeck";
 import AboutSection from "@/components/sections/AboutSection";
 import ExperienceSection from "@/components/sections/ExperienceSection";
 import EducationSection from "@/components/sections/EducationSection";
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Rey Binay-an builds AI voice agents, chatbots and workflow systems that automate repetitive operations and elevate customer experience.",
+          "Rey Binay-an builds AI voice agents, chatbots, and n8n workflow systems for small and medium businesses: law firms, ecommerce brands, and service businesses. Baguio City, Philippines. Available for remote contract work.",
       },
       { property: "og:title", content: "Rey Binay-an — AI Automation Engineer" },
       {
@@ -34,9 +35,10 @@ function Index() {
       <Navbar theme={theme} onThemeToggle={toggle} />
       <main id="main-content" tabIndex={-1}>
         <HeroSection />
+        <HoloDeck />
         <AboutSection />
-        <ExperienceSection />
         <EducationSection />
+        <ExperienceSection />
         <ContactSection />
       </main>
       <Footer />

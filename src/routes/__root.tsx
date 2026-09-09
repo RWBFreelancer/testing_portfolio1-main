@@ -64,6 +64,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+import { Analytics } from "@vercel/analytics/react";
 import Particles from "@/components/ui/Particles";
 import CursorNebula from "@/components/ui/CursorNebula";
 
@@ -83,6 +84,10 @@ function RootComponent() {
       <div className="relative z-10 flex min-h-screen flex-col">
         <Outlet />
       </div>
+      {/* Without this there is no way to tell whether "Book a Call" is ever
+          clicked, so every copy change on this site is a guess. Cookie-free
+          and first-party, so no consent banner is required. */}
+      <Analytics />
     </QueryClientProvider>
   );
 }

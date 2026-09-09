@@ -140,3 +140,8 @@ dist
 
 # Vercel
 .vercel.fal-drafts/
+
+# Lovable generator scratch files. The GitHub profile is linked from the site,
+# so a visitor can open this repo. A generator prompt plan sitting next to
+# "I build AI systems" reads as a template.
+.lovable/

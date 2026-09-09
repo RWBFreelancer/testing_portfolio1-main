@@ -7,6 +7,113 @@ Dates are `YYYY-MM-DD`.
 
 ---
 
+## [0.8.0] - 2026-09-09
+
+Branch: `main`
+
+An adversarial review read the site as three buyers: an agency hiring manager
+screening 40 portfolios, a non-technical business owner, and an Upwork or
+OnlineJobs.ph buyer who filters before reading. All three found the same thing.
+The site was well built and said nothing a buyer could act on, and one bug was
+quietly losing leads.
+
+### Fixed
+
+- **The contact form told visitors their message was delivered when it was
+  not.** `api/contact.ts` answers `200` with `emailSent: false` whenever Resend
+  is unset or fails, and the client only checked `res.ok`. A visitor saw
+  "Your inquiry has been received" and nothing arrived. The hook now reads
+  `emailSent`, and the modal says so and hands over the direct email address.
+- **The sender was Resend's sandbox address.** `onboarding@resend.dev` only
+  delivers to the Resend account owner and is widely spam-filtered. The sender
+  now reads `RESEND_FROM_EMAIL`, and falls back to the sandbox only when that
+  is unset.
+- **"Voice agents that qualifies leads"** in the hero subtitle. A broken verb
+  in the first sentence a buyer reads.
+- **"More than 3 years in AI & Automation"** was checkable against the page
+  itself and wrong. The earliest automation role starts 07/2024. Now reads
+  "More than 2 years".
+- **The word "elevate"** in the page description that Google shows. The copy
+  rules in `docs/2026-09-01` ban it by name. Same for "streamlined" in an
+  earlier-career note.
+- The page had two titles: a hyphen in `index.html`, an em dash in the route
+  head. Now one.
+
+### Added
+
+- `src/lib/site-contact.ts` — one source of truth for the email address and the
+  Calendly URL.
+- **A real email address**, in the footer, in the contact section, and in the
+  success modal when delivery fails. There was no `mailto:` anywhere in the
+  repo. A buyer who wanted to send one line could not.
+- **A plain link fallback for booking.** Calendly needs an external script. An
+  ad blocker stopping it made all four "Book a Call" buttons do nothing,
+  silently. `useCalendlyModal` now returns the URL so a real `<a href>` can sit
+  underneath.
+- **Analytics** (`@vercel/analytics`, cookie-free, no consent banner needed),
+  with events for `book_a_call_click` (recording whether the widget or the
+  fallback opened), `cv_download`, and `contact_form_submit` (recording whether
+  the email actually delivered). Nothing was measured before.
+- **A `Work` nav link** and `id="work"` on the project row. The projects had no
+  anchor, so there was no URL to paste into a proposal.
+- **JSON-LD `Person` markup**, plus `og:site_name` and `og:locale`. Search and
+  answer engines had nothing structured to read.
+- `<lastmod>` in `public/sitemap.xml`.
+- A privacy line under the contact form. It stores a name, an email and a
+  message, and now says so.
+- `docs/2026-09-09-testimonial-outreach.md` — who to ask for a testimonial, the
+  message to send, and the rules for publishing what comes back.
+
+### Changed
+
+- **The hero headline.** "I build AI systems for small and medium businesses"
+  named the buyer and stopped. It is a category, not a claim, and every
+  competing portfolio says a version of it. Now: "Stop losing the calls you
+  never hear." The subtitle names the mechanism and the delivery time.
+- **The rate line.** "Rate on request" reads as a dead end to the buyer who
+  filters on rate first. No figure is published by choice, so the line now
+  names the pricing model: "Fixed-price builds · quote after the call".
+- **The overlap line.** "overlaps 9am–1pm EST" was four hours, and EST is wrong
+  for half the year. Now "9pm–1am overlap with US East".
+- **One job title.** The hero, the page title and the About badge said three
+  different things. All now read "AI Automation Engineer".
+- **The About lede.** It was three abstractions in one sentence — save time,
+  improve customer experience, increase operational efficiency — which the copy
+  rules ban. It now opens on a countable fact: six systems in production, named.
+  The body closes on the two objections that stop a small business owner:
+  lock-in, and what happens when it breaks.
+- **The contact heading.** "Tell me what you'd like to automate" asked the
+  visitor to do the work she is hiring for. Now "Bring me the job nobody wants
+  to do", and the lede states what she gets on the call and what it costs.
+- **The form's service chips.** The old list did not contain the two things
+  actually sold, and had no honest option for a visitor who does not yet know
+  what can be automated. Now voice agent, chatbot, n8n or Make, fix a broken
+  automation, and "Not sure yet — help me work it out".
+- **Section order.** Education now sits before Experience. A 2015 engineering
+  degree was the last thing a reader saw before the call to action.
+
+### Removed
+
+- **The PRC licence number.** It sat next to a full legal name, a city and a
+  photograph, which is identity-theft material, and no automation buyer
+  verifies a PRC electrical licence. The credential still shows; the number is
+  given on request.
+- `.lovable/plan.md` and `.lovable/project.json` from version control. The
+  GitHub profile is linked from the site, so a visitor can open this repo. A
+  generator prompt plan next to "I build AI systems" reads as a template.
+
+### Still open
+
+- **Third-party proof.** Still zero testimonials and one named client. This
+  remains the largest open item. See `docs/2026-09-09-testimonial-outreach.md`.
+- **No live demo.** The site sells voice agents and chatbots and has neither.
+- **Two cards both claim a `4:22` demo** (`projects.ts:185` and `:231`). One is
+  a copy-paste error; the true runtime has not been checked.
+- **`demoLabel: "Demo coming soon"`** on the Make.com card breaks the rule in
+  `docs/2026-09-01` §7: never show a stranger what has not been built.
+
+---
+
 ## [0.7.0] - 2026-09-03
 
 Branch: `main`

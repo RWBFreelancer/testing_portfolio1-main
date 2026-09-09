@@ -13,6 +13,7 @@ import {
 import { useContactForm } from "@/hooks/useContactForm";
 import { useCalendlyModal } from "@/hooks/useCalendlyModal";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import { CONTACT_EMAIL, CONTACT_EMAIL_HREF } from "@/lib/site-contact";
 
 const prefersReducedMotion =
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -57,7 +58,15 @@ function SocialLink({ href, label, tooltip, icon }: SocialLinkProps) {
 }
 
 // ─── Success Modal ────────────────────────────────────────────────────────────
-function SuccessModal({ onClose, onBookCall }: { onClose: () => void; onBookCall: () => void }) {
+function SuccessModal({
+  onClose,
+  onBookCall,
+  emailSent,
+}: {
+  onClose: () => void;
+  onBookCall: () => void;
+  emailSent: boolean;
+}) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -135,14 +144,35 @@ function SuccessModal({ onClose, onBookCall }: { onClose: () => void; onBookCall
           </div>
           <div className="flex flex-col gap-2">
             <h3 id="success-title" className="font-display text-2xl text-foreground">
-              Thanks for reaching out.
+              {emailSent ? "Got it." : "Saved, but not delivered."}
             </h3>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Your inquiry has been received. I usually respond within 24 hours.
-            </p>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Prefer to talk directly? You can also schedule a quick call.
-            </p>
+            {emailSent ? (
+              <>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Your message is with me. I reply within one working day, and I will use the email
+                  address you gave.
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Want it sooner? Grab a 30-minute slot in my calendar now.
+                </p>
+              </>
+            ) : (
+              /* The old copy said "received" whatever happened, so a broken mail
+                 relay lost the lead behind a green tick. Say the truth and hand
+                 over the one route that cannot fail. */
+              <>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Your message is stored, but my mail relay did not confirm it. So you are not left
+                  waiting, please send it to me directly.
+                </p>
+                <a
+                  href={CONTACT_EMAIL_HREF}
+                  className="text-sm font-medium text-primary underline underline-offset-4"
+                >
+                  {CONTACT_EMAIL}
+                </a>
+              </>
+            )}
           </div>
         </div>
 
@@ -175,6 +205,7 @@ function ContactFormCard() {
     form,
     status,
     errorMessage,
+    emailSent,
     SERVICE_OPTIONS,
     updateField,
     toggleService,
@@ -189,7 +220,12 @@ function ContactFormCard() {
     <>
       <AnimatePresence>
         {status === "success" && (
-          <SuccessModal key="success-modal" onClose={resetForm} onBookCall={openCalendly} />
+          <SuccessModal
+            key="success-modal"
+            onClose={resetForm}
+            onBookCall={openCalendly}
+            emailSent={emailSent}
+          />
         )}
       </AnimatePresence>
 
@@ -200,7 +236,9 @@ function ContactFormCard() {
             <h3 className="section-heading" style={{ fontSize: "var(--step-2)" }}>
               Send a message
             </h3>
-            <p className="text-sm text-muted-foreground">I'll get back to you within 24 hours.</p>
+            <p className="text-sm text-muted-foreground">
+              I read every one myself and reply within one working day.
+            </p>
           </div>
 
           <form
@@ -332,6 +370,13 @@ function ContactFormCard() {
                   </>
                 )}
               </button>
+
+              {/* The form stores a name, an email and a message. Say so. Agency
+                  procurement checks for this line, and EU visitors expect it. */}
+              <p className="mt-3 text-center text-xs leading-relaxed text-muted-foreground">
+                Your name, email and message are stored so I can reply. Nothing is shared with
+                anyone else, and nothing is added to a mailing list.
+              </p>
             </div>
           </form>
         </div>
@@ -342,16 +387,12 @@ function ContactFormCard() {
 
 // ─── Main Section ─────────────────────────────────────────────────────────────
 export default function ContactSection() {
-  const { openCalendly } = useCalendlyModal();
+  const { openCalendly, calendlyUrl } = useCalendlyModal();
 
   return (
     <TooltipProvider delayDuration={150}>
-      <section
-        id="contact"
-        className="contact-section relative px-4 py-24 sm:px-6 lg:px-8 lg:py-32"
-        aria-labelledby="contact-heading"
-      >
-        <div className="mx-auto flex flex-col gap-12 sm:gap-16 items-center w-full max-w-7xl">
+      <section id="contact" className="contact-section relative" aria-labelledby="contact-heading">
+        <div className="section-shell flex flex-col items-center gap-12 sm:gap-16">
           {/* Was a symmetric 1-3-1 grid: two tall empty rails holding four small
               icons, with the whole block centred. Left-aligned and single-column
               takes roughly half the height and stops out-measuring the work. */}
@@ -365,12 +406,16 @@ export default function ContactSection() {
           >
             <div className="contact-cta__main">
               <span className="label-mono text-primary">Let&rsquo;s talk</span>
+              {/* The old heading asked the visitor to name the automation. Most
+                  cannot — working that out is the thing they are hiring for. */}
               <h2 id="contact-heading" className="section-heading mt-4">
-                Tell me what you&rsquo;d like to automate.
+                Bring me the job nobody wants to do.
               </h2>
               <p className="contact-cta__lede">
-                Bring a process that eats your week. In 30 minutes I will tell you whether it can be
-                automated, roughly what it takes, and what it would save. No pitch.
+                Thirty minutes, no pitch, no invoice. Tell me one task your team repeats every week.
+                I will tell you on the call whether AI can take it, what it would cost to build, and
+                how long it would run before it pays for itself. If it is not worth automating, I
+                will say so.
               </p>
 
               <div className="contact-cta__actions">
@@ -383,9 +428,30 @@ export default function ContactSection() {
                   Book a Call
                 </button>
                 <span className="contact-cta__note label-mono">
-                  30 min · no commitment · Baguio City, PH
+                  30 min · free · no commitment · Baguio City, PH (UTC+8)
                 </span>
               </div>
+
+              {/* Every other route out of this page runs through someone else's
+                  script: Calendly's widget, Resend's API, Supabase. A plain
+                  mailto and a plain href are the two that survive an ad
+                  blocker, a paused project and an unset env var. */}
+              <p className="contact-cta__fallback">
+                Not ready for a call? Email{" "}
+                <a href={CONTACT_EMAIL_HREF} className="contact-cta__fallback-link">
+                  {CONTACT_EMAIL}
+                </a>{" "}
+                — I reply the same working day. Booking window not opening?{" "}
+                <a
+                  href={calendlyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-cta__fallback-link"
+                >
+                  Open my calendar directly
+                </a>
+                .
+              </p>
             </div>
 
             <div className="contact-cta__links">

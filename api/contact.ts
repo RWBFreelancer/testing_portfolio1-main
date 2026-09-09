@@ -41,6 +41,14 @@ function recordRequest(ip: string) {
 
 const IS_DEV = process.env.NODE_ENV !== "production";
 
+// onboarding@resend.dev is Resend's sandbox sender. It only delivers to the
+// Resend account owner's own verified address, and mail from it is widely
+// spam-filtered. Set RESEND_FROM_EMAIL to an address on a domain verified in
+// Resend before trusting this form with a real lead.
+const RESEND_FROM = process.env.RESEND_FROM_EMAIL
+  ? `Portfolio Contact <${process.env.RESEND_FROM_EMAIL}>`
+  : "Portfolio Contact <onboarding@resend.dev>";
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // ── CORS ────────────────────────────────────────────────────────────────
   // Wide open in dev so the Vite server can call the function directly. In
@@ -67,6 +75,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         SUPABASE_SERVICE_ROLE_KEY: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
         RESEND_API_KEY: !!process.env.RESEND_API_KEY,
         RESEND_TO_EMAIL: !!process.env.RESEND_TO_EMAIL,
+        RESEND_FROM_EMAIL: !!process.env.RESEND_FROM_EMAIL,
       },
     });
   }
@@ -152,7 +161,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!dbSaved) {
       return res.status(500).json({ error: "Could not send your inquiry. Please try again." });
     }
-    return res.json({ success: true, emailSent: false });
+    return res.json({ success: true, emailSent: false, dbSaved });
   }
 
   const serviceList = cleanServices.length ? cleanServices.join(", ") : "—";
@@ -178,7 +187,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         Authorization: `Bearer ${resendKey}`,
       },
       body: JSON.stringify({
-        from: "Portfolio Contact <onboarding@resend.dev>",
+        from: RESEND_FROM,
         to: [toEmail],
         reply_to: cleanEmail,
         subject: `New Portfolio Inquiry${cleanName ? ` from ${cleanName}` : ""}`,
@@ -192,14 +201,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!dbSaved) {
         return res.status(500).json({ error: "Could not send your inquiry. Please try again." });
       }
-      return res.json({ success: true, emailSent: false });
+      return res.json({ success: true, emailSent: false, dbSaved });
     }
   } catch (err) {
     console.error("[contact] Resend threw:", err);
     if (!dbSaved) {
       return res.status(500).json({ error: "Could not send your inquiry. Please try again." });
     }
-    return res.json({ success: true, emailSent: false });
+    return res.json({ success: true, emailSent: false, dbSaved });
   }
 
   return res.json({ success: true, emailSent: true, dbSaved });

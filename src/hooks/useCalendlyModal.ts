@@ -1,8 +1,6 @@
 import { useEffect } from "react";
-
-const CALENDLY_URL =
-  (import.meta.env.VITE_CALENDLY_URL as string | undefined) ??
-  "https://calendly.com/reybinayan01/30min";
+import { track } from "@vercel/analytics";
+import { CALENDLY_URL } from "@/lib/site-contact";
 
 const SCRIPT_ID = "calendly-widget-script";
 const SCRIPT_SRC = "https://assets.calendly.com/assets/external/widget.js";
@@ -26,6 +24,14 @@ export function useCalendlyModal() {
 
   const openCalendly = () => {
     if (typeof window === "undefined") return;
+    // Every "Book a Call" on the site routes through here, so one event covers
+    // the navbar, the hero, the contact section and the success modal. It also
+    // records which path opened, so a widget blocked by an ad blocker shows up
+    // as a rise in "fallback" rather than as silence.
+    track("book_a_call_click", {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      method: (window as any).Calendly?.initPopupWidget ? "widget" : "fallback",
+    });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const Calendly = (window as any).Calendly;
     if (Calendly?.initPopupWidget) {
@@ -48,5 +54,8 @@ export function useCalendlyModal() {
     }
   };
 
-  return { openCalendly };
+  // calendlyUrl is returned so a caller can render a real <a href> fallback.
+  // If an ad blocker stops widget.js AND a pop-up blocker stops window.open,
+  // every "Book a Call" button on the site does nothing and says nothing.
+  return { openCalendly, calendlyUrl: CALENDLY_URL };
 }
