@@ -1,8 +1,9 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ChevronDown, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { track } from "@vercel/analytics";
 import { useCalendlyModal } from "@/hooks/useCalendlyModal";
 import { CV_URL } from "@/components/layout/Navbar";
+import HoloDeck from "./HoloDeck";
 
 export default function HeroSection() {
   const shouldReduceMotion = useReducedMotion();
@@ -51,11 +52,9 @@ export default function HeroSection() {
             }}
             className="hero-section__subtitle"
           >
-            Automations that cut hours of repeat work.
-            <br />
-            Revenue systems like after hours agents and speed to lead follow up.
-            <br />
-            Live in 2 to 4 weeks.
+            Automations that cut hours of repeat work.<br />
+            Revenue systems like after hours agents and speed to lead follow up.<br />
+            I build it and it is live in 2 to 4 weeks.
           </motion.p>
 
           {/* Rate, hours and timezone are the first three filters on
@@ -106,24 +105,9 @@ export default function HeroSection() {
               Download CV
             </a>
           </motion.div>
-
-          {/* The hero fills the first screen, so the project row is below the
-              fold by design. This cue names what is down there and links to
-              it, so the visitor never has to guess whether to scroll. */}
-          <motion.a
-            href="#work"
-            variants={{
-              hidden: { opacity: 0, y: 12 },
-              visible: { opacity: 1, y: 0 },
-            }}
-            className="hero-section__scroll-cue"
-          >
-            <span className="hero-section__scroll-cue-label label-mono">6 projects below</span>
-            <span aria-hidden className="hero-section__scroll-cue-arrow">
-              <ChevronDown className="h-4 w-4" />
-            </span>
-          </motion.a>
         </motion.div>
+
+        <HoloDeck />
       </div>
     </section>
   );
