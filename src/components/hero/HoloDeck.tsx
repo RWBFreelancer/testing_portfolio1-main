@@ -11,8 +11,8 @@ import type { Project } from "@/types";
  *
  * Every project renders, always, side by side. There is no fixed slot count and
  * no placeholder card: the row is exactly as long as the work is. Nothing is
- * hidden behind a click, so the ten-second visitor reads all of it. Six
- * projects fall as two rows of three on a wide screen.
+ * hidden behind a click, so the ten-second visitor reads all of it. On a wide
+ * screen the projects fall in rows of three.
  *
  * The only state here is which demo is open, and which gallery is open. The
  * hover tilt is handled inside each card against the DOM, so moving the

@@ -5,6 +5,7 @@ import thumbFieldService from "@/assets/project-field-service-voice.webp";
 import thumbHyperlite from "@/assets/project-hyperlite-chatbot.webp";
 import thumbCrm from "@/assets/project-aios-crm.webp";
 import thumbMake from "@/assets/project-make-audit.webp";
+import thumbFacebookInbox from "@/assets/project-facebook-inbox.webp";
 
 /* The gallery screenshots. Every one is a redacted capture of the real tool,
    built by scripts/make-card-thumbs.mjs' sibling, scripts/make-gallery.mjs.
@@ -30,16 +31,21 @@ import shotCrm5 from "@/assets/gallery/aios-crm-marketing-5.webp";
 import shotMake1 from "@/assets/gallery/make-audit-1.webp";
 import shotMake2 from "@/assets/gallery/make-audit-2.webp";
 import shotMake3 from "@/assets/gallery/make-audit-3.webp";
+import shotFb1 from "@/assets/gallery/facebook-inbox-1.webp";
+import shotFb2 from "@/assets/gallery/facebook-inbox-2.webp";
+import shotFb3 from "@/assets/gallery/facebook-inbox-3.webp";
 
 /* Each card reads problem first, then solution. A visitor who does not know
    what n8n is can still tell whether this person fixes their kind of problem.
 
    Order is deliberate. On a wide screen the row is three across, so the first
-   three cards are the three voice agents and the second three are the chat,
-   CRM and repair work. Each row reads as one kind of job.
+   three cards are the three voice agents, the second three are the two chat
+   systems and the CRM, and the repair work closes the list.
 
    Every thumbnail is a screenshot of the real tool, built by
-   scripts/make-card-thumbs.mjs. None of them is an illustration. */
+   scripts/make-card-thumbs.mjs. None of them is an illustration. The one
+   exception in source is the Facebook inbox card: its image is a 16:10 crop of
+   the video's own YouTube thumbnail, which shows the live Page and chat. */
 export const projects: Project[] = [
 
   {
@@ -185,6 +191,43 @@ export const projects: Project[] = [
     demoLabel: "4:22 Demo",
     ctaLabel: "View Website",
     ctaUrl: "https://hi-hyperlite.com/",
+  },
+  {
+    id: "facebook-inbox",
+    title: "Facebook Inbox System",
+    category: "Chatbot · Facebook Messenger",
+    tagline:
+      "An AI inbox for a Facebook Page that answers the easy questions and hands the rest to the team.",
+    description:
+      "An n8n workflow behind a Facebook Page inbox. The AI reads each message and decides what the person wants. Simple questions get an answer at once. Pricing, demo requests, complaints, and anyone who asks for a real person get a short holding reply and a Slack alert to the team. When a team member replies by hand, the bot stops for that lead, so it never talks over a person. Every chat is saved to Airtable.",
+    problem:
+      "Messages to a Facebook Page wait hours for a reply, and the ones that need a person get lost among the simple questions.",
+    solution:
+      "n8n reads each message and the AI answers the simple ones at once. Pricing, demos, complaints and requests for a person get a holding reply and a Slack alert. The bot goes quiet when the team replies, and every chat is saved to Airtable.",
+    youtubeId: "J_x_6ZUrHfM",
+    thumbnailUrl: thumbFacebookInbox,
+    gallery: [
+      {
+        src: shotFb1,
+        caption:
+          "The n8n workflow. Skip repeats, stop if a person has taken over, let the AI sort and draft, then reply or alert the team.",
+      },
+      {
+        src: shotFb2,
+        caption:
+          "The Airtable log. Every message is saved with its intent and a flag for a person. The sender IDs are blurred.",
+      },
+      {
+        src: shotFb3,
+        caption:
+          "The handoff table. When a person replies by hand, the bot stays quiet for that lead until the pause ends.",
+      },
+    ],
+    techStack: ["n8n", "Messenger", "Slack", "Airtable"],
+    badge: "Instant replies, clean handoff",
+    demoLabel: "3:30 Demo",
+    ctaLabel: "Watch the Demo",
+    ctaUrl: "https://www.youtube.com/watch?v=J_x_6ZUrHfM",
   },
   {
     id: "aios-crm-marketing",

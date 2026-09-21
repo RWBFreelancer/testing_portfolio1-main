@@ -7,6 +7,19 @@ Dates are `YYYY-MM-DD`.
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- Hero: a seventh project card, "Facebook Inbox System" (n8n, Messenger,
+  Slack, Airtable), with its 3:30 demo video. The card image is a 16:10 crop of
+  the video's YouTube thumbnail, at `src/assets/project-facebook-inbox.webp`.
+- Gallery: three screenshots for that card (the n8n workflow, the Airtable
+  conversation log, the Airtable handoff table). Messenger sender IDs are
+  blurred. `scripts/make-gallery.mjs` now takes an optional `crop` per shot.
+
+---
+
 ## [0.8.0] - 2026-09-09
 
 Branch: `main`

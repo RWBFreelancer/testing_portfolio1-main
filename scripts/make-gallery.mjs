@@ -19,6 +19,10 @@
  * size, so the numbers here are the numbers you see in the shipped image. If a
  * source screenshot is ever replaced, re-measure: nothing here adapts on its
  * own.
+ *
+ * CROP. An optional `crop` is cut from the source at its own size, before the
+ * scale. It is for a capture that is mostly empty canvas around the part that
+ * matters.
  */
 import sharp from "sharp";
 import { mkdirSync } from "node:fs";
@@ -223,13 +227,32 @@ const SHOTS = [
       }),
     ],
   },
+
+  /* ---- Facebook inbox system (own Page, own test account) -------------- */
+  {
+    out: "facebook-inbox-1",
+    src: "Facebook Inbox System/n8n_workflow.png",
+    // The canvas is mostly empty. Keep the two webhook paths and nothing else.
+    crop: { left: 140, top: 270, width: 1380, height: 400 },
+  },
+  {
+    out: "facebook-inbox-2",
+    src: "Facebook Inbox System/airtable_conversations.png",
+    // The sender id is a Messenger user id. It is a test account, but an id
+    // like this is never published.
+    blur: [{ left: 514, top: 150, width: 120, height: 78 }],
+  },
+  {
+    out: "facebook-inbox-3",
+    src: "Facebook Inbox System/airtable_handoffs.png",
+    blur: [{ left: 366, top: 150, width: 130, height: 22 }],
+  },
 ];
 
 for (const shot of SHOTS) {
-  const base = await sharp(`${SOURCE_ROOT}/${shot.src}`)
-    .resize({ width: OUT_WIDTH, withoutEnlargement: true })
-    .png()
-    .toBuffer();
+  let source = sharp(`${SOURCE_ROOT}/${shot.src}`);
+  if (shot.crop) source = sharp(await source.extract(shot.crop).toBuffer());
+  const base = await source.resize({ width: OUT_WIDTH, withoutEnlargement: true }).png().toBuffer();
 
   const { width, height } = await sharp(base).metadata();
 
