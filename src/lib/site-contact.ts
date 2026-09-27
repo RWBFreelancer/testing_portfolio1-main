@@ -6,7 +6,7 @@
 // correct and must be rendered wherever a booking or a form can break.
 //
 // Change CONTACT_EMAIL here and it changes everywhere.
-export const CONTACT_EMAIL = "rwbfreelancer@gmail.com";
+export const CONTACT_EMAIL = "rey@rwbinai.com";
 export const CONTACT_EMAIL_HREF = `mailto:${CONTACT_EMAIL}`;
 
 export const CALENDLY_URL =
