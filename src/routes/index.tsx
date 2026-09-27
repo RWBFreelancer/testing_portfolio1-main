@@ -11,21 +11,6 @@ import { useTheme } from "@/hooks/useTheme";
 
 export const Route = createFileRoute("/")({
   component: Index,
-  head: () => ({
-    meta: [
-      { title: "Rey Binay-an — AI Automation Engineer" },
-      {
-        name: "description",
-        content:
-          "Rey Binay-an builds AI voice agents, chatbots, and n8n workflow systems for small and medium businesses: law firms, ecommerce brands, and service businesses. Baguio City, Philippines. Available for remote contract work.",
-      },
-      { property: "og:title", content: "Rey Binay-an — AI Automation Engineer" },
-      {
-        property: "og:description",
-        content: "AI voice agents, chatbots, and workflow systems for real business bottlenecks.",
-      },
-    ],
-  }),
 });
 
 function Index() {

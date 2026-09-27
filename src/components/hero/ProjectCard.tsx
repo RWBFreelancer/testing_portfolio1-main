@@ -59,7 +59,7 @@ export default function ProjectCard({
         >
           <img
             src={project.thumbnailUrl}
-            alt=""
+            alt={`${project.title} screenshot`}
             className="hero-holo-card__image"
             width={900}
             height={563}

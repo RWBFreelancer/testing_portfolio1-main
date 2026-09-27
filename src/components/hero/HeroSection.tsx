@@ -39,6 +39,9 @@ export default function HeroSection() {
             }}
             className="hero-section__headline font-display"
           >
+            {/* The eyebrow above already shows the name. This copy puts it in
+                the h1 too, so search engines read the page as his. */}
+            <span className="sr-only">Rey W. Binay-an (BinAI), AI Automation Engineer: </span>
             Less time on repeat work.
             <br />
             <span className="hero-section__headline-accent">More revenue for you.</span>

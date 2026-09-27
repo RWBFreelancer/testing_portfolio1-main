@@ -62,7 +62,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8">
     <h1>I build AI systems for<br><span>small and medium businesses.</span></h1>
     <ul class="pills"><li>Voice agents</li><li>Chatbots</li><li>n8n workflows</li></ul>
   </div>
-  <div class="foot">Baguio City, Philippines &nbsp;<b>&middot;</b>&nbsp; rwbinai.vercel.app</div>
+  <div class="foot">Baguio City, Philippines &nbsp;<b>&middot;</b>&nbsp; rwbinai.com</div>
 </div></body></html>`;
 
 const dir = join(tmpdir(), "og-build");
