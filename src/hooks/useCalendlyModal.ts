@@ -4,6 +4,7 @@ import { CALENDLY_URL } from "@/lib/site-contact";
 
 const SCRIPT_ID = "calendly-widget-script";
 const SCRIPT_SRC = "https://assets.calendly.com/assets/external/widget.js";
+const STYLE_SRC = "https://assets.calendly.com/assets/external/widget.css";
 
 export function useCalendlyModal() {
   useEffect(() => {
@@ -14,6 +15,13 @@ export function useCalendlyModal() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).__calendlyScriptAdded = true;
+
+    // Loaded here, not in index.html, so the popup styles do not block the
+    // first paint of every visit.
+    const style = document.createElement("link");
+    style.rel = "stylesheet";
+    style.href = STYLE_SRC;
+    document.head.appendChild(style);
 
     const script = document.createElement("script");
     script.id = SCRIPT_ID;

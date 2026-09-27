@@ -58,11 +58,11 @@ const html = `<!doctype html><html><head><meta charset="utf-8">
 <div class="wrap">
   <div class="logo">Bin<i>AI</i></div>
   <div>
-    <div class="eyebrow">Rey W. Binay-an &middot; AI Automation Engineer</div>
+    <div class="eyebrow">Rey W. Binay-an &middot; AI Voice Agent, AI Automation, and GHL Automation Specialist</div>
     <h1>I build AI systems for<br><span>small and medium businesses.</span></h1>
     <ul class="pills"><li>Voice agents</li><li>Chatbots</li><li>n8n workflows</li></ul>
   </div>
-  <div class="foot">Baguio City, Philippines &nbsp;<b>&middot;</b>&nbsp; rwbinai.vercel.app</div>
+  <div class="foot">Baguio City, Philippines &nbsp;<b>&middot;</b>&nbsp; rwbinai.com</div>
 </div></body></html>`;
 
 const dir = join(tmpdir(), "og-build");

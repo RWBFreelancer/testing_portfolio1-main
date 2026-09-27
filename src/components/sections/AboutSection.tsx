@@ -44,7 +44,7 @@ export default function AboutSection() {
             <div className="about-profile-photo w-full overflow-hidden">
               <img
                 src={profileImage}
-                alt="Portrait of Rey Binay-an, Automation Engineer"
+                alt="Portrait of Rey Binay-an, AI Voice Agent, AI Automation, and GHL Automation Specialist"
                 className="h-auto w-full object-cover object-top"
                 width={1024}
                 height={1535}
@@ -64,7 +64,7 @@ export default function AboutSection() {
             <h2 className="about-name text-center lg:text-left">Rey W. Binay-an</h2>
 
             {/* One job title across the site: hero eyebrow, page title, here. */}
-            <p className="about-role-badge">AI Automation Engineer</p>
+            <p className="about-role-badge">AI Voice Agent, AI Automation, and GHL Automation Specialist</p>
 
             {/* The old lede was three abstractions in one sentence — save time,
                 improve customer experience, increase efficiency — which the copy

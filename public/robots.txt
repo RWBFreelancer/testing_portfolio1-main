@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rwbinai.vercel.app/sitemap.xml
+Sitemap: https://www.rwbinai.com/sitemap.xml
