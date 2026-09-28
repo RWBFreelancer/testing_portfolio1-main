@@ -19,6 +19,7 @@ Dates are `YYYY-MM-DD`.
   blurred. `scripts/make-gallery.mjs` now takes an optional `crop` per shot.
 - Contact: an n8n creator profile link
   (`https://n8n.io/creators/rwbfreelancer/`) in the "Connect" group.
+- CV: the same n8n creator link in the contact line and the summary.
 
 ---
 
