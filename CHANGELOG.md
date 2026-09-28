@@ -17,6 +17,8 @@ Dates are `YYYY-MM-DD`.
 - Gallery: three screenshots for that card (the n8n workflow, the Airtable
   conversation log, the Airtable handoff table). Messenger sender IDs are
   blurred. `scripts/make-gallery.mjs` now takes an optional `crop` per shot.
+- Contact: an n8n creator profile link
+  (`https://n8n.io/creators/rwbfreelancer/`) in the "Connect" group.
 
 ---
 

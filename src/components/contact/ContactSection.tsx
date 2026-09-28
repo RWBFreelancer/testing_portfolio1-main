@@ -9,6 +9,7 @@ import {
   Github,
   Briefcase,
   Handshake,
+  Workflow,
 } from "lucide-react";
 import { useContactForm } from "@/hooks/useContactForm";
 import { useCalendlyModal } from "@/hooks/useCalendlyModal";
@@ -487,6 +488,12 @@ export default function ContactSection() {
                     label="GitHub"
                     tooltip="View GitHub Profile"
                     icon={<Github className="h-5 w-5" />}
+                  />
+                  <SocialLink
+                    href="https://n8n.io/creators/rwbfreelancer/"
+                    label="n8n creator profile"
+                    tooltip="View n8n Creator Profile"
+                    icon={<Workflow className="h-5 w-5" />}
                   />
                 </div>
               </div>
